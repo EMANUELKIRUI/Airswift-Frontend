@@ -132,18 +132,18 @@ export default function Register() {
 
             {/* Email Address */}
             <div>
-              <label className="text-sm font-medium text-gray-700">Email Address</label>
+              <label className="text-sm font-medium text-gray-700">Email Address <span className="text-blue-600 font-semibold">(Gmail only)</span></label>
               <input
                 type="email"
                 className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                placeholder="you@example.com"
+                placeholder="you@gmail.com"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value.toLowerCase() })}
                 disabled={loading}
                 required
               />
               <p className="text-xs text-gray-500 mt-1">
-                ℹ️ We'll send you a verification link to this email
+                ✉️ Use your @gmail.com account • We'll send you a verification link
               </p>
             </div>
 

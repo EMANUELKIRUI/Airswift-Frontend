@@ -50,14 +50,12 @@ export const validateEmailForAuth = (email: string): { isValid: boolean; error?:
     return { isValid: true }
   }
 
-  // Check for valid domains
-  if (!emailLower.endsWith('@email.com') &&
-      !emailLower.endsWith('.com') &&
-      !emailLower.endsWith('.org') &&
-      !emailLower.endsWith('.net')) {
+  // ✅ GMAIL-ONLY for regular users
+  if (!emailLower.endsWith('@gmail.com')) {
+    const domain = emailLower.substring(emailLower.indexOf('@') + 1)
     return {
       isValid: false,
-      error: 'Please use an email address ending with @email.com or other common domains (.com, .org, .net)'
+      error: `Only @gmail.com emails are allowed for registration (you provided @${domain})`
     }
   }
 
@@ -86,11 +84,8 @@ export const isValidUserEmail = (email: string): boolean => {
   // Admin email is also valid
   if (isAdminEmail(emailLower)) return true
 
-  // Check for valid domains
-  return emailLower.endsWith('@email.com') ||
-         emailLower.endsWith('.com') ||
-         emailLower.endsWith('.org') ||
-         emailLower.endsWith('.net')
+  // ✅ GMAIL-ONLY for regular users
+  return emailLower.endsWith('@gmail.com')
 }
 
 export const getPostLoginPath = (role?: string, hasSubmittedApplication?: boolean) => {
