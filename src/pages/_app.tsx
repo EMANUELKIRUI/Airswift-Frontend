@@ -13,8 +13,6 @@ import 'leaflet/dist/leaflet.css'
 import '@/styles/globals.css'
 // @ts-ignore
 import '@/styles/AdminUsers.css'
-// @ts-ignore
-import '@/styles/SystemHealth.css'
 
 /**
  * 🍪 CRITICAL GLOBAL CONFIGURATION 🍪

@@ -44,7 +44,12 @@ export default function AdminSettingsPanel() {
   const fetchSettings = async () => {
     try {
       const data = await adminService.getSettings()
-      setSettings(data)
+      // Handle nested data structure from API
+      const settingsData = data?.data || data || {}
+      setSettings(prev => ({
+        ...prev,
+        ...settingsData
+      }))
     } catch (error) {
       console.error('Failed to fetch settings:', error)
       // Use default settings if API fails

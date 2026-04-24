@@ -180,12 +180,12 @@ export const adminService = {
 
   // Settings Management
   getSettings: async () => {
-    const response = await API.get('/settings')
+    const response = await API.get('/admin/settings')
     return response.data
   },
 
   updateSettings: async (settings: any) => {
-    const response = await API.put('/settings', settings)
+    const response = await API.put('/admin/settings', settings)
     return response.data
   },
 
@@ -277,12 +277,6 @@ export const adminService = {
 
   updateReportStatus: async (id: string, status: string) => {
     const response = await API.put(`/admin/reports/${id}/status`, { status })
-    return response.data
-  },
-
-  // System Health
-  getSystemHealth: async () => {
-    const response = await API.get('/system-health')
     return response.data
   },
 

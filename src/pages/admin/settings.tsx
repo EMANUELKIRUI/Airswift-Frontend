@@ -39,7 +39,29 @@ export default function AdminSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [paymentProcessing, setPaymentProcessing] = useState(false);
+  const [autoSaveEnabled, setAutoSaveEnabled] = useState(true);
+  const [lastSaved, setLastSaved] = useState<string | null>(null);
   const { addNotification } = useNotification()
+
+  // Auto-save settings with debounce
+  useEffect(() => {
+    if (!autoSaveEnabled) return;
+
+    const saveTimeout = setTimeout(async () => {
+      try {
+        setSaving(true)
+        await adminService.updateSettings(form)
+        setLastSaved(new Date().toLocaleTimeString())
+        console.log('✅ Settings auto-saved at', new Date().toLocaleTimeString())
+      } catch (error) {
+        console.error('Auto-save failed:', error)
+      } finally {
+        setSaving(false)
+      }
+    }, 2000); // Save 2 seconds after last change
+
+    return () => clearTimeout(saveTimeout);
+  }, [form, autoSaveEnabled]);
 
   // 🔄 FETCH SETTINGS
   useEffect(() => {
@@ -135,12 +157,13 @@ export default function AdminSettings() {
     }
   };
 
-  // �💾 SAVE SETTINGS
+  // 💾 MANUAL SAVE SETTINGS
   const handleSave = async () => {
     setSaving(true)
 
     try {
       await adminService.updateSettings(form)
+      setLastSaved(new Date().toLocaleTimeString())
       addNotification('✅ Settings saved successfully', 'success')
       alert('✅ Settings saved successfully')
     } catch (error) {
@@ -158,7 +181,49 @@ export default function AdminSettings() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-8">⚙️ Admin Settings</h1>
+      <div className="flex justify-between items-center mb-8">
+        <h1 className="text-3xl font-bold">⚙️ Admin Settings</h1>
+        <div className="flex items-center gap-4">
+          {/* Auto-save Status */}
+          <div className="flex items-center gap-2">
+            <label className="text-sm font-medium">Auto-save:</label>
+            <button
+              onClick={() => setAutoSaveEnabled(!autoSaveEnabled)}
+              className={`px-3 py-1 rounded text-sm font-medium transition-all ${
+                autoSaveEnabled
+                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              {autoSaveEnabled ? '✅ ON' : '⭕ OFF'}
+            </button>
+          </div>
+
+          {/* Saving Indicator */}
+          {saving && (
+            <div className="flex items-center gap-2 text-blue-600">
+              <div className="animate-spin">💾</div>
+              <span className="text-sm font-medium">Saving...</span>
+            </div>
+          )}
+
+          {/* Last Saved Time */}
+          {lastSaved && !saving && (
+            <div className="text-sm text-gray-500">
+              Last saved: {lastSaved}
+            </div>
+          )}
+
+          {/* Manual Save Button */}
+          <button
+            onClick={handleSave}
+            disabled={saving}
+            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+          >
+            {saving ? 'Saving...' : '💾 Save Now'}
+          </button>
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Platform Settings */}
@@ -487,15 +552,18 @@ export default function AdminSettings() {
         </div>
       </div>
 
-      {/* Save Button */}
-      <div className="mt-8 flex gap-4">
-        <button
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 disabled:bg-gray-400"
-        >
-          {saving ? "Saving..." : "💾 Save Settings"}
-        </button>
+      {/* Save Status Footer */}
+      <div className="mt-8 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+        <p className="text-sm text-blue-700">
+          {autoSaveEnabled 
+            ? '✅ Auto-save is enabled. Your changes will be saved automatically 2 seconds after you stop making changes.'
+            : '⭕ Auto-save is disabled. Use the "Save Now" button in the header to manually save your changes.'}
+        </p>
+        {lastSaved && (
+          <p className="text-xs text-blue-600 mt-2">
+            Last saved at {lastSaved}
+          </p>
+        )}
       </div>
     </div>
   );

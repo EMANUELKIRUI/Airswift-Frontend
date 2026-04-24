@@ -51,7 +51,7 @@ export default function AuditLogViewer() {
 
   const fetchAuditLogs = async () => {
     try {
-      const response = await API.get('/audit-logs?limit=50')
+      const response = await API.get('/admin/audit-logs?limit=50')
       if (response.data && response.data.logs) {
         setAuditLogs(response.data.logs)
       }

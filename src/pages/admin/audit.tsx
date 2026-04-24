@@ -39,7 +39,7 @@ const SafeAuditLogs = () => {
         endDate: filters.endDate || undefined
       };
 
-      const response = await api.get('/audit-logs', { params });
+      const response = await api.get('/admin/audit-logs', { params });
       const data = response.data || {};
 
       setLogs(Array.isArray(data.logs) ? data.logs : []);
