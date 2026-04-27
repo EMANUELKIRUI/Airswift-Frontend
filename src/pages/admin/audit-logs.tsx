@@ -38,12 +38,25 @@ export default function AuditLogsPage() {
   const fetchLogs = async () => {
     try {
       setLoading(true);
+      console.log('📡 Fetching audit logs...');
+      
       const res = await api.get("/admin/audit-logs", {
         params: { search, action, startDate, endDate },
       });
-      setLogs(res.data.logs || []);
-    } catch (error) {
-      console.error("Failed to fetch audit logs:", error);
+      
+      console.log('✅ Audit logs fetched:', res.data);
+      
+      // Handle both direct array and wrapped response
+      const logsData = res.data?.logs || res.data || [];
+      setLogs(Array.isArray(logsData) ? logsData : []);
+    } catch (error: any) {
+      console.error("❌ Failed to fetch audit logs:", error);
+      
+      // Log detailed error info
+      const status = error?.response?.status;
+      const message = error?.response?.data?.message || error?.message;
+      console.error(`Error details - Status: ${status}, Message: ${message}`);
+      
       setLogs([]);
     } finally {
       setLoading(false);
@@ -96,16 +109,31 @@ export default function AuditLogsPage() {
     URL.revokeObjectURL(url);
   };
 
-  if (isLoading || loading) return <p>Loading...</p>;
+  if (isLoading || loading) {
+    return (
+      <div className="p-6 max-w-7xl mx-auto">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-gray-600">Loading audit logs...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">
-        Advanced Audit Logs
-      </h1>
+      <h1 className="text-2xl font-bold mb-6">Advanced Audit Logs</h1>
 
-      {/* 🔍 Filters */}
-      <div className="grid grid-cols-5 gap-3 mb-4">
+      {logs.length === 0 ? (
+        <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
+          <p className="text-yellow-800">No audit logs found. Try adjusting your filters.</p>
+        </div>
+      ) : (
+        <>
+          {/* 🔍 Filters */}
+          <div className="grid grid-cols-5 gap-3 mb-4">
         <input
           placeholder="Search description..."
           className="border p-2 rounded"
@@ -170,42 +198,36 @@ export default function AuditLogsPage() {
           </thead>
 
           <tbody>
-            {logs.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="p-8 text-center text-gray-500">
-                  No audit logs found
+            {logs.map((log) => (
+              <tr key={log._id} className="border-t hover:bg-gray-50">
+                <td className="p-3">
+                  {log.user_id?.name || "Unknown User"}
+                </td>
+
+                <td className="p-3">
+                  <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
+                    {log.action}
+                  </span>
+                </td>
+
+                <td className="p-3 text-gray-600">
+                  {log.resource}
+                </td>
+
+                <td className="p-3 text-gray-700">
+                  {log.description}
+                </td>
+
+                <td className="p-3 text-gray-500 text-sm">
+                  {new Date(log.createdAt).toLocaleString()}
                 </td>
               </tr>
-            ) : (
-              logs.map((log) => (
-                <tr key={log._id} className="border-t hover:bg-gray-50">
-                  <td className="p-3">
-                    {log.user_id?.name || "Unknown User"}
-                  </td>
-
-                  <td className="p-3">
-                    <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
-                      {log.action}
-                    </span>
-                  </td>
-
-                  <td className="p-3 text-gray-600">
-                    {log.resource}
-                  </td>
-
-                  <td className="p-3 text-gray-700">
-                    {log.description}
-                  </td>
-
-                  <td className="p-3 text-gray-500 text-sm">
-                    {new Date(log.createdAt).toLocaleString()}
-                  </td>
-                </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
       </div>
+        </>
+      )}
     </div>
   );
 }

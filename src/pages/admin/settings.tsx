@@ -50,18 +50,21 @@ export default function AdminSettings() {
     const saveTimeout = setTimeout(async () => {
       try {
         setSaving(true)
+        console.log('💾 Auto-saving settings...')
         await adminService.updateSettings(form)
         setLastSaved(new Date().toLocaleTimeString())
         console.log('✅ Settings auto-saved at', new Date().toLocaleTimeString())
-      } catch (error) {
-        console.error('Auto-save failed:', error)
+        addNotification('✅ Settings auto-saved', 'success')
+      } catch (error: any) {
+        console.error('❌ Auto-save failed:', error?.response?.data || error?.message || error)
+        addNotification('⚠️ Auto-save failed', 'error')
       } finally {
         setSaving(false)
       }
     }, 2000); // Save 2 seconds after last change
 
     return () => clearTimeout(saveTimeout);
-  }, [form, autoSaveEnabled]);
+  }, [form, autoSaveEnabled, addNotification]);
 
   // 🔄 FETCH SETTINGS
   useEffect(() => {
@@ -162,14 +165,15 @@ export default function AdminSettings() {
     setSaving(true)
 
     try {
+      console.log('💾 Saving settings...', form)
       await adminService.updateSettings(form)
       setLastSaved(new Date().toLocaleTimeString())
       addNotification('✅ Settings saved successfully', 'success')
-      alert('✅ Settings saved successfully')
-    } catch (error) {
-      console.error('Error saving settings:', error)
-      addNotification('❌ Failed to save settings', 'error')
-      alert('❌ Failed to save settings')
+      console.log('✅ Settings saved successfully')
+    } catch (error: any) {
+      const errorMessage = error?.response?.data?.message || error?.message || 'Failed to save settings'
+      console.error('❌ Error saving settings:', errorMessage, error)
+      addNotification(`❌ ${errorMessage}`, 'error')
     } finally {
       setSaving(false)
     }
