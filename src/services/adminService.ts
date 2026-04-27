@@ -239,12 +239,12 @@ export const adminService = {
 
   // Payment Management
   getPayments: async (params?: any) => {
-    const response = await API.get('/payment', { params })
+    const response = await API.get('/admin/payments', { params })
     return response.data
   },
 
   updatePaymentStatus: async (id: string, status: string, notes?: string) => {
-    const response = await API.put(`/payment/${id}/status`, { status, notes })
+    const response = await API.put(`/admin/payments/${id}/status`, { status, notes })
     return response.data
   },
 
@@ -261,7 +261,7 @@ export const adminService = {
   },
 
   getEmailLogs: async (params?: any) => {
-    const response = await API.get('/email', { params })
+    const response = await API.get('/admin/email-logs', { params })
     return response.data
   },
 
