@@ -74,7 +74,7 @@ const getBackendUrl = (): string => {
 export const verifyGoogleToken = async (googleToken: string): Promise<{ token: string; user: AuthUser }> => {
   try {
     const baseUrl = getBackendUrl()
-    const response = await fetch(`${baseUrl}/auth/google`, {
+    const response = await fetch(`${baseUrl}/api/auth/google`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

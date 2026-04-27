@@ -36,23 +36,6 @@ export default function LoginPage() {
 
       const result = await AuthService.login(email, password);
 
-      // ⚠️ Check if account is not verified
-      if (result.code === 'ACCOUNT_NOT_VERIFIED') {
-        setError(result.message || "Your account has not been verified yet. Check your email for the verification link.");
-        
-        // Optional: Offer to resend verification link
-        setTimeout(() => {
-          const resendOption = window.confirm(
-            'Would you like us to resend the verification link to your email?'
-          );
-          if (resendOption) {
-            router.push(`/verify-email?email=${encodeURIComponent(email)}`);
-          }
-        }, 2000);
-        
-        return;
-      }
-
       if (result.success) {
         const normalizedUser = AuthService.normalizeUser(result.user);
         console.log('✅ Login successful, redirecting...', normalizedUser);
@@ -61,7 +44,25 @@ export default function LoginPage() {
         await new Promise((resolve) => setTimeout(resolve, 0));
         await redirectAfterLogin(normalizedUser, router);
       } else {
-        setError(result.error || 'Login failed');
+        // ⚠️ Check if account is not verified
+        const isNotVerified = result.error?.toLowerCase?.().includes('not verified') || 
+                             result.error?.toLowerCase?.().includes('verification');
+        
+        if (isNotVerified) {
+          setError(result.error || "Your account has not been verified yet. Check your email for the verification link.");
+          
+          // Optional: Offer to resend verification link
+          setTimeout(() => {
+            const resendOption = window.confirm(
+              'Would you like us to resend the verification link to your email?'
+            );
+            if (resendOption) {
+              router.push(`/verify-email?email=${encodeURIComponent(email)}`);
+            }
+          }, 2000);
+        } else {
+          setError(result.error || 'Login failed');
+        }
       }
     } catch (err) {
       console.error("❌ [Login] Error:", err);
@@ -95,45 +96,27 @@ export default function LoginPage() {
       // Clear any existing auth state first
       clearAuth();
 
-      // Send Google credential to backend
-      const res = await fetch("https://airswift-backend-fjt3.onrender.com/auth/google", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          credential: credentialResponse.credential,
-        }),
-      });
+      // Send Google credential to backend using API client
+      const response = await AuthService.googleLogin(credentialResponse.credential);
 
-      if (!res.ok) {
-        throw new Error("Google authentication failed");
-      }
-
-      const responseData = await res.json();
-
-      // Normalize response structure
-      const token = responseData.token || responseData.accessToken || responseData.data?.token || responseData.data?.accessToken;
-      const user = responseData.user || responseData.data?.user || responseData;
-
-      if (!token || !user) {
-        throw new Error("Invalid response from Google authentication");
+      if (!response.success) {
+        throw new Error(response.error || "Google authentication failed");
       }
 
       // Email validation for Google login
-      const emailValidation = validateEmailForAuth(user?.email);
+      const emailValidation = validateEmailForAuth(response.user?.email);
       if (!emailValidation.isValid) {
         setError(emailValidation.error);
         return;
       }
 
-      if (user?.role?.toLowerCase() === 'admin') {
+      if (response.user?.role?.toLowerCase() === 'admin') {
         setError("Admin login not allowed with Google. Please use email/password.");
         return;
       }
 
-      await login({ token, user });
-      await redirectAfterLogin(user, router);
+      await login({ token: response.token, user: response.user });
+      await redirectAfterLogin(response.user, router);
 
     } catch (err) {
       setError(err.message || "Google login failed");

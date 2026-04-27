@@ -14,6 +14,8 @@ const nextConfig = {
       },
     ],
   },
+  // Explicitly configure src directory for pages routing
+  pageExtensions: ['tsx', 'ts', 'jsx', 'js'],
   webpack: (config) => {
     config.resolve.alias['@'] = path.resolve(__dirname, 'src')
     return config

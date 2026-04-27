@@ -268,6 +268,31 @@ class AuthService {
       console.error('❌ Error clearing auth data:', error)
     }
   }
+
+  static async googleLogin(googleCredential) {
+    try {
+      console.log('🔐 Logging in with Google...')
+      const response = await api.post('/auth/google', { credential: googleCredential })
+      console.log('✅ Google login successful')
+      const data = response.data || {}
+      const token = data.token || data.accessToken || data.data?.token || data.data?.accessToken
+      const user = data.user || data.data?.user || data
+      if (!token || !user) {
+        throw new Error('Google login response missing token or user data')
+      }
+      const normalizedUser = this.normalizeUser(user)
+      this.storeToken(token, normalizedUser)
+      console.log('🔌 Reconnecting socket with token...')
+      const socket = reconnectSocket(token)
+      if (socket) {
+        console.log('✅ Socket reconnected:', socket.id)
+      }
+      return { success: true, token, user: normalizedUser }
+    } catch (error) {
+      console.error('❌ Google login error:', error?.message || error)
+      return { success: false, error: error.response?.data?.message || error.message || 'Google login failed' }
+    }
+  }
 }
 
 export default AuthService
