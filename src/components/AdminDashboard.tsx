@@ -127,7 +127,14 @@ export default function AdminDashboard() {
   const fetchApplications = async () => {
     try {
       const res = await applicationService.getAllApplications()
-      const apps = res?.applications || res || []
+      let apps = res?.applications || res || []
+      
+      // Ensure apps is always an array
+      if (!Array.isArray(apps)) {
+        console.warn('⚠️ Expected applications to be an array, got:', typeof apps)
+        apps = []
+      }
+      
       setApplications(apps)
       // Load notes into local state
       const notesMap: { [key: string]: string } = {}
@@ -139,6 +146,7 @@ export default function AdminDashboard() {
       setNotes(notesMap)
     } catch (err) {
       console.error('❌ Failed to fetch applications:', err)
+      setApplications([]) // Set empty array on error
     } finally {
       setLoading(false)
     }
@@ -147,9 +155,18 @@ export default function AdminDashboard() {
   const fetchPendingJobs = async () => {
     try {
       const res = await API.get('/jobs?status=pending')
-      setPendingJobs(res.data?.jobs || [])
+      let jobs = res.data?.jobs || []
+      
+      // Ensure jobs is always an array
+      if (!Array.isArray(jobs)) {
+        console.warn('⚠️ Expected jobs to be an array, got:', typeof jobs)
+        jobs = []
+      }
+      
+      setPendingJobs(jobs)
     } catch (err) {
       console.error('❌ Failed to fetch pending jobs:', err)
+      setPendingJobs([]) // Set empty array on error
     }
   }
 
