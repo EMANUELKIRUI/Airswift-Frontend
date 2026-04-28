@@ -9,13 +9,14 @@ import { CheckCircle, AlertCircle, InfoIcon, Eye, EyeOff, Check, X } from "lucid
 
 export default function Register() {
   const router = useRouter();
-  const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState<'form' | 'success'>('form');
   const [registeredEmail, setRegisteredEmail] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [touched, setTouched] = useState({ name: false, email: false, password: false });
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [touched, setTouched] = useState({ name: false, email: false, password: false, confirmPassword: false });
 
   // Password strength validation
   const passwordStrength = useMemo(() => {
@@ -45,7 +46,8 @@ export default function Register() {
   const isValidEmail = formData.email ? /^[^\s@]+@gmail\.com$/.test(formData.email.toLowerCase()) : false;
   const isValidName = formData.name.trim().length >= 2;
   const isValidPassword = formData.password.length >= 6;
-  const isFormValid = isValidName && isValidEmail && isValidPassword;
+  const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword.length > 0;
+  const isFormValid = isValidName && isValidEmail && isValidPassword && passwordsMatch;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,12 +78,12 @@ export default function Register() {
         // New user created - show verification email screen
         setRegisteredEmail(formData.email);
         setRegistrationStatus('success');
-        setFormData({ name: "", email: "", password: "" });
+        setFormData({ name: "", email: "", password: "", confirmPassword: "" });
       } else if (result.data.code === 'VERIFICATION_EMAIL_RESENT') {
         // Unverified user tried to register again - show verification email screen
         setRegisteredEmail(formData.email);
         setRegistrationStatus('success');
-        setFormData({ name: "", email: "", password: "" });
+        setFormData({ name: "", email: "", password: "", confirmPassword: "" });
       } else {
         // Unexpected response
         setError(result.data.message || "Registration failed");
@@ -285,6 +287,55 @@ export default function Register() {
                 <p className="text-xs text-gray-500 mt-2">
                   • Minimum 6 characters • Use uppercase, numbers & symbols for stronger password
                 </p>
+              </div>
+
+              {/* Confirm Password Field */}
+              <div>
+                <div className="flex items-center justify-between">
+                  <label className="block text-sm font-semibold text-gray-800 mb-2">
+                    Confirm Password
+                  </label>
+                  {touched.confirmPassword && formData.confirmPassword && (
+                    <span className={`text-xs font-medium flex items-center gap-1 ${
+                      passwordsMatch ? "text-green-600" : "text-red-600"
+                    }`}>
+                      {passwordsMatch ? <Check size={14} /> : <X size={14} />}
+                      {passwordsMatch ? "Matches" : "Doesn't match"}
+                    </span>
+                  )}
+                </div>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    className={`w-full px-4 py-3 border rounded-xl transition-all focus:outline-none focus:ring-2 bg-gray-50 focus:bg-white pr-12 ${
+                      touched.confirmPassword && formData.confirmPassword && !passwordsMatch
+                        ? "border-red-300 focus:ring-red-500"
+                        : touched.confirmPassword && passwordsMatch
+                        ? "border-green-300 focus:ring-green-500"
+                        : "border-gray-300 focus:ring-blue-500"
+                    }`}
+                    placeholder="Confirm your password"
+                    value={formData.confirmPassword}
+                    onChange={(e) => setFormData({ ...formData, confirmPassword: e.target.value })}
+                    onBlur={() => setTouched({ ...touched, confirmPassword: true })}
+                    disabled={loading}
+                    required
+                    minLength={6}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 transition"
+                    disabled={loading}
+                  >
+                    {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                {touched.confirmPassword && formData.confirmPassword && !passwordsMatch && (
+                  <p className="text-xs text-red-600 mt-2 flex items-center gap-1">
+                    <X size={14} /> Passwords do not match
+                  </p>
+                )}
               </div>
 
               {/* Terms & Privacy */}
