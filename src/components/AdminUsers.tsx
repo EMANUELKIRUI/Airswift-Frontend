@@ -163,9 +163,10 @@ const AdminUsers: React.FC<AdminUsersProps> = ({ title = 'Admin Users' }) => {
       console.log('📥 Fetching users from /api/admin/users');
       
       const response = await api.get('/admin/users');
+      console.log("ADMIN USERS:", response.data);
       
       // Handle response structure: { users: [...] }
-      const usersData = response.data.users || response.data;
+      const usersData = response.data.data || [];
       console.log('✅ Users fetched successfully:', usersData.length, 'users');
       
       setUsers(Array.isArray(usersData) ? usersData : []);

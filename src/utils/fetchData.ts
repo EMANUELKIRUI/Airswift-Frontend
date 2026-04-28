@@ -65,6 +65,14 @@ export const fetchData = async <T = any>(
 };
 
 /**
+ * Helper to extract data from API response (assumes { success: true, data: ... } format)
+ * 
+ * Usage:
+ *   const data = getData(response);
+ */
+export const getData = (res: any) => res.data.data;
+
+/**
  * Safe array converter - ensures we always get an array
  * 
  * Usage:

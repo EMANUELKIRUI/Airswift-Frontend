@@ -268,7 +268,7 @@ export default function LoginPage() {
               size="large"
               text="continue_with"
               shape="rectangular"
-              width="100%"
+              width={100}
             />
           </div>
 

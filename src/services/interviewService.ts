@@ -56,6 +56,6 @@ export const interviewService = {
   // Get all interviews for admin
   getAllInterviews: async (page = 1, limit = 20) => {
     const response = await API.get('/admin/interviews', { params: { page, limit } })
-    return response.data
+    return response.data.data
   },
 }

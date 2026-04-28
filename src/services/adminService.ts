@@ -19,13 +19,13 @@ export const adminService = {
 
   getJobs: async (params?: any) => {
     const response = await API.get('/admin/jobs', { params })
-    return response.data
+    return response.data.data
   },
 
   // Categories Management
   getCategories: async () => {
     const response = await API.get('/admin/categories')
-    return response.data
+    return response.data.data
   },
 
   createCategory: async (categoryData: any) => {
@@ -48,12 +48,12 @@ export const adminService = {
     // Try to use the direct endpoint first, fallback to admin endpoint
     try {
       const response = await API.get('/applications/admin', { params })
-      return response.data
+      return response.data.data
     } catch (error: any) {
       // Fallback to admin proxy endpoint
       if (error.response?.status === 404) {
         const response = await API.get('/admin/applications', { params })
-        return response.data
+        return response.data.data
       }
       throw error
     }
@@ -101,7 +101,7 @@ export const adminService = {
 
   getInterviews: async (params?: any) => {
     const response = await API.get('/admin/interviews', { params })
-    return response.data
+    return response.data.data
   },
 
   getInterview: async (id: string) => {
@@ -136,12 +136,12 @@ export const adminService = {
     const response = await API.get('/admin/interviews/calendar', {
       params: { month, year }
     })
-    return response.data
+    return response.data.data
   },
 
   getInterviewStats: async () => {
     const response = await API.get('/admin/interviews/stats')
-    return response.data
+    return response.data.data
   },
 
   // AI CV Analysis
@@ -169,7 +169,7 @@ export const adminService = {
   // Dashboard Stats
   getDashboardStats: async () => {
     const response = await API.get('/admin/dashboard')
-    return response.data
+    return response.data.data
   },
 
   // Job Analytics
@@ -181,7 +181,7 @@ export const adminService = {
   // Settings Management
   getSettings: async () => {
     const response = await API.get('/admin/settings')
-    return response.data
+    return response.data.data
   },
 
   updateSettings: async (settings: any) => {
@@ -192,7 +192,7 @@ export const adminService = {
   // User Management
   getUsers: async (params?: any) => {
     const response = await API.get('/admin/users', { params })
-    return response.data
+    return response.data.data
   },
 
   getUser: async (id: string) => {
@@ -240,7 +240,7 @@ export const adminService = {
   // Payment Management
   getPayments: async (params?: any) => {
     const response = await API.get('/admin/payments', { params })
-    return response.data
+    return response.data.data
   },
 
   updatePaymentStatus: async (id: string, status: string, notes?: string) => {
@@ -257,22 +257,22 @@ export const adminService = {
   // Audit & Reports
   getAuditLogs: async (params?: any) => {
     const response = await API.get('/admin/audit-logs', { params })
-    return response.data
+    return response.data.data
   },
 
   getEmailLogs: async (params?: any) => {
     const response = await API.get('/admin/email-logs', { params })
-    return response.data
+    return response.data.data
   },
 
   getAuditStats: async () => {
     const response = await API.get('/admin/audit/stats')
-    return response.data
+    return response.data.data
   },
 
   getReports: async () => {
     const response = await API.get('/admin/reports')
-    return response.data
+    return response.data.data
   },
 
   updateReportStatus: async (id: string, status: string) => {
@@ -304,7 +304,7 @@ export const adminService = {
   // Email Templates
   getEmailTemplates: async () => {
     const response = await API.get('/admin/email-templates')
-    return response.data
+    return response.data.data
   },
 
   createEmailTemplate: async (templateData: any) => {
@@ -325,12 +325,12 @@ export const adminService = {
   // Analytics
   getApplicationsOverTime: async (days: number = 30) => {
     const response = await API.get('/admin/dashboard/applications-over-time', { params: { days } })
-    return response.data
+    return response.data.data
   },
 
   getCVScoreDistribution: async () => {
     const response = await API.get('/admin/dashboard/cv-score-distribution')
-    return response.data
+    return response.data.data
   },
 
   getJobApplicationDistribution: async () => {

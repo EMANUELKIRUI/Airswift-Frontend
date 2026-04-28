@@ -335,7 +335,7 @@ export default function AdminPaymentsPage() {
             {/* Monthly Revenue Chart */}
             <div className="bg-white rounded-lg p-6 shadow-md">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Monthly Revenue Trend</h3>
-              <ResponsiveContainer width="100%" height={300}>
+              <ResponsiveContainer width={100} height={300}>
                 <LineChart data={stats.monthlyRevenue}>
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -355,7 +355,7 @@ export default function AdminPaymentsPage() {
             {stats.paymentsByType && stats.paymentsByType.length > 0 && (
               <div className="bg-white rounded-lg p-6 shadow-md">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Payments by Type</h3>
-                <ResponsiveContainer width="100%" height={300}>
+                <ResponsiveContainer width={100} height={300}>
                   <PieChart>
                     <Pie
                       data={stats.paymentsByType}

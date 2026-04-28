@@ -53,8 +53,8 @@ export default function AuditLogViewer() {
   const fetchAuditLogs = async () => {
     try {
       const response = await API.get('/admin/audit-logs?limit=50')
-      const logs = ensureArray(response.data?.logs || response.data || [], [])
-      setAuditLogs(logs)
+      console.log("AUDIT LOGS:", response.data);
+      setAuditLogs(response.data.data);
     } catch (error) {
       console.error('Failed to fetch audit logs:', error)
       setAuditLogs([])

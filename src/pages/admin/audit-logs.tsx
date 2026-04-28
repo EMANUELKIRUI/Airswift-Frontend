@@ -47,7 +47,7 @@ export default function AuditLogsPage() {
       console.log('✅ Audit logs fetched:', res.data);
       
       // Handle both direct array and wrapped response
-      const logsData = res.data?.logs || res.data || [];
+      const logsData = res.data.data || [];
       setLogs(Array.isArray(logsData) ? logsData : []);
     } catch (error: any) {
       console.error("❌ Failed to fetch audit logs:", error);

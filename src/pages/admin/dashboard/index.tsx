@@ -65,7 +65,8 @@ export default function AdminDashboard() {
   const fetchDashboardData = useCallback(async () => {
     try {
       const response = await API.get('/admin/dashboard')
-      const data = response.data || {}
+      console.log("DASHBOARD DATA:", response.data);
+      const data = response.data.data || {}
       
       // Parse the single response containing all dashboard data
       setSummary(ensureObject(data.summary))
@@ -290,7 +291,7 @@ export default function AdminDashboard() {
                 <option value="30d">Last 30 days</option>
               </select>
             </div>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width={100} height={300}>
               <LineChart data={safeTrends}>
                 <XAxis dataKey="date" />
                 <YAxis />
@@ -303,7 +304,7 @@ export default function AdminDashboard() {
           {/* Conversion Funnel */}
           <div className="bg-white p-6 rounded-lg shadow-sm border">
             <h3 className="text-lg font-semibold text-gray-900 mb-6">Conversion Funnel</h3>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width={100} height={300}>
               <FunnelChart>
                 <Tooltip />
                 <Funnel
@@ -409,7 +410,7 @@ export default function AdminDashboard() {
                         <td colSpan={5} className="px-4 py-8 text-center text-gray-500">No email logs found.</td>
                       </tr>
                     ) : (
-                      emailLogs.map((log: any) => (
+                      (Array.isArray(emailLogs) ? emailLogs : []).map((log: any) => (
                         <tr key={log._id || log.id} className="border-b border-gray-100 hover:bg-gray-50">
                           <td className="px-4 py-3">{log.recipientEmail || log.email || 'Unknown'}</td>
                           <td className="px-4 py-3">{log.subject || '—'}</td>

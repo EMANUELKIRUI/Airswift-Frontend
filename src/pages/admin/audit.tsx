@@ -40,9 +40,10 @@ const SafeAuditLogs = () => {
       };
 
       const response = await api.get('/admin/audit-logs', { params });
-      const data = response.data || {};
+      console.log("AUDIT LOGS:", response.data);
+      const data = response.data.data || {};
 
-      setLogs(Array.isArray(data.logs) ? data.logs : []);
+      setLogs(data);
       setPagination((prev) => ({
         ...prev,
         page: data.pagination?.page || override.page || prev.page,
@@ -142,7 +143,7 @@ const SafeAuditLogs = () => {
                     </td>
                   </tr>
                 ) : (
-                  logs.map((log) => (
+                  (Array.isArray(logs) ? logs : []).map((log) => (
                     <tr key={log._id || log.id}>
                       <td style={{ borderBottom: '1px solid #eee', padding: '10px' }}>{new Date(log.created_at || log.createdAt).toLocaleString()}</td>
                       <td style={{ borderBottom: '1px solid #eee', padding: '10px' }}>

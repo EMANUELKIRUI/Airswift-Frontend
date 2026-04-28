@@ -171,12 +171,13 @@ const AdminApplications: React.FC = () => {
       try {
         console.log('🔄 Trying /applications/admin endpoint...');
         response = await api.get('/admin/applications');
-        applicationsData = response.data.data || response.data.applications || response.data || [];
+        console.log("ADMIN APPLICATIONS:", response.data);
+        applicationsData = response.data.data || [];
       } catch (err1) {
         console.warn('⚠️ /admin/applications failed, trying fallback...');
         try {
           response = await api.get('/applications');
-          applicationsData = Array.isArray(response.data) ? response.data : response.data.data || [];
+          applicationsData = response.data.data || [];
         } catch (err2) {
           throw err1;
         }
