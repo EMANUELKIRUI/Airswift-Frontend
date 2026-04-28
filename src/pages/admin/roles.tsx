@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 import API from '@/services/apiClient'
 import RoleEditModal from '@/components/RoleEditModal'
+import { ensureArray } from '@/utils/fetchData'
 
 export default function RolesPage() {
   const [roles, setRoles] = useState<any[]>([])
@@ -24,10 +25,14 @@ export default function RolesPage() {
     try {
       const rolesRes = await API.get('/roles')
       const permsRes = await API.get('/permissions')
-      setRoles(rolesRes.data)
-      setPermissions(permsRes.data)
+      // Handle both res.data.data and res.data formats
+      setRoles(ensureArray(rolesRes.data?.data || rolesRes.data, []))
+      setPermissions(ensureArray(permsRes.data?.data || permsRes.data, []))
     } catch (e) {
+      console.error('Error loading data:', e)
       toast.error('Failed to load data')
+      setRoles([])
+      setPermissions([])
     }
     setLoading(false)
   }

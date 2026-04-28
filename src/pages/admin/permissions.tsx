@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 import API from "@/services/apiClient";
+import { ensureArray } from "@/utils/fetchData";
 
 interface Permission {
   id: string;
@@ -47,8 +48,9 @@ export default function PermissionsPanel() {
           API.get("/admin/permissions")
         ]);
 
-        setRoles(rolesRes.data);
-        setPermissions(permsRes.data);
+        // Handle both res.data.data and res.data formats
+        setRoles(ensureArray(rolesRes.data?.data || rolesRes.data, []));
+        setPermissions(ensureArray(permsRes.data?.data || permsRes.data, []));
       } catch (error) {
         console.error("Failed to load permissions data:", error);
       } finally {
@@ -69,7 +71,7 @@ export default function PermissionsPanel() {
 
       // Refresh roles
       const rolesRes = await API.get("/admin/roles");
-      setRoles(rolesRes.data);
+      setRoles(ensureArray(rolesRes.data?.data || rolesRes.data, []));
     } catch (error) {
       console.error("Failed to update permission:", error);
     }

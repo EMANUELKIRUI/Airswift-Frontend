@@ -4,6 +4,7 @@ import { useNotification } from "@/context/NotificationContext";
 import StatusTimeline from "@/components/StatusTimeline";
 import API from '@/services/apiClient';
 import { useAuth } from '@/context/AuthContext';
+import { ensureArray } from '@/utils/fetchData';
 
 export default function MyApplications() {
   const [apps, setApps] = useState([]);
@@ -13,8 +14,15 @@ export default function MyApplications() {
 
   useEffect(() => {
     const fetchApps = async () => {
-      const res = await API.get("/applications/my");
-      setApps(res.data);
+      try {
+        const res = await API.get("/applications/my");
+        // Handle both res.data.data and res.data formats
+        const appsData = ensureArray(res.data?.data || res.data, []);
+        setApps(appsData);
+      } catch (error) {
+        console.error('Failed to fetch applications:', error);
+        setApps([]);
+      }
     };
 
     fetchApps();
