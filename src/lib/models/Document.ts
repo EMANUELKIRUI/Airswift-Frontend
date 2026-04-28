@@ -82,6 +82,6 @@ const documentSchema = new Schema<IDocument>(
 )
 
 // Prevent model recompilation in Next.js dev mode
-const Document = mongoose.models.Document || mongoose.model<IDocument>('Document', documentSchema)
+const DocumentModel = mongoose.models.Document || mongoose.model<IDocument>('Document', documentSchema)
 
-export default Document
+export default DocumentModel

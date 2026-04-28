@@ -120,7 +120,7 @@ export const InterviewScheduler: React.FC<InterviewSchedulerProps> = ({
 
       // Reset form
       setFormData({
-        scheduled_at: format(addDays(new Date(), 1), "yyyy-MM-dd'T'HH:mm"),
+        scheduled_at: getDefaultDate(),
         type: 'video',
         mode: 'online',
         notes: '',
@@ -199,7 +199,7 @@ export const InterviewScheduler: React.FC<InterviewSchedulerProps> = ({
             type="datetime-local"
             name="scheduled_at"
             required
-            min={format(new Date(), "yyyy-MM-dd'T'HH:mm")}
+            min={formatDateForInput(new Date())}
             value={formData.scheduled_at}
             onChange={(e) => setFormData({ ...formData, scheduled_at: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded"

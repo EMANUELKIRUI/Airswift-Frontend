@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
 import { getSocket } from '@/lib/socket';
-import '../styles/AdminComponents.css';
 
 interface Application {
   _id: string;

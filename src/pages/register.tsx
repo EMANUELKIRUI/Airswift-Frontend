@@ -359,58 +359,6 @@ export default function Register() {
       </div>
     );
   }
-                  </Link>{" "}
-                  and{" "}
-                  <Link href="/privacy" className="text-blue-600 hover:text-blue-700 font-semibold">
-                    Privacy Policy
-                  </Link>
-                </p>
-              </div>
-
-              {/* Submit Button */}
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 rounded-lg hover:from-blue-700 hover:to-blue-800 transition disabled:opacity-70 disabled:cursor-not-allowed shadow-md hover:shadow-lg"
-              >
-                {loading ? (
-                  <span className="flex items-center justify-center gap-2">
-                    <span className="inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                    Creating Account...
-                  </span>
-                ) : (
-                  "Create Account"
-                )}
-              </Button>
-            </form>
-
-            {/* Login Link */}
-            <p className="text-center text-gray-700 text-sm mt-6">
-              Already have an account?{" "}
-              <Link href="/login" className="text-blue-600 hover:text-blue-700 font-semibold transition">
-                Sign in
-              </Link>
-            </p>
-
-            {/* Security Note */}
-            <div className="text-xs text-gray-500 text-center mt-6 pt-6 border-t border-gray-200">
-              <p>
-                🔒 Your password is securely encrypted. We never share your data.
-              </p>
-            </div>
-          </div>
-
-          {/* Support Text */}
-          <p className="text-center text-gray-600 text-xs mt-4 md:mt-6">
-            Need help?{" "}
-            <Link href="/contact" className="text-blue-600 hover:text-blue-700 font-medium">
-              Contact support
-            </Link>
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   // Success screen - prompt to verify email
   return (

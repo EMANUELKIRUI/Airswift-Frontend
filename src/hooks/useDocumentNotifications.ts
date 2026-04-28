@@ -47,7 +47,7 @@ export const useDocumentNotifications = (options: UseDocumentNotificationsOption
       'pending': '📤 Document pending review',
     }
     
-    toast.info(statusMessages[data.status] || data.message)
+    toast(statusMessages[data.status] || data.message)
     onStatusChanged?.(data)
   }, [onStatusChanged])
 
