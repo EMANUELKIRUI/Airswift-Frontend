@@ -87,7 +87,7 @@ const RecentActivity: React.FC<RecentActivityProps> = ({
         </div>
       ) : (
         <div className="space-y-3">
-          {recentActivities.map(activity => (
+          {ensureArray(recentActivities, []).map(activity => (
             <div
               key={activity._id}
               className={`p-4 rounded-lg transition-all hover:shadow-md ${getActivityColor(activity.status)}`}

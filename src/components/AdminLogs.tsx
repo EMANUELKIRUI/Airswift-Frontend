@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/context/AuthContext'
 import API from '@/services/apiClient'
+import { ensureArray } from '@/utils/fetchData'
 
 interface AuditLog {
   _id: string
@@ -190,7 +191,7 @@ export const AdminLogs = ({ limit = 20, compact = false }: AdminLogsProps) => {
 
           {!loading && !error && logs.length > 0 && (
             <>
-              {logs.map(log => (
+              {ensureArray(logs, []).map(log => (
                 <div key={log._id} className="bg-gray-50 border border-gray-200 rounded p-3 hover:shadow-md transition">
                   <div className="flex items-center justify-between">
                     <div>
@@ -323,7 +324,7 @@ export const AdminLogs = ({ limit = 20, compact = false }: AdminLogsProps) => {
                     </td>
                   </tr>
                 ) : (
-                  logs.map((log) => (
+                  ensureArray(logs, []).map((log) => (
                     <tr key={log._id} className="hover:bg-gray-50">
                       <td className="border border-gray-200 px-4 py-3">
                         {new Date(log.created_at).toLocaleString()}

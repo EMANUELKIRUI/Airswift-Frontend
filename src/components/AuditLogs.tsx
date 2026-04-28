@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import apiClient from '../services/apiClient';
+import { ensureArray } from '@/utils/fetchData';
 
 function AuditLogs() {
   const [logs, setLogs] = useState([]);
@@ -420,7 +421,7 @@ function AuditLogs() {
                 </tr>
               </thead>
               <tbody>
-                {currentLogs.map((log, index) => (
+                {ensureArray(currentLogs, []).map((log, index) => (
                   <tr key={log._id || index} className={`log-row ${getActionBadgeClass(log.action)}`}>
                     <td className="timestamp">
                       {new Date(log.createdAt).toLocaleString()}

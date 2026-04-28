@@ -14,6 +14,7 @@ import { adminService } from '@/services/adminService'
 import AdminPayments from '@/components/AdminPayments'
 import { AdminLogs } from '@/components/AdminLogs'
 import Loader from '@/components/Loader'
+import { ensureArray, ensureObject } from '@/utils/fetchData'
 
 const AdminRealtimeMap = dynamic(() => import('@/components/AdminRealtimeMap'), {
   ssr: false,
@@ -67,11 +68,11 @@ export default function AdminDashboard() {
       const data = response.data || {}
       
       // Parse the single response containing all dashboard data
-      setSummary(data.summary || {})
-      setFunnel(data.funnel || [])
-      setActivities(data.activities || [])
-      setHealth(data.health || {})
-      setTrends(data.trends || [])
+      setSummary(ensureObject(data.summary))
+      setFunnel(ensureArray(data.funnel, []))
+      setActivities(ensureArray(data.activities, []))
+      setHealth(ensureObject(data.health))
+      setTrends(ensureArray(data.trends, []))
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
       // Set safe defaults to prevent crashes

@@ -15,6 +15,7 @@ import { cvService, CVScore } from '@/services/cvService'
 import { useSocket } from '@/hooks/useSocket'
 import useApplicationPolling from '@/hooks/useApplicationPolling'
 import { formatDate } from '@/utils/helpers'
+import { ensureArray } from '@/utils/fetchData'
 import { Eye, Mail, Send, FileText, BarChart3, Trash2 } from 'lucide-react'
 
 // Force server-side rendering for admin pages
@@ -507,7 +508,7 @@ const AdminApplicationsPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {filteredApplications.map(app => (
+                    {ensureArray(filteredApplications, []).map(app => (
                       <tr key={app._id} className="hover:bg-gray-50 transition">
                         <td className="px-6 py-4 text-sm">
                           <p className="font-medium text-gray-900">{app.fullName}</p>

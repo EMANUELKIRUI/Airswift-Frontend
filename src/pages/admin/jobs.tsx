@@ -14,6 +14,7 @@ import Textarea from '@/components/Textarea'
 import { adminService } from '@/services/adminService'
 import { jobService } from '@/services/jobService'
 import { formatDate } from '@/utils/helpers'
+import { ensureArray } from '@/utils/fetchData'
 import { Edit2, Trash2, Plus, Search, Eye } from 'lucide-react'
 
 // Force server-side rendering for admin pages
@@ -298,7 +299,7 @@ const AdminJobsPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {filteredJobs.map((job) => (
+                {ensureArray(filteredJobs, []).map((job) => (
                   <tr key={job._id} className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
                       {job.title}

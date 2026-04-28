@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import API from '@/services/apiClient'
 import { motion } from 'framer-motion'
+import { ensureArray } from '@/utils/fetchData'
 
 interface Document {
   _id: string
@@ -82,16 +83,10 @@ export default function EnhancedDashboard() {
         API.get('/notifications').catch(() => ({ data: [] })),
       ])
 
-      const allDocuments = Array.isArray(docsRes.data) ? docsRes.data : docsRes.data?.documents || []
-      const allApplications = Array.isArray(applicationsRes.data)
-        ? applicationsRes.data
-        : applicationsRes.data?.applications || []
-      const allInterviews = Array.isArray(interviewsRes.data)
-        ? interviewsRes.data
-        : interviewsRes.data?.interviews || []
-      const allNotifications = Array.isArray(notificationsRes.data)
-        ? notificationsRes.data
-        : notificationsRes.data?.notifications || []
+      const allDocuments = ensureArray(docsRes.data || [])
+      const allApplications = ensureArray(applicationsRes.data || [])
+      const allInterviews = ensureArray(interviewsRes.data || [])
+      const allNotifications = ensureArray(notificationsRes.data || [])
 
       setDocuments(allDocuments)
       setApplications(allApplications)

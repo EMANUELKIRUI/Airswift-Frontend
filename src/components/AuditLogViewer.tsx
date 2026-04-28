@@ -5,6 +5,7 @@ import { useAuth } from '@/context/AuthContext'
 import { usePermissions } from '@/hooks/usePermissions'
 import { getSocket } from '@/services/socket'
 import API from '@/services/apiClient'
+import { ensureArray } from '@/utils/fetchData'
 
 interface AuditLog {
   _id: string
@@ -52,11 +53,11 @@ export default function AuditLogViewer() {
   const fetchAuditLogs = async () => {
     try {
       const response = await API.get('/admin/audit-logs?limit=50')
-      if (response.data && response.data.logs) {
-        setAuditLogs(response.data.logs)
-      }
+      const logs = ensureArray(response.data?.logs || response.data || [], [])
+      setAuditLogs(logs)
     } catch (error) {
       console.error('Failed to fetch audit logs:', error)
+      setAuditLogs([])
     } finally {
       setIsLoading(false)
     }
@@ -117,7 +118,7 @@ export default function AuditLogViewer() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {auditLogs.map((log) => (
+                {((Array.isArray(auditLogs) ? auditLogs : [])).map((log) => (
                   <tr key={log._id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {new Date(log.createdAt).toLocaleString()}

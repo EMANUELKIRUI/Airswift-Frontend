@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
 import { getSocket } from '@/lib/socket';
+import { ensureArray } from '@/utils/fetchData';
 
 interface Application {
   _id: string;
@@ -182,7 +183,7 @@ const AdminApplications: React.FC = () => {
       }
 
       console.log('✅ Applications fetched:', applicationsData.length);
-      setApplications(Array.isArray(applicationsData) ? applicationsData : []);
+      setApplications(ensureArray(applicationsData, []));
     } catch (err: any) {
       console.error('❌ Error fetching applications:', err);
       const errorMessage = err.response?.data?.message || err.message || 'Failed to fetch applications';
@@ -562,7 +563,7 @@ const AdminApplications: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {currentApplications.map((app) => (
+                  {ensureArray(currentApplications, []).map((app) => (
                     <tr key={app._id} className={`status-${app.status?.toLowerCase()}`}>
                       <td className="name-cell">
                         <span className="applicant-name">{app.userId?.name || 'N/A'}</span>

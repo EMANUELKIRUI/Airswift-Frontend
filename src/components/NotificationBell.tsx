@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { Bell } from 'lucide-react'
 import { useNotification } from '@/context/NotificationContext'
+import { ensureArray } from '@/utils/fetchData'
 
 export default function NotificationBell() {
   const { notifications, removeNotification, clearNotifications } = useNotification()
   const [showDropdown, setShowDropdown] = useState(false)
 
-  const unreadCount = notifications.filter(n => n.type === 'info' || n.type === 'warning').length
+  const safeNotifications = ensureArray(notifications || [], [])
+  const unreadCount = safeNotifications.filter(n => n.type === 'info' || n.type === 'warning').length
 
   return (
     <div className="relative">
@@ -27,7 +29,7 @@ export default function NotificationBell() {
           <div className="p-4 border-b">
             <div className="flex items-center justify-between">
               <h3 className="text-lg font-semibold">Notifications</h3>
-              {notifications.length > 0 && (
+              {safeNotifications.length > 0 && (
                 <button
                   onClick={clearNotifications}
                   className="text-sm text-blue-600 hover:text-blue-800"
@@ -39,12 +41,12 @@ export default function NotificationBell() {
           </div>
 
           <div className="max-h-96 overflow-y-auto">
-            {notifications.length === 0 ? (
+            {safeNotifications.length === 0 ? (
               <div className="p-4 text-center text-gray-500">
                 No notifications
               </div>
             ) : (
-              notifications.map((notification) => (
+              safeNotifications.map((notification) => (
                 <div
                   key={notification.id}
                   className={`p-4 border-b hover:bg-gray-50 ${
