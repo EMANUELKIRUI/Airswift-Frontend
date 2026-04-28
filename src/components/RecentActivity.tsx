@@ -1,6 +1,7 @@
 import React from 'react'
 import { Activity, FileText, CheckCircle, AlertCircle, XCircle, Clock, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
+import { ensureArray } from '@/utils/helpers'
 
 interface ActivityItem {
   _id: string

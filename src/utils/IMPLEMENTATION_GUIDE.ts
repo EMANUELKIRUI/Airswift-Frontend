@@ -6,6 +6,7 @@
  * structures not being validated before .map() calls.
  */
 
+import { useState, useEffect } from 'react'
 import { ensureArray, fetchData, ensureObject, getSafeArray } from '@/utils/fetchData'
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -43,6 +44,7 @@ import { ensureArray, fetchData, ensureObject, getSafeArray } from '@/utils/fetc
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 // BEFORE: Unsafe pattern that crashes
+/*
 export const unsafePattern = () => {
   const [notifications, setNotifications] = useState([])
   
@@ -54,12 +56,14 @@ export const unsafePattern = () => {
   
   return (
     <ul>
-      {notifications.map(n => n.message)} {/* 💥 CRASH: notifications might not be array */}
+      {notifications.map(n => n.message)} 
     </ul>
   )
 }
+*/
 
 // AFTER: Safe pattern that never crashes
+/*
 export const safePattern = () => {
   const [notifications, setNotifications] = useState<any[]>([])
   
@@ -74,13 +78,13 @@ export const safePattern = () => {
   
   return (
     <ul>
-      {/* ✅ GUARANTEED array: ensureArray returns [] if data is invalid */}
       {ensureArray(notifications, []).map(n => (
         <li key={n.id}>{n.message}</li>
       ))}
     </ul>
   )
 }
+*/
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🔍 DEBUGGING THE ERROR
@@ -175,6 +179,7 @@ export async function exampleEnsureArray() {
  * - Array/null/invalid → returns {} ✓
  * - Provides type-safe property access ✓
  */
+/*
 export async function exampleEnsureObject() {
   const data = await fetchData('/admin/dashboard')
   
@@ -189,6 +194,7 @@ export async function exampleEnsureObject() {
  * 
  * Useful when you know the key but need flexibility
  */
+/*
 export async function exampleGetSafeArray() {
   const response = await API.get('/api/users')
   
@@ -199,6 +205,7 @@ export async function exampleGetSafeArray() {
   
   users1.map(user => user.name) // ✅ Always works
 }
+*/
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // 🏗️ ARCHITECTURE CHANGES
@@ -276,6 +283,7 @@ Files to verify:
 // 🧪 TESTING EXAMPLES
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
+/*
 import { render, screen, waitFor } from '@testing-library/react'
 
 // Test to verify ensureArray handles all edge cases
@@ -311,6 +319,7 @@ describe('Component safety', () => {
     expect(() => safeArray.map(item => item)).not.toThrow()
   })
 })
+*/
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 //  📚 COMMON PATTERNS REFERENCE
