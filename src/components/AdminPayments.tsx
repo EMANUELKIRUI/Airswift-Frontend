@@ -88,48 +88,56 @@ export default function AdminPayments() {
           </thead>
 
           <tbody>
-            {payments.map((p) => (
-              <tr key={p._id} className="border-t hover:bg-gray-50">
-                <td className="p-3">
-                  <div>{p.user_id?.name}</div>
-                  <div className="text-sm text-gray-500">
-                    {p.user_id?.email}
-                  </div>
-                </td>
+            {Array.isArray(payments) && payments.length > 0 ? (
+              payments.map((p) => (
+                <tr key={p._id} className="border-t hover:bg-gray-50">
+                  <td className="p-3">
+                    <div>{p.user_id?.name || 'N/A'}</div>
+                    <div className="text-sm text-gray-500">
+                      {p.user_id?.email || 'N/A'}
+                    </div>
+                  </td>
 
-                <td className="p-3">{p.amount} {p.currency}</td>
+                  <td className="p-3">{p.amount} {p.currency}</td>
 
-                <td className="p-3">{p.provider}</td>
+                  <td className="p-3">{p.provider}</td>
 
-                <td className={`p-3 ${getStatusColor(p.status)}`}>
-                  {p.status}
-                </td>
+                  <td className={`p-3 ${getStatusColor(p.status)}`}>
+                    {p.status}
+                  </td>
 
-                <td className="p-3">
-                  {new Date(p.created_at).toLocaleString()}
-                </td>
+                  <td className="p-3">
+                    {new Date(p.created_at).toLocaleString()}
+                  </td>
 
-                <td className="p-3 space-x-2">
-                  {p.status === 'pending' && (
-                    <>
-                      <button
-                        onClick={() => reconcile(p._id, 'completed')}
-                        className="bg-green-500 text-white px-3 py-1 rounded"
-                      >
-                        Mark Paid
-                      </button>
+                  <td className="p-3 space-x-2">
+                    {p.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => reconcile(p._id, 'completed')}
+                          className="bg-green-500 text-white px-3 py-1 rounded"
+                        >
+                          Mark Paid
+                        </button>
 
-                      <button
-                        onClick={() => reconcile(p._id, 'failed')}
-                        className="bg-red-500 text-white px-3 py-1 rounded"
-                      >
-                        Mark Failed
-                      </button>
-                    </>
-                  )}
+                        <button
+                          onClick={() => reconcile(p._id, 'failed')}
+                          className="bg-red-500 text-white px-3 py-1 rounded"
+                        >
+                          Mark Failed
+                        </button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={6} className="p-6 text-center text-gray-500">
+                  {Array.isArray(payments) ? 'No payments found' : 'Error loading payments'}
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
 
