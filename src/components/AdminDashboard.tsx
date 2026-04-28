@@ -71,6 +71,11 @@ export default function AdminDashboard() {
     const handleNewApplication = (data: Application) => {
       console.log('🔥 New application received:', data)
       setApplications((prev) => {
+        // Ensure prev is an array
+        if (!Array.isArray(prev)) {
+          console.warn('⚠️ Previous applications state is not an array:', typeof prev)
+          return [data]
+        }
         // Avoid duplicates
         if (prev.find((app) => app._id === data._id)) return prev
         return [data, ...prev]
@@ -80,11 +85,15 @@ export default function AdminDashboard() {
     // 🟡 Listen for application status updates
     const handleApplicationStatusUpdate = (updatedApp: Application) => {
       console.log('🔥 Application status updated:', updatedApp)
-      setApplications((prev) =>
-        prev.map((app) =>
+      setApplications((prev) => {
+        if (!Array.isArray(prev)) {
+          console.warn('⚠️ Previous applications state is not an array:', typeof prev)
+          return [updatedApp]
+        }
+        return prev.map((app) =>
           app._id === updatedApp._id ? updatedApp : app
         )
-      )
+      })
     }
 
     // 🟡 Listen for new jobs created
@@ -92,6 +101,10 @@ export default function AdminDashboard() {
       if (job.status === 'pending') {
         console.log('🔥 New pending job:', job)
         setPendingJobs((prev) => {
+          if (!Array.isArray(prev)) {
+            console.warn('⚠️ Previous jobs state is not an array:', typeof prev)
+            return [job]
+          }
           if (prev.find((j) => j._id === job._id)) return prev
           return [job, ...prev]
         })
@@ -101,11 +114,15 @@ export default function AdminDashboard() {
     // 🟡 Listen for job updates
     const handleJobUpdated = (updatedJob: Job) => {
       console.log('🔥 Job updated:', updatedJob)
-      setPendingJobs((prev) =>
-        prev
+      setPendingJobs((prev) => {
+        if (!Array.isArray(prev)) {
+          console.warn('⚠️ Previous jobs state is not an array:', typeof prev)
+          return updatedJob.status === 'pending' ? [updatedJob] : []
+        }
+        return prev
           .map((job) => (job._id === updatedJob._id ? updatedJob : job))
           .filter((job) => job.status === 'pending') // Remove non-pending jobs
-      )
+      })
     }
 
     // Register event listeners
@@ -250,13 +267,13 @@ export default function AdminDashboard() {
               Pending Jobs
             </h2>
             <span className="bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-sm font-medium">
-              {pendingJobs.length} pending
+              {Array.isArray(pendingJobs) ? pendingJobs.length : 0} pending
             </span>
           </div>
 
-          {pendingJobs.length === 0 ? (
+          {pendingJobs && Array.isArray(pendingJobs) && pendingJobs.length === 0 ? (
             <p className="text-gray-500">No pending jobs</p>
-          ) : (
+          ) : pendingJobs && Array.isArray(pendingJobs) ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {pendingJobs.map((job) => (
                 <div
@@ -277,6 +294,8 @@ export default function AdminDashboard() {
                 </div>
               ))}
             </div>
+          ) : (
+            <p className="text-gray-500">Error loading jobs</p>
           )}
         </div>
       </div>
@@ -297,123 +316,133 @@ export default function AdminDashboard() {
           </thead>
 
           <tbody>
-            {applications.map((app) => (
-              <tr key={app._id} className="border-t hover:bg-gray-50">
-                <td className="p-4">
-                  <div className="font-medium">{app.user_id?.name}</div>
-                  <div className="text-sm text-gray-500">{app.user_id?.email}</div>
-                </td>
+            {applications && Array.isArray(applications) && applications.length > 0 ? (
+              applications.map((app) => (
+                <tr key={app._id} className="border-t hover:bg-gray-50">
+                  <td className="p-4">
+                    <div className="font-medium">{app.user_id?.name || 'N/A'}</div>
+                    <div className="text-sm text-gray-500">{app.user_id?.email || 'N/A'}</div>
+                  </td>
 
-                <td className="p-4">{app.job_id?.title}</td>
+                  <td className="p-4">{app.job_id?.title || 'N/A'}</td>
 
-                <td className="p-4 space-y-2">
-                  {app.cvUrl && (
-                    <div className="space-x-2">
-                      <a
-                        href={app.cvUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 underline text-sm"
-                      >
-                        View CV
-                      </a>
-                      <a
-                        href={app.cvUrl}
-                        download
-                        className="text-green-600 hover:text-green-800 underline text-sm"
-                      >
-                        Download CV
-                      </a>
-                    </div>
-                  )}
-                  {app.passportUrl && (
-                    <div className="space-x-2">
-                      <a
-                        href={app.passportUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-blue-600 hover:text-blue-800 underline text-sm"
-                      >
-                        View Passport
-                      </a>
-                      <a
-                        href={app.passportUrl}
-                        download
-                        className="text-green-600 hover:text-green-800 underline text-sm"
-                      >
-                        Download Passport
-                      </a>
-                    </div>
-                  )}
-                  {!app.cvUrl && !app.passportUrl && (
-                    <span className="text-gray-400 text-sm">No documents</span>
-                  )}
-                </td>
+                  <td className="p-4 space-y-2">
+                    {app.cvUrl && (
+                      <div className="space-x-2">
+                        <a
+                          href={app.cvUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline text-sm"
+                        >
+                          View CV
+                        </a>
+                        <a
+                          href={app.cvUrl}
+                          download
+                          className="text-green-600 hover:text-green-800 underline text-sm"
+                        >
+                          Download CV
+                        </a>
+                      </div>
+                    )}
+                    {app.passportUrl && (
+                      <div className="space-x-2">
+                        <a
+                          href={app.passportUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-600 hover:text-blue-800 underline text-sm"
+                        >
+                          View Passport
+                        </a>
+                        <a
+                          href={app.passportUrl}
+                          download
+                          className="text-green-600 hover:text-green-800 underline text-sm"
+                        >
+                          Download Passport
+                        </a>
+                      </div>
+                    )}
+                    {!app.cvUrl && !app.passportUrl && (
+                      <span className="text-gray-400 text-sm">No documents</span>
+                    )}
+                  </td>
 
-                <td className="p-4">
-                  <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(app.status)}`}>
-                    {app.status}
-                  </span>
-                </td>
+                  <td className="p-4">
+                    <span className={`px-3 py-1 rounded-full text-sm ${getStatusColor(app.status)}`}>
+                      {app.status}
+                    </span>
+                  </td>
 
-                <td className="p-4">
-                  <textarea
-                    value={notes[app._id] || ""}
-                    onChange={(e) => {
-                      const newNotes = { ...notes, [app._id]: e.target.value }
-                      setNotes(newNotes)
-                    }}
-                    onBlur={(e) => updateNotes(app._id, e.target.value)}
-                    placeholder="Add notes..."
-                    className="w-full border rounded px-2 py-1 text-sm resize-none"
-                    rows={2}
-                  />
-                </td>
+                  <td className="p-4">
+                    <textarea
+                      value={notes[app._id] || ""}
+                      onChange={(e) => {
+                        const newNotes = { ...notes, [app._id]: e.target.value }
+                        setNotes(newNotes)
+                      }}
+                      onBlur={(e) => updateNotes(app._id, e.target.value)}
+                      placeholder="Add notes..."
+                      className="w-full border rounded px-2 py-1 text-sm resize-none"
+                      rows={2}
+                    />
+                  </td>
 
-                <td className="p-4">
-                  {new Date(app.created_at || app.createdAt || '').toLocaleDateString()}
-                </td>
+                  <td className="p-4">
+                    {new Date(app.created_at || app.createdAt || '').toLocaleDateString()}
+                  </td>
 
-                <td className="p-4 space-x-2">
-                  {app.status === 'pending' && (
-                    <>
-                      <button
-                        onClick={() => updateStatus(app._id, 'shortlisted')}
-                        className="bg-blue-500 text-white px-2 py-1 rounded text-sm"
-                      >
-                        Shortlist
-                      </button>
+                  <td className="p-4 space-x-2">
+                    {app.status === 'pending' && (
+                      <>
+                        <button
+                          onClick={() => updateStatus(app._id, 'shortlisted')}
+                          className="bg-blue-500 text-white px-2 py-1 rounded text-sm"
+                        >
+                          Shortlist
+                        </button>
 
-                      <button
-                        onClick={() => updateStatus(app._id, 'accepted')}
-                        className="bg-green-500 text-white px-2 py-1 rounded text-sm"
-                      >
-                        Accept
-                      </button>
+                        <button
+                          onClick={() => updateStatus(app._id, 'accepted')}
+                          className="bg-green-500 text-white px-2 py-1 rounded text-sm"
+                        >
+                          Accept
+                        </button>
 
-                      <button
-                        onClick={() => updateStatus(app._id, 'rejected')}
-                        className="bg-red-500 text-white px-2 py-1 rounded text-sm"
-                      >
-                        Reject
-                      </button>
-                    </>
-                  )}
+                        <button
+                          onClick={() => updateStatus(app._id, 'rejected')}
+                          className="bg-red-500 text-white px-2 py-1 rounded text-sm"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
 
-                  <button
-                    onClick={() => openModal(app.user_id?._id)}
-                    className="bg-purple-500 text-white px-2 py-1 rounded text-sm"
-                  >
-                    Interview
-                  </button>
+                    <button
+                      onClick={() => openModal(app.user_id?._id || '')}
+                      className="bg-purple-500 text-white px-2 py-1 rounded text-sm"
+                    >
+                      Interview
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={7} className="p-6 text-center text-gray-500">
+                  {!applications || !Array.isArray(applications) ? 'Error loading applications' : 'No applications found'}
                 </td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
 
-        {applications.length === 0 && (
-          <div className="p-6 text-center text-gray-500">No applications found</div>
+        {(!applications || !Array.isArray(applications) || applications.length === 0) && (
+          <div className="p-6 text-center text-gray-500">
+            {!applications || !Array.isArray(applications) ? 'Error loading applications' : 'No applications found'}
+          </div>
         )}
       </div>
 
