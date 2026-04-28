@@ -44,3 +44,14 @@ export const getInitials = (name: string): string => {
     .join('')
     .toUpperCase()
 }
+
+/**
+ * Ensures a value is an array. Returns the value if it's already an array,
+ * otherwise returns the provided fallback (default empty array).
+ * @example ensureArray(null, []) => []
+ * @example ensureArray([1, 2], []) => [1, 2]
+ */
+export const ensureArray = <T,>(value: T | T[] | null | undefined, fallback: T[] = []): T[] => {
+  if (Array.isArray(value)) return value
+  return fallback
+}
