@@ -9,6 +9,7 @@ export interface IApplication extends Document {
   passport_path: string
   cv_path: string
   status: 'pending' | 'shortlisted' | 'accepted' | 'rejected'
+  stage: 'documents' | 'interview' | 'final'
   notes?: string
   created_at: Date
   updated_at: Date
@@ -46,6 +47,12 @@ const applicationSchema = new Schema<IApplication>(
       type: String,
       enum: ['pending', 'shortlisted', 'accepted', 'rejected'],
       default: 'pending',
+    },
+    stage: {
+      type: String,
+      enum: ['documents', 'interview', 'final'],
+      default: 'documents',
+      index: true,
     },
     notes: {
       type: String,
