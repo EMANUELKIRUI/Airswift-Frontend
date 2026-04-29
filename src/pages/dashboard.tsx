@@ -13,10 +13,8 @@ export default function Dashboard() {
         router.replace('/login')
       } else if (user?.role?.toLowerCase() === 'admin') {
         router.replace('/admin/dashboard')
-      } else if (user?.hasSubmittedApplication) {
-        router.replace('/job-seeker/dashboard')
       } else {
-        router.replace('/apply')
+        router.replace('/job-seeker/dashboard')
       }
     }
   }, [isAuthenticated, user, isLoading, router])
