@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import { useAuth } from '@/context/AuthContext'
 import { CheckCircle, XCircle, Clock, FileText, Download, Send } from 'lucide-react'
 import toast from 'react-hot-toast'
+import AdminLayout from '@/layouts/AdminLayout'
 
 interface AdminDocument {
   _id: string
@@ -28,20 +29,20 @@ export default function AdminDocumentsReview() {
   const [rejectionReason, setRejectionReason] = useState<string>('')
   const [selectedDocId, setSelectedDocId] = useState<string | null>(null)
 
-  // 🔒 Admin Guard
-  useEffect(() => {
-    if (isLoading) return
+  // 🔒 Admin Guard - Now handled by AdminLayout
+  // useEffect(() => {
+  //   if (isLoading) return
 
-    if (!user) {
-      router.push('/login')
-      return
-    }
+  //   if (!user) {
+  //     router.push('/login')
+  //     return
+  //   }
 
-    if (user?.role?.toLowerCase() !== 'admin') {
-      router.push('/unauthorized')
-      return
-    }
-  }, [user, isLoading, router])
+  //   if (user?.role?.toLowerCase() !== 'admin') {
+  //     router.push('/unauthorized')
+  //     return
+  //   }
+  // }, [user, isLoading, router])
 
   // Fetch all users' documents
   const fetchDocuments = useCallback(async () => {
@@ -152,14 +153,16 @@ export default function AdminDocumentsReview() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-lg text-gray-600">Loading...</div>
-      </div>
+      <AdminLayout>
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-lg text-gray-600">Loading...</div>
+        </div>
+      </AdminLayout>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+    <AdminLayout>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -315,7 +318,7 @@ export default function AdminDocumentsReview() {
           </div>
         )}
       </div>
-    </div>
+    </AdminLayout>
   )
 }
 

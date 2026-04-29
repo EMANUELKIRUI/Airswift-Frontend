@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import DashboardLayout from '@/layouts/DashboardLayout'
+import AdminLayout from '@/layouts/AdminLayout'
 import { useAuth } from '@/context/AuthContext'
 import { useProtectedRoute } from '@/hooks/useProtectedRoute'
 import { useNotification } from '@/context/NotificationContext'
@@ -42,15 +42,7 @@ const AdminMessagesPage = () => {
   const [replyText, setReplyText] = useState('')
   const [sending, setSending] = useState(false)
 
-  const sidebarItems = [
-    { label: '📊 Dashboard', href: '/admin/dashboard' },
-    { label: '👥 Users', href: '/admin/users' },
-    { label: ' Applications', href: '/admin/applications' },
-    { label: '📞 Interviews', href: '/admin/interviews' },
-    { label: '💰 Payments', href: '/admin/payments' },
-    { label: '📋 Audit Logs', href: '/admin/audit' },
-    { label: '⚙️ Settings', href: '/admin/settings' },
-  ]
+  // Sidebar items removed - now handled by AdminLayout
 
   useEffect(() => {
     if (!authLoading && (!user || user.role !== 'admin')) {
@@ -152,7 +144,7 @@ const AdminMessagesPage = () => {
   if (!isAuthorized) return null
 
   return (
-    <DashboardLayout sidebarItems={sidebarItems}>
+    <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div>
@@ -384,7 +376,7 @@ const AdminMessagesPage = () => {
           </div>
         </Modal>
       </div>
-    </DashboardLayout>
+    </AdminLayout>
   )
 }
 

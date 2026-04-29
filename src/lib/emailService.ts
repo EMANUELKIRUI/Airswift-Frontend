@@ -142,8 +142,8 @@ export const sendVerificationEmail = async (
   try {
     const transporter = await initializeTransporter()
     const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000'
-    // Use verify-email endpoint to verify the token
-    const verificationLink = `${frontendUrl}/verify-email?token=${verificationToken}`
+    // Use activate route to verify the token
+    const verificationLink = `${frontendUrl}/activate/${verificationToken}`
 
     const mailOptions = {
       from: process.env.EMAIL_FROM || 'noreply@airswift.com',

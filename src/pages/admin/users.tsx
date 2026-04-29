@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { adminService } from '@/services/adminService'
-import ProtectedRoute from '@/components/ProtectedRoute'
+import AdminLayout from '@/layouts/AdminLayout'
 import Loader from '@/components/Loader'
 import api from '@/lib/api'
 
@@ -179,15 +179,17 @@ const AdminUsers = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader />
-      </div>
+      <AdminLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <Loader />
+        </div>
+      </AdminLayout>
     )
   }
 
   if (error) {
     return (
-      <ProtectedRoute role="admin">
+      <AdminLayout>
         <div className="p-6">
           <div className="bg-red-50 border border-red-200 rounded-lg p-6">
             <h2 className="text-lg font-semibold text-red-800 mb-2">Error Loading Users</h2>
@@ -201,12 +203,12 @@ const AdminUsers = () => {
             </button>
           </div>
         </div>
-      </ProtectedRoute>
+      </AdminLayout>
     )
   }
 
   return (
-    <ProtectedRoute role="admin">
+    <AdminLayout>
       <div className="p-6 max-w-7xl mx-auto">
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-900">Users Management</h1>
@@ -444,7 +446,7 @@ const AdminUsers = () => {
           </div>
         </div>
       )}
-    </ProtectedRoute>
+    </AdminLayout>
   )
 }
 

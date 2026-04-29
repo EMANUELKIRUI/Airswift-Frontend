@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
+import AdminLayout from "@/layouts/AdminLayout";
 import api from "@/lib/api";
 import { getSocket } from "@/services/socket";
 
@@ -26,13 +27,13 @@ export default function AuditLogsPage() {
   const [endDate, setEndDate] = useState("");
   const [loading, setLoading] = useState(true);
 
-  // 🔒 Guard
-  useEffect(() => {
-    if (isLoading) return;
+  // 🔒 Guard - Now handled by AdminLayout
+  // useEffect(() => {
+  //   if (isLoading) return;
 
-    if (!user) router.push("/login");
-    if (user?.role !== "admin") router.push("/unauthorized");
-  }, [user, isLoading]);
+  //   if (!user) router.push("/login");
+  //   if (user?.role !== "admin") router.push("/unauthorized");
+  // }, [user, isLoading]);
 
   // 🔄 Fetch logs
   const fetchLogs = async () => {
@@ -111,20 +112,21 @@ export default function AuditLogsPage() {
 
   if (isLoading || loading) {
     return (
-      <div className="p-6 max-w-7xl mx-auto">
+      <AdminLayout>
         <div className="flex items-center justify-center h-64">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
             <p className="text-gray-600">Loading audit logs...</p>
           </div>
         </div>
-      </div>
+      </AdminLayout>
     );
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-2xl font-bold mb-6">Advanced Audit Logs</h1>
+    <AdminLayout>
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-2xl font-bold mb-6">Advanced Audit Logs</h1>
 
       {logs.length === 0 ? (
         <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6 text-center">
@@ -229,5 +231,6 @@ export default function AuditLogsPage() {
         </>
       )}
     </div>
+    </AdminLayout>
   );
 }

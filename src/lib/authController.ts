@@ -510,9 +510,14 @@ export const authVerifyEmail = async (req: NextApiRequest, res: NextApiResponse)
 
     await connectDB();
 
-    // Find user with matching hashed token that hasn't expired
+    // Hash the provided token and look up the exact matching user
+    const verificationTokenHash = crypto
+      .createHash('sha256')
+      .update(token)
+      .digest('hex')
+
     const user = await User.findOne({
-      verificationToken: { $exists: true, $ne: null },
+      verificationToken: verificationTokenHash,
       verificationTokenExpires: { $gt: new Date() }
     });
 
@@ -520,17 +525,6 @@ export const authVerifyEmail = async (req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({
         message: "Verification link is invalid or has expired. Please request a new one.",
         code: 'TOKEN_EXPIRED_OR_INVALID'
-      });
-    }
-
-    // Verify token by comparing hashes
-    const tokenMatches = verifyTokenMatch(token, user.verificationToken);
-    if (!tokenMatches) {
-      // Log suspicious activity (possible token tampering)
-      console.warn(`⚠️ Token verification failed for user: ${user.email}`);
-      return res.status(400).json({
-        message: "Verification link is invalid. Please request a new one.",
-        code: 'INVALID_TOKEN'
       });
     }
 
