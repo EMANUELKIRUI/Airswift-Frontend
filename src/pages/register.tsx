@@ -175,21 +175,6 @@ export default function Register() {
               </div>
             )}
 
-            {/* Registration Info Banner */}
-            <div className="rounded-3xl border border-blue-200 bg-gradient-to-br from-sky-50/90 to-blue-50/90 p-4 text-sm text-slate-700 shadow-sm mb-5">
-              <div className="flex items-start gap-3">
-                <div className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
-                  <span className="text-lg font-bold">✦</span>
-                </div>
-                <div>
-                  <p className="font-semibold text-slate-900">Airswift activation link is on its way.</p>
-                  <p className="mt-1 leading-relaxed text-slate-600">
-                    Submit your details and we’ll deliver a secure activation email to the address you provided. Open it to confirm your account and complete onboarding.
-                  </p>
-                </div>
-              </div>
-            </div>
-
             {/* Registration Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Full Name Field */}
