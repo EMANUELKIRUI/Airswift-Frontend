@@ -19,6 +19,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [showResendPrompt, setShowResendPrompt] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -49,17 +50,8 @@ export default function LoginPage() {
                              result.error?.toLowerCase?.().includes('verification');
         
         if (isNotVerified) {
-          setError(result.error || "Your account has not been verified yet. Check your email for the verification link.");
-          
-          // Optional: Offer to resend verification link
-          setTimeout(() => {
-            const resendOption = window.confirm(
-              'Would you like us to resend the verification link to your email?'
-            );
-            if (resendOption) {
-              router.push(`/verify-email?email=${encodeURIComponent(email)}`);
-            }
-          }, 2000);
+          setError(result.error || "Your Airswift account is pending activation. Check your inbox for the activation email.");
+          setShowResendPrompt(true);
         } else {
           setError(result.error || 'Login failed');
         }
@@ -69,17 +61,8 @@ export default function LoginPage() {
       
       // Handle specific error codes from backend
       if (err.response?.data?.code === 'ACCOUNT_NOT_VERIFIED') {
-        setError(err.response.data.message || "Your account has not been verified yet. Check your email for the verification link.");
-        
-        // Auto-offer to resend after a moment
-        setTimeout(() => {
-          const resendOption = window.confirm(
-            'Would you like us to resend the verification link?'
-          );
-          if (resendOption) {
-            router.push(`/verify-email?email=${encodeURIComponent(email)}`);
-          }
-        }, 2000);
+        setError(err.response.data.message || "Your Airswift account is pending activation. Check your inbox for the activation email.");
+        setShowResendPrompt(true);
       } else {
         setError(err.response?.data?.message || err.message || "Login failed");
       }
@@ -176,9 +159,23 @@ export default function LoginPage() {
 
           {/* Error Message */}
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm flex gap-3">
-              <span className="text-lg">⚠️</span>
-              <span>{error}</span>
+            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6 text-sm flex flex-col gap-3">
+              <div className="flex items-start gap-3">
+                <span className="text-lg">⚠️</span>
+                <span>{error}</span>
+              </div>
+              {showResendPrompt && email && (
+                <div className="rounded-xl bg-white border border-blue-100 p-3 text-sm text-slate-700">
+                  <p className="font-semibold text-slate-900 mb-2">Need a new activation link?</p>
+                  <button
+                    type="button"
+                    onClick={() => router.push(`/verify-email?email=${encodeURIComponent(email)}`)}
+                    className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-white font-semibold hover:bg-blue-700 transition"
+                  >
+                    Resend Airswift activation email
+                  </button>
+                </div>
+              )}
             </div>
           )}
 

@@ -45,29 +45,14 @@ api.interceptors.request.use((config) => {
 
 // ✅ RESPONSE INTERCEPTOR: Handle authentication errors
 api.interceptors.response.use(
-  (response) => {
-    console.log('✅ API RESPONSE:', response.status, response.config.url)
-    return response
-  },
-  (error) => {
-    console.error('❌ API ERROR:', {
-      status: error.response?.status,
-      url: error.config?.url,
-      message: error.response?.data?.message || error.message
-    })
-
-    // Handle different error types
-    if (error.response?.status === 401) {
-      console.warn('🔐 UNAUTHORIZED - Clearing token and redirecting to login')
-      localStorage.removeItem('token')
-      localStorage.removeItem('user')
-      alert("Session expired. Please login again.")
-      window.location.href = '/login'
-    } else if (!error.response) {
-      console.error('🌐 NETWORK ERROR - No response from server')
+  res => res,
+  err => {
+    if (err.response?.status === 401) {
+      console.log("Unauthorized - redirecting...");
+      localStorage.removeItem("token");
+      window.location.href = "/login";
     }
-
-    return Promise.reject(error)
+    return Promise.reject(err);
   }
 )
 

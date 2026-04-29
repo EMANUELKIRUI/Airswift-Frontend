@@ -122,10 +122,9 @@ const navigateTo = async (router: any, path: string): Promise<void> => {
 export const redirectAfterLogin = async (user: AuthUser | null, router: any): Promise<void> => {
   if (!user) return
 
-  const normalizedUser = normalizeUser(user)
-  const role = normalizedUser?.role?.toLowerCase() || 'user'
-  const target = role === 'admin' ? '/admin/dashboard' : normalizedUser.hasSubmittedApplication ? '/dashboard' : '/apply'
-
-  console.log('➡️ redirectAfterLogin -> role:', role, 'target:', target)
-  await navigateTo(router, target)
+  if (user.role === "admin") {
+    router.push("/admin/dashboard");
+  } else { 
+    router.push("/dashboard"); // ✅ FIX
+  }
 }

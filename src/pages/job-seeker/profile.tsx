@@ -9,6 +9,7 @@ export default function ProfilePage() {
     skills: "",
     experience: "",
   });
+  const [documents, setDocuments] = useState([]);
   const [loadingCV, setLoadingCV] = useState(false);
   const [saving, setSaving] = useState(false);
 
@@ -43,7 +44,17 @@ export default function ProfilePage() {
       }
     }
 
-    fetchProfile()
+    const fetchDocuments = async () => {
+      try {
+        const res = await API.get('/documents')
+        setDocuments(res.data || [])
+      } catch (err) {
+        console.error('Failed to load documents:', err)
+      }
+    }
+
+    fetchProfile();
+    fetchDocuments();
   }, [])
 
   // HANDLE CV UPLOAD + AUTO-FILL

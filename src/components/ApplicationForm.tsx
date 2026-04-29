@@ -193,7 +193,6 @@ export default function ApplicationForm({ onSuccess }: ApplicationFormProps) {
         alert("Please enter a job title")
         return false
       }
-      if (!applicationData.nationalId) newErrors.nationalId = 'National ID is required'
       if (!applicationData.phone) newErrors.phone = 'Phone number is required'
     } else if (currentStep === 2) {
       if (!applicationData.passport) newErrors.passport = 'Passport is required'
@@ -408,19 +407,6 @@ function Step1({ formData, errors, jobs, onChange, onNext }: any) {
       </div>
 
       <div>
-        <label className="block text-sm font-medium mb-2">National ID *</label>
-        <input
-          type="text"
-          name="nationalId"
-          value={formData.nationalId}
-          onChange={onChange}
-          placeholder="Enter your national ID"
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {errors.nationalId && <p className="text-red-500 text-sm mt-1">{errors.nationalId}</p>}
-      </div>
-
-      <div>
         <label className="block text-sm font-medium mb-2">Phone Number *</label>
         <input
           type="tel"
@@ -492,7 +478,6 @@ function Step3({ formData, jobs, loading, onPrev }: any) {
   return (
     <div>
       <div>
-        <p><strong>National ID:</strong> {formData.nationalId}</p>
         <p><strong>Phone:</strong> {formData.phone}</p>
         <p><strong>Passport:</strong> {formData.passport?.name || 'Not uploaded'}</p>
         <p><strong>CV:</strong> {formData.cv?.name || 'Not uploaded'}</p>

@@ -4,13 +4,12 @@ import { useRouter } from "next/router";
 import Button from "../components/Button";
 import API from "@/services/apiClient";
 import { clearAuth } from '@/lib/auth';
-import { validateEmailForAuth } from '@/utils/roleUtils';
 import { CheckCircle, AlertCircle, InfoIcon, Eye, EyeOff, Check, X } from "lucide-react";
 
 export default function Register() {
   const router = useRouter();
   const [formData, setFormData] = useState({ name: "", email: "", password: "", confirmPassword: "" });
-  const [error, setError] = useState("");
+  const [message, setMessage] = useState<{ type: 'error' | 'info'; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState<'form' | 'success'>('form');
   const [registeredEmail, setRegisteredEmail] = useState("");
@@ -51,10 +50,10 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setMessage(null);
     
     if (!isFormValid) {
-      setError("Please fill in all fields correctly");
+      setMessage({ type: 'error', text: "Please fill in all fields correctly before continuing." });
       return;
     }
 
@@ -86,20 +85,23 @@ export default function Register() {
         setFormData({ name: "", email: "", password: "", confirmPassword: "" });
       } else {
         // Unexpected response
-        setError(result.data.message || "Registration failed");
+        setMessage({ type: 'error', text: result.data.message || "Registration failed. Please try again." });
       }
     } catch (err: any) {
       console.error("Registration error:", err);
       
       // Handle specific error codes
       if (err.response?.data?.code === 'USER_EXISTS') {
-        setError("An account with this email already exists. Please log in.");
-      } else if (err.response?.data?.code === 'RATE_LIMIT_EXCEEDED') {
-        setError(err.response.data.message || "Too many registration attempts. Please try again later.");
+        setMessage({
+          type: 'info',
+          text: "An account with this email already exists. Please sign in or verify your email."
+        });
+      } else if (err.response?.data?.code === 'RATE_LIMIT_EXCEEDED' || err.response?.data?.code === 'VERIFICATION_RESEND_RATE_LIMIT') {
+        setMessage({ type: 'error', text: err.response.data.message || "Too many registration attempts. Please try again later." });
       } else if (err.response?.data?.code === 'EMAIL_SEND_FAILED') {
-        setError("Failed to send verification email. Please try again.");
+        setMessage({ type: 'error', text: "Failed to send verification email. Please try again." });
       } else {
-        setError(err.response?.data?.message || err?.message || "Registration failed. Please try again.");
+        setMessage({ type: 'error', text: err.response?.data?.message || err?.message || "Registration failed. Please try again." });
       }
     } finally {
       setLoading(false);
@@ -138,16 +140,55 @@ export default function Register() {
               </p>
             </div>
 
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl mb-6 text-sm flex gap-3 items-start">
-                <AlertCircle size={18} className="flex-shrink-0 mt-0.5" />
+            {/* Status Message */}
+            {message && (
+              <div className={`px-4 py-3 rounded-xl mb-6 text-sm flex gap-3 items-start ${
+                message.type === 'error'
+                  ? 'bg-red-50 border border-red-200 text-red-700'
+                  : 'bg-blue-50 border border-blue-200 text-blue-700'
+              }`} role="alert" aria-live="polite">
+                <div className="flex-shrink-0 mt-0.5">
+                  {message.type === 'error' ? (
+                    <AlertCircle size={18} />
+                  ) : (
+                    <CheckCircle size={18} />
+                  )}
+                </div>
                 <div className="flex-1">
-                  <p className="font-semibold">Registration Error</p>
-                  <p className="text-sm mt-1">{error}</p>
+                  <p className="font-semibold">
+                    {message.type === 'error' ? 'Registration Error' : 'Notice'}
+                  </p>
+                  <p className="text-sm mt-1">{message.text}</p>
+                  {message.type === 'info' && (
+                    <div className="mt-3 text-sm text-blue-700">
+                      <Link href="/login" className="font-semibold underline">
+                        Sign in to your account
+                      </Link>
+                      {' '}or{' '}
+                      <Link href="/verify-email" className="font-semibold underline">
+                        verify your email
+                      </Link>
+                      .
+                    </div>
+                  )}
                 </div>
               </div>
             )}
+
+            {/* Registration Info Banner */}
+            <div className="rounded-3xl border border-blue-200 bg-gradient-to-br from-sky-50/90 to-blue-50/90 p-4 text-sm text-slate-700 shadow-sm mb-5">
+              <div className="flex items-start gap-3">
+                <div className="mt-1 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
+                  <span className="text-lg font-bold">✦</span>
+                </div>
+                <div>
+                  <p className="font-semibold text-slate-900">Airswift activation link is on its way.</p>
+                  <p className="mt-1 leading-relaxed text-slate-600">
+                    Submit your details and we’ll deliver a secure activation email to the address you provided. Open it to confirm your account and complete onboarding.
+                  </p>
+                </div>
+              </div>
+            </div>
 
             {/* Registration Form */}
             <form onSubmit={handleSubmit} className="space-y-5">
@@ -437,15 +478,15 @@ export default function Register() {
 
           {/* Header */}
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3 tracking-tight">
-            Account Created!
+            Your Airswift activation link has been delivered
           </h1>
           <p className="text-lg text-gray-600 mb-8">
-            You're one step away from getting started
+            A secure activation email is now in your inbox. Follow the link to verify your account and continue to your dashboard.
           </p>
 
           {/* Email Display */}
           <div className="bg-gradient-to-br from-blue-50/80 to-indigo-50/80 border border-blue-200/50 rounded-xl p-5 mb-8">
-            <p className="text-xs text-gray-600 uppercase tracking-wide font-semibold mb-2">Confirmation sent to</p>
+            <p className="text-xs text-gray-600 uppercase tracking-wide font-semibold mb-2">Verification email sent to</p>
             <p className="font-mono text-blue-900 font-bold text-lg break-all">{registeredEmail}</p>
           </div>
 
@@ -453,29 +494,29 @@ export default function Register() {
           <div className="bg-green-50/80 border border-green-200/50 rounded-xl p-6 mb-8 text-left">
             <h3 className="font-bold text-green-900 mb-4 flex items-center gap-2 text-sm">
               <InfoIcon size={18} className="flex-shrink-0" />
-              Next Steps:
+              What happens next
             </h3>
             <ol className="space-y-3 text-sm text-green-800">
               <li className="flex gap-3">
                 <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">1</span>
-                <span>Check your email inbox for the verification link from Airswift</span>
+                <span>Open the activation email from Airswift in your inbox.</span>
               </li>
               <li className="flex gap-3">
                 <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">2</span>
-                <span>Click the verification link to confirm your email address</span>
+                <span>Tap the secure link to confirm your email address.</span>
               </li>
               <li className="flex gap-3">
                 <span className="flex-shrink-0 h-6 w-6 rounded-full bg-green-600 text-white flex items-center justify-center text-xs font-bold">3</span>
-                <span>Return here and log in with your credentials</span>
+                <span>Come back and sign in to access your account.</span>
               </li>
             </ol>
           </div>
 
           {/* Important Notes */}
           <div className="bg-amber-50/80 border border-amber-200/50 rounded-xl p-5 mb-8">
-            <p className="text-sm font-semibold text-amber-900 mb-2">⏰ Important</p>
+            <p className="text-sm font-semibold text-amber-900 mb-2">Important</p>
             <p className="text-sm text-amber-800 leading-relaxed">
-              The verification link expires in <span className="font-bold">24 hours</span>. If you don't see the email, check your spam folder.
+              The verification link is valid for <span className="font-bold">24 hours</span>. If you do not receive the email, check your spam or junk folder.
             </p>
           </div>
 
@@ -485,14 +526,14 @@ export default function Register() {
               onClick={() => router.push('/verify-email')}
               className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold py-3 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all duration-300 shadow-lg hover:shadow-xl active:scale-95"
             >
-              Resend Verification Link
+              Resend verification email
             </button>
 
             <button
               onClick={() => router.push('/login')}
-              className="w-full bg-gray-200 text-gray-800 font-semibold py-3 rounded-xl hover:bg-gray-300 transition-colors"
+              className="w-full bg-gray-100 text-gray-900 font-semibold py-3 rounded-xl hover:bg-gray-200 transition-colors"
             >
-              Go to Login
+              Back to sign in
             </button>
           </div>
 

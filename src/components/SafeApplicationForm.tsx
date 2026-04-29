@@ -30,7 +30,6 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
   const fileInputRefs = {
     cv: useRef(null),
-    nationalId: useRef(null),
     passport: useRef(null)
   };
 
@@ -64,7 +63,7 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
     console.log(`✅ ${fieldName} selected:`, file)
 
-    const fileKey = fieldName === 'CV' ? 'cv' : fieldName === 'National ID' ? 'nationalId' : 'passport'
+    const fileKey = fieldName === 'CV' ? 'cv' : 'passport'
     setFiles(prev => ({ ...prev, [fileKey]: file }))
 
     if (fieldName === 'CV') {
@@ -102,13 +101,6 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
       return false;
     }
 
-    if (!formData.nationalId?.trim()) {
-      const msg = '❌ National ID is required';
-      setError(msg);
-      toast.error(msg, { duration: 3000 });
-      return false;
-    }
-
     if (!formData.jobId?.trim()) {
       const msg = '❌ Please select a job title';
       setError(msg);
@@ -119,13 +111,6 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
     // Check files
     if (!cvFile) {
       const msg = '❌ CV file is required';
-      setError(msg);
-      toast.error(msg, { duration: 3000 });
-      return false;
-    }
-
-    if (!files.nationalId) {
-      const msg = '❌ National ID file is required';
       setError(msg);
       toast.error(msg, { duration: 3000 });
       return false;
@@ -175,17 +160,14 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
       const formDataToSend = new FormData();
 
       formDataToSend.append('jobId', formData.jobId);
-      formDataToSend.append('nationalId', formData.nationalId);
       formDataToSend.append('phone', formData.phone);
 
       // Append files (these must match backend multer field names)
       formDataToSend.append('cv', cvFile);
-      formDataToSend.append('nationalId', files.nationalId);
       formDataToSend.append('passport', files.passport);
 
       console.log('📋 Form data prepared:');
       console.log('   - CV:', cvFile?.name);
-      console.log('   - National ID:', files.nationalId?.name);
       console.log('   - Passport:', files.passport?.name);
 
       // 🔍 Debug: Log all FormData entries before sending
@@ -293,22 +275,6 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
           />
         </div>
 
-        {/* National ID */}
-        <div className="form-group">
-          <label htmlFor="national-id">
-            National ID <span className="required">*</span>
-          </label>
-          <input
-            id="national-id"
-            type="text"
-            name="nationalId"
-            value={formData.nationalId}
-            onChange={handleInputChange}
-            placeholder="Your national ID number"
-            required
-          />
-        </div>
-
         {/* File Uploads */}
         <div className="file-uploads-section">
           <h3>📄 Required Documents (PDF only, max 5MB each)</h3>
@@ -330,27 +296,6 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
             {cvFile && (
               <small className="file-selected">
                 ✅ {cvFile.name} ({(cvFile.size / 1024).toFixed(2)}KB)
-              </small>
-            )}
-          </div>
-
-          {/* National ID Document Upload */}
-          <div className="form-group">
-            <label htmlFor="national-id-upload">
-              National ID Document <span className="required">*</span>
-            </label>
-            <input
-              ref={fileInputRefs.nationalId}
-              id="national-id-upload"
-              type="file"
-              accept=".pdf,application/pdf"
-              onChange={(e) => handleFileChange(e, 'National ID')}
-              aria-label="Upload National ID"
-              required
-            />
-            {files.nationalId && (
-              <small className="file-selected">
-                ✅ {files.nationalId.name} ({(files.nationalId.size / 1024).toFixed(2)}KB)
               </small>
             )}
           </div>

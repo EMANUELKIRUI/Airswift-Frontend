@@ -98,7 +98,7 @@ export default function VerifyEmailPage() {
           {/* Header */}
           <div style={{ textAlign: 'center', marginBottom: '30px' }}>
             <h1 style={{ fontSize: '32px', color: '#333', margin: '0 0 10px 0' }}>Airswift</h1>
-            <p style={{ color: '#666', fontSize: '16px', margin: 0 }}>Email Verification</p>
+            <p style={{ color: '#666', fontSize: '16px', margin: 0 }}>Email activation and account confirmation</p>
           </div>
 
           {/* Loading State */}
@@ -120,7 +120,7 @@ export default function VerifyEmailPage() {
                   100% { transform: rotate(360deg); }
                 }
               `}</style>
-              <p style={{ color: '#666', fontSize: '16px' }}>Verifying your email...</p>
+              <p style={{ color: '#666', fontSize: '16px' }}>Verifying your Airswift activation link...</p>
             </div>
           )}
 
@@ -135,10 +135,10 @@ export default function VerifyEmailPage() {
               textAlign: 'center'
             }}>
               <div style={{ fontSize: '48px', marginBottom: '10px' }}>✅</div>
-              <h2 style={{ margin: '10px 0', fontSize: '20px' }}>Verification Successful!</h2>
-              <p style={{ margin: '10px 0' }}>{message}</p>
+              <h2 style={{ margin: '10px 0', fontSize: '20px' }}>Email confirmed</h2>
+              <p style={{ margin: '10px 0' }}>{message || 'Your Airswift account is now activated.'}</p>
               <p style={{ fontSize: '14px', color: '#155724', marginTop: '15px' }}>
-                Redirecting to login in a few seconds...
+                You will be redirected to login shortly.
               </p>
             </div>
           )}
@@ -155,8 +155,11 @@ export default function VerifyEmailPage() {
               marginBottom: '20px'
             }}>
               <div style={{ fontSize: '48px', marginBottom: '10px' }}>⚠️</div>
-              <h2 style={{ margin: '10px 0', fontSize: '20px' }}>Verification Failed</h2>
+              <h2 style={{ margin: '10px 0', fontSize: '20px' }}>Unable to verify your email</h2>
               <p style={{ margin: '10px 0', fontSize: '14px' }}>{message}</p>
+              <p style={{ margin: '10px 0', fontSize: '14px', color: '#721c24' }}>
+                If the link has expired or you did not receive it, request a new activation email below.
+              </p>
             </div>
           )}
 
@@ -169,7 +172,7 @@ export default function VerifyEmailPage() {
               marginTop: '20px'
             }}>
               <h3 style={{ fontSize: '16px', color: '#333', marginTop: 0, marginBottom: '15px' }}>
-                Resend Verification Email
+                Request a new activation link
               </h3>
 
               <div style={{ marginBottom: '15px' }}>
@@ -231,7 +234,7 @@ export default function VerifyEmailPage() {
                   transition: 'opacity 0.2s'
                 }}
               >
-                {isResending ? 'Sending...' : 'Resend Verification Email'}
+                {isResending ? 'Sending...' : 'Send new activation link'}
               </button>
 
               <p style={{
