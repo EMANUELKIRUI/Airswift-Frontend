@@ -149,6 +149,42 @@ export const applicationService = {
     })
     return response.data
   },
+
+  /**
+   * Get top candidates (admin only)
+   * @param limit - Number of top candidates to fetch (default 20)
+   * @param jobId - Optional filter by job ID
+   */
+  getTopCandidates: async (limit: number = 20, jobId?: string) => {
+    const params: Record<string, any> = { limit }
+    if (jobId) params.jobId = jobId
+    const response = await API.get('/applications/top-candidates', { params })
+    return response.data
+  },
+
+  /**
+   * Get candidates for a specific job ranked by AI score
+   * @param jobId - Job ID
+   * @param limit - Number of candidates to fetch
+   */
+  getJobTopCandidates: async (jobId: string, limit: number = 20) => {
+    const response = await API.get(`/applications/job/${jobId}/top-candidates`, {
+      params: { limit },
+    })
+    return response.data
+  },
+
+  /**
+   * Get candidate ranking (admin only)
+   */
+  getCandidateRankings: async (filters?: { 
+    jobId?: string
+    status?: string
+    stage?: string
+  }) => {
+    const response = await API.get('/applications/rankings', { params: filters })
+    return response.data
+  },
 }
 
 export default applicationService

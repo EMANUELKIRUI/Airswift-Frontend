@@ -1,6 +1,13 @@
 // @ts-nocheck
 import mongoose, { Schema, Document } from 'mongoose'
 
+export interface AIScore {
+  total: number
+  skills: number
+  experience: number
+  communication: number
+}
+
 export interface IApplication extends Document {
   user_id: mongoose.Types.ObjectId
   job_id: mongoose.Types.ObjectId
@@ -11,6 +18,8 @@ export interface IApplication extends Document {
   status: 'pending' | 'shortlisted' | 'accepted' | 'rejected'
   stage: 'documents' | 'interview' | 'final'
   notes?: string
+  aiScore?: AIScore
+  rank?: number
   created_at: Date
   updated_at: Date
 }
@@ -57,6 +66,16 @@ const applicationSchema = new Schema<IApplication>(
     notes: {
       type: String,
       default: '',
+    },
+    aiScore: {
+      total: { type: Number, default: 0 },
+      skills: { type: Number, default: 0 },
+      experience: { type: Number, default: 0 },
+      communication: { type: Number, default: 0 },
+    },
+    rank: {
+      type: Number,
+      default: null,
     },
   },
   {
