@@ -6,8 +6,7 @@
  */
 
 import { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth/next'
-import { authOptions } from '@/pages/api/auth/[...nextauth]'
+import { verifyToken } from '@/lib/authController'
 import rankingService from '@/services/rankingService'
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -17,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   try {
     // Check admin authentication
-    const session = await getServerSession(req, res, authOptions)
-    if (!session || session.user.role !== 'admin') {
+    const user = await verifyToken(req) as any
+    if (!user || user.role !== 'admin') {
       return res.status(403).json({ message: 'Admin access required' })
     }
 

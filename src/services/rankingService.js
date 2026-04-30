@@ -11,7 +11,7 @@
  * ✅ Get top candidates globally
  */
 
-const Application = require("../models/Application");
+const Application = require("../lib/models/Application");
 
 class RankingService {
   /**
