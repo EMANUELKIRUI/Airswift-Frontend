@@ -7,9 +7,9 @@
 
 import { useState, useEffect } from 'react'
 import AdminLayout from '@/layouts/AdminLayout'
-import { StatCard } from '@/components/admin/StatCard'
-import { Table } from '@/components/admin/Table'
-import { Chart } from '@/components/admin/Chart'
+import StatCard from '@/components/admin/StatCard'
+import Table from '@/components/admin/Table'
+import Chart from '@/components/admin/Chart'
 import Loader from '@/components/Loader'
 import api from '@/services/api'
 
@@ -273,6 +273,7 @@ export default function TopCandidatesDashboard() {
           <Chart
             data={chartData}
             type="bar"
+            dataKey="value"
             height={300}
           />
         </div>
