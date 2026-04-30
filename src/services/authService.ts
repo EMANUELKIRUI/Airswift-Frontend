@@ -92,9 +92,13 @@ class AuthService {
       const normalizedUser = this.normalizeUser(user)
       this.storeToken(token, normalizedUser)
       console.log('🔌 Reconnecting socket with token...')
-      const socket = reconnectSocket(token)
-      if (socket) {
-        console.log('✅ Socket reconnected:', socket.id)
+      if (typeof reconnectSocket === 'function') {
+        const socket = reconnectSocket(token)
+        if (socket) {
+          console.log('✅ Socket reconnected:', socket.id)
+        }
+      } else {
+        console.warn('❌ reconnectSocket is not available')
       }
       return { success: true, token, user: normalizedUser }
     } catch (error) {
@@ -148,7 +152,11 @@ class AuthService {
       const user = data.user || data.data?.user || data
       if (token && user) {
         this.storeToken(token, user)
-        reconnectSocket(token)
+        if (typeof reconnectSocket === 'function') {
+          reconnectSocket(token)
+        } else {
+          console.warn('❌ reconnectSocket is not available')
+        }
         return { success: true, token, user: this.normalizeUser(user) }
       }
       return { success: true, message: data.message }
@@ -169,7 +177,11 @@ class AuthService {
       const user = this.getUser()
       this.storeToken(token, user)
       console.log('✅ Token refreshed successfully')
-      reconnectSocket(token)
+      if (typeof reconnectSocket === 'function') {
+        reconnectSocket(token)
+      } else {
+        console.warn('❌ reconnectSocket is not available')
+      }
       return { success: true, token }
     } catch (error) {
       console.error('❌ Token refresh error:', error?.message || error)

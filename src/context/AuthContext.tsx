@@ -253,7 +253,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const reconnectSocket = () => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null
     if (token) {
-      reconnectSocketConnection(token)
+      if (typeof reconnectSocketConnection === 'function') {
+        reconnectSocketConnection(token)
+      } else {
+        console.warn('❌ reconnectSocketConnection is not available')
+      }
     }
   }
 

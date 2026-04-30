@@ -69,6 +69,8 @@ export const initSocket = (token?: string): Socket | null => {
   return socket
 }
 
+export const connectSocket = initSocket
+
 export const disconnectSocket = () => {
   if (socket) {
     socket.disconnect()

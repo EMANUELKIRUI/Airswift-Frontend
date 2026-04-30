@@ -30,6 +30,15 @@ export const disconnectSocket = () => {
   }
 };
 
+export const connectSocket = (token) => {
+  if (!token) {
+    console.warn('⚠️ No token provided for socket connection');
+    return null;
+  }
+
+  return initSocket(token);
+};
+
 // Socket event helpers
 export const emit = (event, data) => {
   if (socket && socket.connected) {
@@ -49,11 +58,32 @@ export const off = (event, callback) => {
   }
 };
 
+export const reconnectSocket = (token) => {
+  console.log('🔌 Reconnecting socket with token...')
+
+  if (socket) {
+    socket.disconnect()
+    socket = null
+  }
+
+  if (!token) {
+    console.warn('⚠️ No token provided to reconnectSocket')
+    return null
+  }
+
+  return initSocket(token)
+};
+
+export const reconnectSocketConnection = reconnectSocket
+
 export default {
   initSocket,
+  connectSocket,
   getSocket,
   disconnectSocket,
   emit,
   on,
-  off
+  off,
+  reconnectSocket,
+  reconnectSocketConnection
 };
