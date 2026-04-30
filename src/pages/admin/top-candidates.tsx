@@ -8,8 +8,13 @@
 import { useState, useEffect } from 'react'
 import AdminLayout from '@/layouts/AdminLayout'
 import StatCard from '@/components/admin/StatCard'
+<<<<<<< HEAD
 import Table from '@/components/admin/Table'
 import Chart from '@/components/admin/Chart'
+=======
+import { Table } from '@/components/admin/Table'
+import { Chart } from '@/components/admin/Chart'
+>>>>>>> a644836 (fix app)
 import Loader from '@/components/Loader'
 import api from '@/services/api'
 

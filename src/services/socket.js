@@ -3,17 +3,31 @@ import { io } from 'socket.io-client';
 let socket = null;
 
 export const initSocket = (token) => {
+  // ✅ PREVENT INFINITE RECONNECT LOOP
   if (socket) {
-    socket.disconnect();
+    console.log('Socket already connected');
+    return socket;
   }
 
-  const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5000';
+  const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'https://airswift-backend-fjt3.onrender.com';
 
   socket = io(socketUrl, {
     auth: {
       token
     },
-    transports: ['websocket', 'polling']
+    transports: ['websocket']
+  });
+
+  socket.on('connect', () => {
+    console.log('✅ Socket connected:', socket.id);
+  });
+
+  socket.on('disconnect', (reason) => {
+    console.log('❌ Socket disconnected:', reason);
+  });
+
+  socket.on('connect_error', (error) => {
+    console.error('❌ Socket connection error:', error);
   });
 
   return socket;

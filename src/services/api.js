@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://airswift-backend-fjt3.onrender.com/api',
 });
 
 // Request interceptor to add auth token
@@ -20,11 +20,14 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      // Token expired or invalid
+      // ✅ DO NOT immediately remove token
+      // Token might be temporarily invalid; let the app handle logout
+      console.warn('Unauthorized (401) - Token may be expired or invalid');
+      
+      // Only redirect to login if specifically needed
       if (typeof window !== 'undefined') {
-        localStorage.removeItem('token');
-        localStorage.removeItem('accessToken');
-        window.location.href = '/login';
+        // Optionally redirect after a delay or on user action
+        console.warn('Please refresh or log in again');
       }
     }
     return Promise.reject(error);

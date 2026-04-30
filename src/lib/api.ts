@@ -48,9 +48,10 @@ api.interceptors.response.use(
   res => res,
   err => {
     if (err.response?.status === 401) {
-      console.log("Unauthorized - redirecting...");
-      localStorage.removeItem("token");
-      window.location.href = "/login";
+      // ✅ DO NOT immediately remove token on 401
+      console.warn("Unauthorized (401) - Token may be expired or invalid");
+      // The token will be handled by the app's auth logic
+      // Token removal should only happen on explicit logout
     }
     return Promise.reject(err);
   }

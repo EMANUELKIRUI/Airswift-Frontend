@@ -28,11 +28,9 @@ export const documentService = {
     formData.append('type', documentType)
 
     try {
-      const response = await API.post('/documents/upload', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
+      // ✅ DO NOT set Content-Type header explicitly
+      // Axios automatically sets it with proper boundary when FormData is used
+      const response = await API.post('/documents/upload', formData)
       return response.data?.document || response.data
     } catch (error: any) {
       const message = error.response?.data?.message || 'Failed to upload document'
