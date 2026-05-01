@@ -42,9 +42,9 @@ export default function Register() {
   }, [formData.password]);
 
   // Email validation
-  const isValidEmail = formData.email ? /^[^\s@]+@gmail\.com$/.test(formData.email.toLowerCase()) : false;
+  const isValidEmail = formData.email ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.toLowerCase()) : false;
   const isValidName = formData.name.trim().length >= 2;
-  const isValidPassword = formData.password.length >= 6;
+  const isValidPassword = formData.password.length >= 8;
   const passwordsMatch = formData.password === formData.confirmPassword && formData.confirmPassword.length > 0;
   const isFormValid = isValidName && isValidEmail && isValidPassword && passwordsMatch;
 

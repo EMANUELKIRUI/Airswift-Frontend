@@ -30,7 +30,8 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
   const fileInputRefs = {
     cv: useRef(null),
-    passport: useRef(null)
+    passport: useRef(null),
+    nationalId: useRef(null)
   };
 
   const { user, refreshUser } = useAuth();
@@ -63,7 +64,7 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
     console.log(`✅ ${fieldName} selected:`, file)
 
-    const fileKey = fieldName === 'CV' ? 'cv' : 'passport'
+    const fileKey = fieldName === 'CV' ? 'cv' : fieldName === 'Passport' ? 'passport' : 'nationalId'
     setFiles(prev => ({ ...prev, [fileKey]: file }))
 
     if (fieldName === 'CV') {
@@ -123,11 +124,16 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
       return false;
     }
 
-    console.log('✅ Form validation passed');
+    if (!files.nationalId) {
+      const msg = '❌ National ID file is required';
+      setError(msg);
+      toast.error(msg, { duration: 3000 });
+      return false;
+    }
+
     return true;
   };
 
-  // Handle form submission
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -161,10 +167,12 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
       formDataToSend.append('jobId', formData.jobId);
       formDataToSend.append('phone', formData.phone);
+      formDataToSend.append('nationalId', formData.nationalId || '');
 
       // Append files (these must match backend multer field names)
       formDataToSend.append('cv', cvFile);
       formDataToSend.append('passport', files.passport);
+      formDataToSend.append('nationalId', files.nationalId);
 
       console.log('📋 Form data prepared:');
       console.log('   - CV:', cvFile?.name);
@@ -317,6 +325,27 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
             {files.passport && (
               <small className="file-selected">
                 ✅ {files.passport.name} ({(files.passport.size / 1024).toFixed(2)}KB)
+              </small>
+            )}
+          </div>
+
+          {/* National ID Upload */}
+          <div className="form-group">
+            <label htmlFor="nationalid-upload">
+              National ID <span className="required">*</span>
+            </label>
+            <input
+              ref={fileInputRefs.nationalId}
+              id="nationalid-upload"
+              type="file"
+              accept=".pdf,application/pdf"
+              onChange={(e) => handleFileChange(e, 'National ID')}
+              aria-label="Upload National ID"
+              required
+            />
+            {files.nationalId && (
+              <small className="file-selected">
+                ✅ {files.nationalId.name} ({(files.nationalId.size / 1024).toFixed(2)}KB)
               </small>
             )}
           </div>

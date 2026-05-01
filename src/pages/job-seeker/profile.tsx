@@ -8,6 +8,10 @@ export default function ProfilePage() {
     location: "",
     skills: "",
     experience: "",
+    education: "",
+    linkedin: "",
+    portfolio: "",
+    bio: "",
   });
   const [documents, setDocuments] = useState([]);
   const [loadingCV, setLoadingCV] = useState(false);
@@ -15,7 +19,16 @@ export default function ProfilePage() {
 
   // Calculate profile completion
   const calculateCompletion = () => {
-    const fields = [formData.name, formData.phone, formData.location, formData.skills, formData.experience];
+    const fields = [
+      formData.name,
+      formData.phone,
+      formData.location,
+      formData.skills,
+      formData.experience,
+      formData.education,
+      formData.linkedin,
+      formData.bio,
+    ];
     const filledFields = fields.filter(field => field && field.trim() !== "").length;
     return Math.round((filledFields / fields.length) * 100);
   };
@@ -28,6 +41,8 @@ export default function ProfilePage() {
     if (!formData.phone || formData.phone.trim() === "") missingFields.push("Phone");
     if (!formData.location || formData.location.trim() === "") missingFields.push("Location");
     if (!formData.skills || formData.skills.trim() === "") missingFields.push("Skills");
+    if (!formData.education || formData.education.trim() === "") missingFields.push("Education");
+    if (!formData.bio || formData.bio.trim() === "") missingFields.push("Professional Bio");
     return missingFields;
   };
 
@@ -38,7 +53,10 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         const res = await API.get('/profile')
-        setFormData(res.data || {})
+        setFormData(prev => ({
+          ...prev,
+          ...res.data,
+        }))
       } catch (err) {
         console.error('Failed to load profile:', err)
       }
@@ -186,6 +204,50 @@ export default function ProfilePage() {
               onChange={(e) => setFormData({ ...formData, skills: e.target.value })}
               className="w-full p-2 border rounded"
               placeholder="e.g., JavaScript, React, Node.js"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Education</label>
+            <input
+              type="text"
+              value={formData.education}
+              onChange={(e) => setFormData({ ...formData, education: e.target.value })}
+              className="w-full p-2 border rounded"
+              placeholder="e.g., BSc Computer Science"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">LinkedIn Profile</label>
+            <input
+              type="url"
+              value={formData.linkedin}
+              onChange={(e) => setFormData({ ...formData, linkedin: e.target.value })}
+              className="w-full p-2 border rounded"
+              placeholder="https://www.linkedin.com/in/username"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Portfolio Website</label>
+            <input
+              type="url"
+              value={formData.portfolio}
+              onChange={(e) => setFormData({ ...formData, portfolio: e.target.value })}
+              className="w-full p-2 border rounded"
+              placeholder="https://www.yourportfolio.com"
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium mb-1">Professional Bio</label>
+            <textarea
+              value={formData.bio}
+              onChange={(e) => setFormData({ ...formData, bio: e.target.value })}
+              className="w-full p-2 border rounded"
+              rows={4}
+              placeholder="Write a short bio about your experience and goals..."
             />
           </div>
 

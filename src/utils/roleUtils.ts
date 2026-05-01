@@ -50,13 +50,8 @@ export const validateEmailForAuth = (email: string): { isValid: boolean; error?:
     return { isValid: true }
   }
 
-  // ✅ GMAIL-ONLY for regular users
-  if (!emailLower.endsWith('@gmail.com')) {
-    const domain = emailLower.substring(emailLower.indexOf('@') + 1)
-    return {
-      isValid: false,
-      error: `Only @gmail.com emails are allowed for registration (you provided @${domain})`
-    }
+  if (!emailLower.includes('@') || !emailLower.includes('.')) {
+    return { isValid: false, error: 'Please enter a valid email address' }
   }
 
   return { isValid: true }
@@ -81,11 +76,8 @@ export const isValidUserEmail = (email: string): boolean => {
 
   const emailLower = email.toLowerCase().trim()
 
-  // Admin email is also valid
   if (isAdminEmail(emailLower)) return true
-
-  // ✅ GMAIL-ONLY for regular users
-  return emailLower.endsWith('@gmail.com')
+  return emailLower.includes('@') && emailLower.includes('.')
 }
 
 export const getPostLoginPath = (role?: string, hasSubmittedApplication?: boolean) => {
