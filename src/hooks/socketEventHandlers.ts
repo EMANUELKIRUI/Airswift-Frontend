@@ -16,7 +16,7 @@ export const useAdminSocketEvents = () => {
   const [adminUpdate, setAdminUpdate] = useState<any>(null)
 
   useEffect(() => {
-    if (!user || user.role.toLowerCase() !== 'admin' || !socket?.connected) return
+    if (!user || !user.role || user.role.toLowerCase() !== 'admin' || !socket?.connected) return
 
     const handleNewApplication = (data: any) => {
       console.log('👑 [ADMIN] New application:', data)
@@ -45,10 +45,12 @@ export const useAdminSocketEvents = () => {
 
     // Cleanup
     return () => {
-      socket.off('admin:new-application', handleNewApplication)
-      socket.off('application:status', handleApplicationStatusUpdate)
-      socket.off('job:created', handleJobCreated)
-      socket.off('job:updated', handleJobUpdated)
+      if (socket) {
+        socket.off('admin:new-application', handleNewApplication)
+        socket.off('application:status', handleApplicationStatusUpdate)
+        socket.off('job:created', handleJobCreated)
+        socket.off('job:updated', handleJobUpdated)
+      }
     }
   }, [user])
 
@@ -63,7 +65,7 @@ export const useUserSocketEvents = () => {
   const [userUpdate, setUserUpdate] = useState<any>(null)
 
   useEffect(() => {
-    if (!user || user.role.toLowerCase() !== 'user' || !socket?.connected) return
+    if (!user || !user.role || user.role.toLowerCase() !== 'user' || !socket?.connected) return
 
     const handleApplicationStatusChange = (data: any) => {
       console.log('👤 [USER] Your application status changed:', data)
@@ -92,10 +94,12 @@ export const useUserSocketEvents = () => {
 
     // Cleanup
     return () => {
-      socket.off('user:application-status', handleApplicationStatusChange)
-      socket.off('user:interview-scheduled', handleInterviewScheduled)
-      socket.off('user:message-received', handleMessageReceived)
-      socket.off('user:notification', handleNotification)
+      if (socket) {
+        socket.off('user:application-status', handleApplicationStatusChange)
+        socket.off('user:interview-scheduled', handleInterviewScheduled)
+        socket.off('user:message-received', handleMessageReceived)
+        socket.off('user:notification', handleNotification)
+      }
     }
   }, [user])
 
@@ -110,7 +114,7 @@ export const useRecruiterSocketEvents = () => {
   const [recruiterUpdate, setRecruiterUpdate] = useState<any>(null)
 
   useEffect(() => {
-    if (!user || user.role.toLowerCase() !== 'recruiter' || !socket?.connected) return
+    if (!user || !user.role || user.role.toLowerCase() !== 'recruiter' || !socket?.connected) return
 
     const handleCandidateApplication = (data: any) => {
       console.log('💼 [RECRUITER] New candidate application:', data)
@@ -127,8 +131,10 @@ export const useRecruiterSocketEvents = () => {
 
     // Cleanup
     return () => {
-      socket.off('recruiter:candidate-application', handleCandidateApplication)
-      socket.off('recruiter:job-stats', handleJobStats)
+      if (socket) {
+        socket.off('recruiter:candidate-application', handleCandidateApplication)
+        socket.off('recruiter:job-stats', handleJobStats)
+      }
     }
   }, [user])
 

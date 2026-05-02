@@ -223,7 +223,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       admin: '👑',
       recruiter: '💼',
       user: '👤',
-    }[normalizedUser?.role] || '✅'
+    }[normalizedUser?.role as string] || '✅'
 
     toast.success(`Welcome back, ${normalizedUser?.name || 'User'}!`, {
       icon: roleEmoji,
