@@ -1,4 +1,4 @@
-```tsx
+
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
 import { getSocket } from '@/lib/socket';
@@ -108,4 +108,4 @@ const AdminApplications: React.FC = () => {
 };
 
 export default AdminApplications;
-```
+
