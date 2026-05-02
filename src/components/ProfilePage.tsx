@@ -3,8 +3,6 @@ import api from '@/lib/api'; // Your axios instance
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-<<<<<<< HEAD
-=======
 interface ProfileFormData {
   name: string;
   email: string;
@@ -14,7 +12,6 @@ interface ProfileFormData {
   experience: string;
 }
 
->>>>>>> 74c58cc (fix error)
 const calculateProfileCompletion = (user: any) => {
   const fields = [
     user.name,
@@ -33,18 +30,7 @@ const calculateProfileCompletion = (user: any) => {
 };
 
 const ProfilePage = () => {
-<<<<<<< HEAD
-  const [form, setForm] = useState<{
-    name: string;
-    email: string;
-    phone: string;
-    location: string;
-    skills: string[];
-    experience: string;
-  }>({
-=======
   const [form, setForm] = useState<ProfileFormData>({
->>>>>>> 74c58cc (fix error)
     name: '',
     email: '',
     phone: '',
@@ -70,11 +56,7 @@ const ProfilePage = () => {
     }
   };
 
-<<<<<<< HEAD
-  const handleSubmit = async (e: React.FormEvent) => {
-=======
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
->>>>>>> 74c58cc (fix error)
     e.preventDefault();
     setLoading(true);
     setError(null);

@@ -30,7 +30,7 @@ const InterviewsPage: React.FC = () => {
     try {
       const data = await jobService.getMyApplications()
       // Filter applications that have interviews scheduled or completed
-      const interviewApplications = data.filter(app =>
+      const interviewApplications = data.filter((app: JobApplication) =>
         ['interview_scheduled', 'interview_completed', 'accepted'].includes(app.status)
       )
       setApplications(interviewApplications)

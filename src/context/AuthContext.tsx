@@ -223,12 +223,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       admin: '👑',
       recruiter: '💼',
       user: '👤',
-<<<<<<< HEAD
-    }[normalizedUser?.role as string] || '✅'
-=======
     } as const
     const roleEmoji = roleEmojiMap[normalizedUser?.role as keyof typeof roleEmojiMap] || '✅'
->>>>>>> 74c58cc (fix error)
 
     toast.success(`Welcome back, ${normalizedUser?.name || 'User'}!`, {
       icon: roleEmoji,

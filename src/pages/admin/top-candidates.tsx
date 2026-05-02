@@ -244,25 +244,21 @@ export default function TopCandidatesDashboard() {
               title="Total Candidates"
               value={stats.totalCandidates}
               icon="👥"
-              trend={null}
             />
             <StatCard
               title="Average Score"
               value={stats.averageScore}
               icon="📊"
-              trend={null}
             />
             <StatCard
               title="Top Score"
               value={stats.topScore}
               icon="🏆"
-              trend={null}
             />
             <StatCard
               title="Jobs Ranked"
               value={stats.rankedJobs}
               icon="💼"
-              trend={null}
             />
           </div>
         )}

@@ -7,11 +7,7 @@ function AuditLogs() {
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-<<<<<<< HEAD
-  const [message, setMessage] = useState(null);
-=======
   const [message, setMessage] = useState<string | null>(null);
->>>>>>> 74c58cc (fix error)
   const [searchTerm, setSearchTerm] = useState('');
   const [actionFilter, setActionFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,11 +20,7 @@ function AuditLogs() {
   const [autoRefreshInterval, setAutoRefreshInterval] = useState(30);
   const [selectedLog, setSelectedLog] = useState<any | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-<<<<<<< HEAD
-  const autoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
-=======
   const autoRefreshTimer = useRef<ReturnType<typeof setInterval> | null>(null);
->>>>>>> 74c58cc (fix error)
 
   useEffect(() => {
     fetchAuditLogs();
@@ -103,15 +95,11 @@ function AuditLogs() {
           console.log(`✅ Successfully fetched from ${endpoint}`);
           break;
         } catch (err) {
-<<<<<<< HEAD
-          console.warn(`⚠️ ${endpoint} failed (${(err as any).response?.status}), trying next endpoint...`);
-=======
           if (axios.isAxiosError(err)) {
             console.warn(`⚠️ ${endpoint} failed (${err.response?.status}), trying next endpoint...`);
           } else {
             console.warn(`⚠️ ${endpoint} failed with unexpected error:`, err);
           }
->>>>>>> 74c58cc (fix error)
         }
       }
 
@@ -148,15 +136,6 @@ function AuditLogs() {
       setTotalLogs(pagination.total);
     } catch (err) {
       console.error('❌ Error fetching audit logs:', err);
-<<<<<<< HEAD
-      const errorMessage = (err as any).response?.data?.message || (err as any).message || 'Unable to load audit logs. Please try again.';
-      setError(errorMessage);
-
-      if ((err as any).response?.status === 401) {
-        setError('Unauthorized - Please login again');
-      } else if ((err as any).response?.status === 403) {
-        setError('Forbidden - You do not have permission to view audit logs');
-=======
       let errorMessage = 'Unable to load audit logs. Please try again.';
 
       if (axios.isAxiosError(err)) {
@@ -168,7 +147,6 @@ function AuditLogs() {
         }
       } else if (err instanceof Error) {
         errorMessage = err.message || errorMessage;
->>>>>>> 74c58cc (fix error)
       }
 
       setError(errorMessage);
@@ -454,11 +432,7 @@ function AuditLogs() {
                 </tr>
               </thead>
               <tbody>
-<<<<<<< HEAD
-                {currentLogs.map((log, index) => (
-=======
                 {ensureArray<any>(currentLogs, []).map((log, index) => (
->>>>>>> 74c58cc (fix error)
                   <tr key={log._id || index} className={`log-row ${getActionBadgeClass(log.action)}`}>
                     <td className="timestamp">
                       {new Date(log.createdAt).toLocaleString()}

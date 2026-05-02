@@ -7,13 +7,8 @@ export default function NotificationBell() {
   const { notifications, removeNotification, clearNotifications } = useNotification()
   const [showDropdown, setShowDropdown] = useState(false)
 
-<<<<<<< HEAD
-  const safeNotifications = notifications || []
-  const unreadCount = safeNotifications.filter(n => n.type === 'info' || n.type === 'warning').length
-=======
   const safeNotifications = ensureArray<any>(notifications || [], [])
   const unreadCount = safeNotifications.filter((n: any) => n.type === 'info' || n.type === 'warning').length
->>>>>>> 74c58cc (fix error)
 
   return (
     <div className="relative">

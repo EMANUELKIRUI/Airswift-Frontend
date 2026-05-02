@@ -36,11 +36,7 @@ const AdminSettings = () => {
     }
   };
 
-<<<<<<< HEAD
-  const updateSetting = async (key: string, value: string) => {
-=======
   const updateSetting = async (key: string, value: any) => {
->>>>>>> 009fa55 (fix:)
     try {
       await api.put(`/settings/${key}`, { value });
       fetchSettings();

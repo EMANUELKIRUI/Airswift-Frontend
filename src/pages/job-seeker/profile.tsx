@@ -76,8 +76,8 @@ export default function ProfilePage() {
   }, [])
 
   // HANDLE CV UPLOAD + AUTO-FILL
-  const handleCVUpload = async (e) => {
-    const file = e.target.files[0];
+  const handleCVUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     setLoadingCV(true);

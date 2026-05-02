@@ -122,16 +122,17 @@ export default function AdminSettings() {
   useEffect(() => {
     if (!socket) return
 
+    const activeSocket = socket
     const handleSettingsUpdated = (newSettings: any) => {
       console.log('🔄 Settings updated in real-time', newSettings)
       setForm(newSettings)
       addNotification('⚙️ Settings were updated in real time', 'info')
     }
 
-    socket.on('settingsUpdated', handleSettingsUpdated)
+    activeSocket.on('settingsUpdated', handleSettingsUpdated)
 
     return () => {
-      socket.off('settingsUpdated', handleSettingsUpdated)
+      activeSocket.off('settingsUpdated', handleSettingsUpdated)
     }
   }, [addNotification])
 

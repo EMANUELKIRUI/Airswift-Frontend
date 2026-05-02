@@ -7,7 +7,7 @@ import { useAuth } from '@/context/AuthContext';
 import { ensureArray } from '@/utils/fetchData';
 
 export default function MyApplications() {
-  const [apps, setApps] = useState([]);
+  const [apps, setApps] = useState<any[]>([]);
   const { subscribe, isConnected } = useSocket();
   const { addNotification } = useNotification();
   const { user } = useAuth();

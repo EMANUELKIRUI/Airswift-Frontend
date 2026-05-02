@@ -277,12 +277,15 @@ export default function ApplicationForm({ onSuccess }: ApplicationFormProps) {
         return
       }
 
+      const cvFileNonNull = cvFile as File
+      const passportFileNonNull = passportFile as File
+
       // Call application service to submit
       const result = await applicationService.submitApplication(
         jobId,
         phone,
-        cvFile,
-        passportFile,
+        cvFileNonNull,
+        passportFileNonNull,
         nationalId
       )
 
