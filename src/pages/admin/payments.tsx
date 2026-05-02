@@ -341,7 +341,7 @@ export default function AdminPaymentsPage() {
                 <LineChart data={stats.monthlyRevenue}>
                   <XAxis dataKey="month" />
                   <YAxis />
-                  <Tooltip formatter={(value) => `Ksh ${value.toLocaleString()}`} />
+                  <Tooltip formatter={(value) => `Ksh ${Number(value || 0).toLocaleString()}`} />
                   <Line
                     type="monotone"
                     dataKey="total"
@@ -372,7 +372,7 @@ export default function AdminPaymentsPage() {
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
-                    <Tooltip formatter={(value) => `Ksh ${value.toLocaleString()}`} />
+                    <Tooltip formatter={(value) => `Ksh ${Number(value || 0).toLocaleString()}`} />
                   </PieChart>
                 </ResponsiveContainer>
               </div>

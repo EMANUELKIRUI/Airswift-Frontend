@@ -6,13 +6,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 interface Setting {
   _id: string;
   key: string;
-<<<<<<< HEAD
-  value: string;
-  description: string;
-=======
   value: any;
   description?: string;
->>>>>>> 009fa55 (fix:)
   category: string;
   isPublic: boolean;
 }
