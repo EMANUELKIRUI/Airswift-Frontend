@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "@/context/AuthContext";
 import { clearAuth } from "@/lib/auth";
@@ -32,7 +32,7 @@ export default function LoginPage() {
   const [otpStatus, setOtpStatus] = useState<string>("");
   const [otpError, setOtpError] = useState<string>("");
 
-  const handleLogin = async (e) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     setError("");
