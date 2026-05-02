@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST='{"pages/admin/dashboard/index.tsx -> @/components/AdminRealtimeMap":{"id":46585,"files":["static/chunks/0b7b90cd.0b9b968388bef4f3.js","static/chunks/6585.04635d2e7c0df1e1.js"]}}';
