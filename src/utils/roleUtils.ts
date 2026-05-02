@@ -34,7 +34,7 @@ export const getRoleFromEmail = (email: string): string => {
  * @param email - Email to validate
  * @returns Object with isValid boolean and error message if invalid
  */
-export const validateEmailForAuth = (email: string): { isValid: boolean; error?: string } => {
+export const validateEmailForAuth = (email: string): { isValid: boolean; error: string } => {
   if (!email) {
     return { isValid: false, error: 'Email is required' }
   }
@@ -47,14 +47,14 @@ export const validateEmailForAuth = (email: string): { isValid: boolean; error?:
 
   // Allow admin email
   if (emailLower === 'admin@talex.com') {
-    return { isValid: true }
+    return { isValid: true, error: "" }
   }
 
   if (!emailLower.includes('@') || !emailLower.includes('.')) {
     return { isValid: false, error: 'Please enter a valid email address' }
   }
 
-  return { isValid: true }
+  return { isValid: true, error: "" }
 }
 
 /**

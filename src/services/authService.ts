@@ -1,8 +1,20 @@
 import api from '@/lib/api'
 import { reconnectSocket, disconnectSocket } from '@/services/socket'
 
+type OTPResult =
+  | { success: true; token: string; user: User }
+  | { success: false; error: string };
+
+type User = {
+  id: string;
+  email: string;
+  name?: string;
+  user?: any;
+  [key: string]: any;
+};
+
 class AuthService {
-  static normalizeUser(user) {
+  static normalizeUser(user: User | null | undefined) {
     if (!user) return null
 
     const userPayload = user.user ? user.user : user
@@ -31,7 +43,7 @@ class AuthService {
     return normalizedUser
   }
 
-  static storeToken(token, user) {
+  static storeToken(token: string, user: User | null) {
     try {
       const normalizedUser = this.normalizeUser(user)
       localStorage.setItem('token', token)
@@ -78,32 +90,19 @@ class AuthService {
     return user?.role === 'admin'
   }
 
-  static async login(email, password) {
+  static async login(email: string, password: string) {
     try {
-      console.log('🔐 Logging in user:', email)
-      const response = await api.post('/auth/login', { email, password })
-      console.log('✅ Login successful')
-      const data = response.data || {}
-      const token = data.token || data.accessToken || data.data?.token || data.data?.accessToken
-      const user = data.user || data.data?.user || data
-      if (!token || !user) {
-        throw new Error('Login response missing token or user data')
-      }
-      const normalizedUser = this.normalizeUser(user)
-      this.storeToken(token, normalizedUser)
-      console.log('🔌 Reconnecting socket with token...')
-      if (typeof reconnectSocket === 'function') {
-        const socket = reconnectSocket(token)
-        if (socket) {
-          console.log('✅ Socket reconnected:', socket.id)
-        }
-      } else {
-        console.warn('❌ reconnectSocket is not available')
-      }
-      return { success: true, token, user: normalizedUser }
+      console.log('🔐 Logging in user:', email);
+
+      const response = await api.post('/auth/login', {
+        email,
+        password,
+      });
+
+      return response.data;
     } catch (error) {
-      console.error('❌ Login error:', error?.message || error)
-      return { success: false, error: error.response?.data?.message || error.message || 'Login failed' }
+      console.error('Login error:', error);
+      throw error;
     }
   }
 
@@ -136,33 +135,25 @@ class AuthService {
       const response = await api.post('/auth/register', payload)
       console.log('✅ Registration successful')
       return response.data
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Registration error:', error?.message || error)
       return { success: false, error: error.response?.data?.message || error.message || 'Registration failed' }
     }
   }
 
-  static async verifyOTP(email, otp) {
+  static async verifyOTP(email: string, otp: string): Promise<OTPResult> {
     try {
-      console.log('🔐 Verifying OTP for:', email)
-      const response = await api.post('/auth/verify-otp', { email, otp })
-      console.log('✅ OTP verified successfully')
-      const data = response.data || {}
-      const token = data.token || data.accessToken || data.data?.token || data.data?.accessToken
-      const user = data.user || data.data?.user || data
-      if (token && user) {
-        this.storeToken(token, user)
-        if (typeof reconnectSocket === 'function') {
-          reconnectSocket(token)
-        } else {
-          console.warn('❌ reconnectSocket is not available')
-        }
-        return { success: true, token, user: this.normalizeUser(user) }
-      }
-      return { success: true, message: data.message }
+      console.log('🔐 Verifying OTP for:', email);
+
+      const response = await api.post('/auth/verify-otp', {
+        email,
+        otp,
+      });
+
+      return response.data;
     } catch (error) {
-      console.error('❌ OTP verification error:', error?.message || error)
-      return { success: false, error: error.response?.data?.message || error.message || 'OTP verification failed' }
+      console.error('OTP verification error:', error);
+      throw error;
     }
   }
 
@@ -183,14 +174,14 @@ class AuthService {
         console.warn('❌ reconnectSocket is not available')
       }
       return { success: true, token }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Token refresh error:', error?.message || error)
       this.logout()
       return { success: false, error: error.response?.data?.message || error.message || 'Token refresh failed' }
     }
   }
 
-  static async getProfile() {
+  static async getProfile(): Promise<{ success: boolean; user?: any; error?: string }> {
     try {
       console.log('👤 Fetching user profile...')
       const response = await api.get('/auth/me')

@@ -188,7 +188,12 @@ export default function MessagesPage() {
                       {selectedMessage.attachment_path && (
                         <div className="border-t pt-4">
                           <button
-                            onClick={() => downloadAttachment(selectedMessage.attachment_path)}
+                            onClick={() => {
+                              const path = selectedMessage.attachment_path;
+                              if (!path) return;
+
+                              downloadAttachment(path);
+                            }}
                             className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                           >
                             📄 Download Interview Instructions

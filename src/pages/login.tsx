@@ -7,6 +7,7 @@ import { clearAuth } from "@/lib/auth";
 import { validateEmailForAuth } from "@/utils/roleUtils";
 import { Eye, EyeOff } from "lucide-react";
 import { GoogleLogin } from "@react-oauth/google";
+import { CredentialResponse } from "@react-oauth/google";
 import AuthService from "@/services/authService";
 import API from "@/services/apiClient";
 import OTPInput from "@/components/OTPInput";
@@ -40,7 +41,7 @@ export default function LoginPage() {
     try {
       const emailValidation = validateEmailForAuth(email);
       if (!emailValidation.isValid) {
-        setError(emailValidation.error);
+        setError(emailValidation.error || "");
         return;
       }
 
@@ -67,22 +68,22 @@ export default function LoginPage() {
           setError(result.error || 'Login failed');
         }
       }
-    } catch (err) {
-      console.error("❌ [Login] Error:", err);
-      
-      // Handle specific error codes from backend
+    } catch (err: any) {
       if (err.response?.data?.code === 'ACCOUNT_NOT_VERIFIED') {
-        setError(err.response.data.message || "Your Airswift account is pending activation. Check your inbox for the activation email.");
+        setError(
+          err.response?.data?.message ||
+          "Your Airswift account is pending activation. Check your inbox for the activation email."
+        );
         setShowResendPrompt(true);
       } else {
-        setError(err.response?.data?.message || err.message || "Login failed");
+        setError(err.response?.data?.message || "Login failed. Please try again.");
       }
     } finally {
       setLoading(false);
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse) => {
+  const handleGoogleSuccess = async (credentialResponse: any) => {
     setLoading(true);
     setError("");
 
@@ -100,7 +101,7 @@ export default function LoginPage() {
       // Email validation for Google login
       const emailValidation = validateEmailForAuth(response.user?.email);
       if (!emailValidation.isValid) {
-        setError(emailValidation.error);
+        setError(emailValidation.error || "");
         return;
       }
 
@@ -112,8 +113,10 @@ export default function LoginPage() {
       await login({ token: response.token, user: response.user });
       await redirectAfterLogin(response.user, router);
 
-    } catch (err) {
-      setError(err.message || "Google login failed");
+    } catch (err: unknown) {
+      const error = err as { message?: string };
+
+      setError(error.message || "Google login failed");
     } finally {
       setLoading(false);
     }
@@ -128,7 +131,7 @@ export default function LoginPage() {
     const emailTarget = otpEmail || email;
     const emailValidation = validateEmailForAuth(emailTarget);
     if (!emailValidation.isValid) {
-      setOtpError(emailValidation.error);
+      setOtpError(emailValidation.error || "");
       setSendingOtp(false);
       return;
     }
@@ -168,7 +171,7 @@ export default function LoginPage() {
     try {
       const result = await AuthService.verifyOTP(emailTarget, otpCode);
       if (result.success) {
-        const normalizedUser = AuthService.normalizeUser(result.user || result.data?.user || result.user);
+        const normalizedUser = AuthService.normalizeUser(result.user);
         await login({ token: result.token, user: normalizedUser });
         await redirectAfterLogin(normalizedUser, router);
       } else {
