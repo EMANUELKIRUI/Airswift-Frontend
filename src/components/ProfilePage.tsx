@@ -3,7 +3,7 @@ import api from '@/lib/api'; // Your axios instance
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
-const calculateProfileCompletion = (user) => {
+const calculateProfileCompletion = (user: any) => {
   const fields = [
     user.name,
     user.email,
@@ -21,7 +21,14 @@ const calculateProfileCompletion = (user) => {
 };
 
 const ProfilePage = () => {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    location: string;
+    skills: string[];
+    experience: string;
+  }>({
     name: '',
     email: '',
     phone: '',
@@ -30,7 +37,7 @@ const ProfilePage = () => {
     experience: '',
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
   const [loadingCV, setLoadingCV] = useState(false);
 
@@ -47,7 +54,7 @@ const ProfilePage = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
@@ -63,13 +70,13 @@ const ProfilePage = () => {
     }
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleCVUpload = async (e) => {
-    const file = e.target.files[0];
+  const handleCVUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (!file) return;
 
     setLoadingCV(true);

@@ -17,15 +17,15 @@ export const applicationService = {
   submitApplication: async (
     jobId: string,
     phone: string,
-    cv: File,
-    passport: File,
+    cv: File | null,
+    passport: File | null,
     nationalId: string
   ) => {
     const formData = new FormData()
     formData.append('jobId', jobId)
     formData.append('phone', phone)
-    formData.append('cv', cv)
-    formData.append('passport', passport)
+    if (cv) formData.append('cv', cv)
+    if (passport) formData.append('passport', passport)
     formData.append('nationalId', nationalId)
 
     const response = await API.post('/applications', formData)

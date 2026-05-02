@@ -564,7 +564,11 @@ const AdminApplications: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
+<<<<<<< HEAD
                   {ensureArray<Application>(currentApplications, []).map((app) => (
+=======
+                  {currentApplications.map((app) => (
+>>>>>>> 009fa55 (fix:)
                     <tr key={app._id} className={`status-${app.status?.toLowerCase()}`}>
                       <td className="name-cell">
                         <span className="applicant-name">{app.userId?.name || 'N/A'}</span>

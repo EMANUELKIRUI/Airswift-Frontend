@@ -135,10 +135,19 @@ export default function AdminDashboard() {
     // 🛡️ CLEANUP - Prevent memory leaks (CRITICAL)
     return () => {
       console.log('🧹 Cleaning up admin socket listeners...')
+<<<<<<< HEAD
       activeSocket.off('admin:new-application', handleNewApplication)
       activeSocket.off('application:status', handleApplicationStatusUpdate)
       activeSocket.off('job:created', handleJobCreated)
       activeSocket.off('job:updated', handleJobUpdated)
+=======
+      if (socket) {
+        socket.off('admin:new-application', handleNewApplication)
+        socket.off('application:status', handleApplicationStatusUpdate)
+        socket.off('job:created', handleJobCreated)
+        socket.off('job:updated', handleJobUpdated)
+      }
+>>>>>>> 009fa55 (fix:)
     }
   }, [user, isAuthorized, socket])
 

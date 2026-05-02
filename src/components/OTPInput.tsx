@@ -1,10 +1,15 @@
 import { useRef, useState } from "react";
 
-export default function OTPInput({ length = 6, onComplete }) {
-  const [otp, setOtp] = useState(Array(length).fill(""));
-  const inputsRef = useRef([]);
+interface OTPInputProps {
+  length?: number;
+  onComplete: (otp: string) => void;
+}
 
-  const handleChange = (value, index) => {
+export default function OTPInput({ length = 6, onComplete }: OTPInputProps) {
+  const [otp, setOtp] = useState(Array(length).fill(""));
+  const inputsRef = useRef<(HTMLInputElement | null)[]>([]);
+
+  const handleChange = (value: string, index: number) => {
     if (!/^\d*$/.test(value)) return;
 
     const newOtp = [...otp];
@@ -13,7 +18,7 @@ export default function OTPInput({ length = 6, onComplete }) {
 
     // Move forward
     if (value && index < length - 1) {
-      inputsRef.current[index + 1].focus();
+      inputsRef.current[index + 1]?.focus();
     }
 
     // Complete OTP
@@ -22,13 +27,13 @@ export default function OTPInput({ length = 6, onComplete }) {
     }
   };
 
-  const handleKeyDown = (e, index) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
     if (e.key === "Backspace" && !otp[index] && index > 0) {
-      inputsRef.current[index - 1].focus();
+      inputsRef.current[index - 1]?.focus();
     }
   };
 
-  const handlePaste = (e) => {
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
     const pasteData = e.clipboardData.getData("text").trim();
     if (!/^\d+$/.test(pasteData)) return;
 

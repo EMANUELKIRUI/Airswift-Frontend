@@ -5,11 +5,11 @@ import React, { useState, useEffect } from 'react';
 import api from '@/lib/api'; // Your API configuration with interceptors
 
 const JobSelectionInput = () => {
-  const [jobs, setJobs] = useState([]);
+  const [jobs, setJobs] = useState<any[]>([]);
   const [jobText, setJobText] = useState('');
   const [selectedJobId, setSelectedJobId] = useState('');
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
   const safeJobs = Array.isArray(jobs) ? jobs : [];
 
@@ -33,7 +33,7 @@ const JobSelectionInput = () => {
         : [];
 
       // Sort jobs alphabetically A to Z by title
-      const sortedJobs = jobsData.sort((a, b) => a.title.localeCompare(b.title));
+      const sortedJobs = jobsData.sort((a: any, b: any) => a.title.localeCompare(b.title));
 
       setJobs(sortedJobs);
     } catch (err) {
@@ -45,7 +45,7 @@ const JobSelectionInput = () => {
     }
   };
 
-  const handleJobInputChange = (e) => {
+  const handleJobInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setJobText(value);
 

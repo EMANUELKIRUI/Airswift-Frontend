@@ -6,8 +6,13 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 interface Setting {
   _id: string;
   key: string;
+<<<<<<< HEAD
   value: string;
   description: string;
+=======
+  value: any;
+  description?: string;
+>>>>>>> 009fa55 (fix:)
   category: string;
   isPublic: boolean;
 }
@@ -36,7 +41,11 @@ const AdminSettings = () => {
     }
   };
 
+<<<<<<< HEAD
   const updateSetting = async (key: string, value: string) => {
+=======
+  const updateSetting = async (key: string, value: any) => {
+>>>>>>> 009fa55 (fix:)
     try {
       await api.put(`/settings/${key}`, { value });
       fetchSettings();

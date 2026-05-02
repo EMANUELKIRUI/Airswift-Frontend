@@ -17,14 +17,18 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
     nationalId: '',
     coverLetter: ''
   });
-  const [files, setFiles] = useState({
+  const [files, setFiles] = useState<{
+    cv: File | null;
+    nationalId: File | null;
+    passport: File | null;
+  }>({
     cv: null,
     nationalId: null,
     passport: null
   });
   const [cvFile, setCvFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
 
@@ -79,7 +83,7 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
   }
 
   // Handle text input changes
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     try {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -171,8 +175,8 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
       // Append files (these must match backend multer field names)
       formDataToSend.append('cv', cvFile);
-      formDataToSend.append('passport', files.passport);
-      formDataToSend.append('nationalId', files.nationalId);
+      if (files.passport) formDataToSend.append('passport', files.passport);
+      if (files.nationalId) formDataToSend.append('nationalId', files.nationalId);
 
       console.log('📋 Form data prepared:');
       console.log('   - CV:', cvFile?.name);

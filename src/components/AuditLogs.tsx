@@ -3,9 +3,9 @@ import apiClient from '../services/apiClient';
 import { ensureArray } from '@/utils/fetchData';
 
 function AuditLogs() {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [actionFilter, setActionFilter] = useState('all');
@@ -17,9 +17,9 @@ function AuditLogs() {
   const [dateRange, setDateRange] = useState({ startDate: '', endDate: '' });
   const [autoRefresh, setAutoRefresh] = useState(false);
   const [autoRefreshInterval, setAutoRefreshInterval] = useState(30);
-  const [selectedLog, setSelectedLog] = useState(null);
+  const [selectedLog, setSelectedLog] = useState<any | null>(null);
   const [showDetailModal, setShowDetailModal] = useState(false);
-  const autoRefreshTimer = useRef(null);
+  const autoRefreshTimer = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     fetchAuditLogs();
@@ -94,7 +94,7 @@ function AuditLogs() {
           console.log(`✅ Successfully fetched from ${endpoint}`);
           break;
         } catch (err) {
-          console.warn(`⚠️ ${endpoint} failed (${err.response?.status}), trying next endpoint...`);
+          console.warn(`⚠️ ${endpoint} failed (${(err as any).response?.status}), trying next endpoint...`);
         }
       }
 
@@ -131,12 +131,12 @@ function AuditLogs() {
       setTotalLogs(pagination.total);
     } catch (err) {
       console.error('❌ Error fetching audit logs:', err);
-      const errorMessage = err.response?.data?.message || err.message || 'Unable to load audit logs. Please try again.';
+      const errorMessage = (err as any).response?.data?.message || (err as any).message || 'Unable to load audit logs. Please try again.';
       setError(errorMessage);
 
-      if (err.response?.status === 401) {
+      if ((err as any).response?.status === 401) {
         setError('Unauthorized - Please login again');
-      } else if (err.response?.status === 403) {
+      } else if ((err as any).response?.status === 403) {
         setError('Forbidden - You do not have permission to view audit logs');
       }
     } finally {
@@ -149,12 +149,12 @@ function AuditLogs() {
     fetchAuditLogs();
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1);
   };
 
-  const handleActionFilterChange = (e) => {
+  const handleActionFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setActionFilter(e.target.value);
     setCurrentPage(1);
   };
@@ -179,16 +179,16 @@ function AuditLogs() {
     setCurrentPage(1);
   };
 
-  const handleAutoRefreshChange = (e) => {
+  const handleAutoRefreshChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAutoRefresh(e.target.checked);
   };
 
-  const handleAutoRefreshIntervalChange = (e) => {
+  const handleAutoRefreshIntervalChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value, 10);
     setAutoRefreshInterval(Math.max(5, value)); // Minimum 5 seconds
   };
 
-  const openDetailModal = (log) => {
+  const openDetailModal = (log: any) => {
     setSelectedLog(log);
     setShowDetailModal(true);
   };
@@ -248,7 +248,7 @@ function AuditLogs() {
     );
   }
 
-  const getActionBadgeClass = (action) => {
+  const getActionBadgeClass = (action: string) => {
     if (action.includes('CREATE')) return 'badge-create';
     if (action.includes('UPDATE')) return 'badge-update';
     if (action.includes('DELETE')) return 'badge-delete';
@@ -256,7 +256,7 @@ function AuditLogs() {
     return 'badge-default';
   };
 
-  const getActionIcon = (action) => {
+  const getActionIcon = (action: string) => {
     if (action.includes('CREATE')) return '➕';
     if (action.includes('UPDATE')) return '✏️';
     if (action.includes('DELETE')) return '🗑️';
@@ -421,7 +421,7 @@ function AuditLogs() {
                 </tr>
               </thead>
               <tbody>
-                {ensureArray(currentLogs, []).map((log, index) => (
+                {currentLogs.map((log, index) => (
                   <tr key={log._id || index} className={`log-row ${getActionBadgeClass(log.action)}`}>
                     <td className="timestamp">
                       {new Date(log.createdAt).toLocaleString()}
