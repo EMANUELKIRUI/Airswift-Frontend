@@ -58,7 +58,8 @@ export const usePermissions = () => {
     }
 
     const userRole = user.role?.toLowerCase()
-    return rolePermissions[userRole]?.includes(permission) || false
+    if (!userRole) return false
+    return rolePermissions[userRole as keyof typeof rolePermissions]?.includes(permission) || false
   }
 
   /**

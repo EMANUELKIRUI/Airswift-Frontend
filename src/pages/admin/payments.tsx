@@ -185,7 +185,8 @@ export default function AdminPaymentsPage() {
   }, [payments, fetchStats])
 
   useEffect(() => {
-    if (!socket) return
+    const activeSocket = socket
+    if (!activeSocket) return
 
     const handlePaymentSuccess = (payment: Payment) => {
       addNotification('📊 New payment received', 'success')
@@ -197,10 +198,11 @@ export default function AdminPaymentsPage() {
       }
     }
 
-    socket.on('payment_success', handlePaymentSuccess)
+    activeSocket.on('payment_success', handlePaymentSuccess)
 
     return () => {
-      socket.off('payment_success', handlePaymentSuccess)
+      if (!activeSocket) return
+      activeSocket.off('payment_success', handlePaymentSuccess)
     }
   }, [fetchStats, statusFilter, serviceFilter, currentPage, pageSize, addNotification])
 

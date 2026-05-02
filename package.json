@@ -10,14 +10,21 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@hello-pangea/dnd": "^18.0.1",
+=======
+>>>>>>> 74c58cc (fix error)
     "@react-oauth/google": "^0.12.1",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "axios": "^1.6.0",
     "bcryptjs": "^2.4.3",
+<<<<<<< HEAD
     "cloudinary": "^2.10.0",
+=======
+    "cloudinary": "^1.41.0",
+>>>>>>> 74c58cc (fix error)
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "eslint": "^8",
@@ -26,15 +33,24 @@
     "express-rate-limit": "^7.1.5",
     "express-validator": "^7.0.1",
     "framer-motion": "^10.16.0",
+<<<<<<< HEAD
     "glob": "^13.0.6",
+=======
+>>>>>>> 74c58cc (fix error)
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.263.0",
     "mongoose": "^8.0.0",
+<<<<<<< HEAD
     "multer": "^2.1.1",
     "next": "^14.2.35",
     "nodemailer": "^8.0.7",
+=======
+    "multer": "^1.4.5-lts.1",
+    "next": "14.0.0",
+    "nodemailer": "^6.9.7",
+>>>>>>> 74c58cc (fix error)
     "react": "^18",
     "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^18",

@@ -114,7 +114,7 @@ const AdminApplicationsPage = () => {
   ]
 
   useEffect(() => {
-    if (!authLoading && (!user || user.role.toLowerCase() !== 'admin')) {
+    if (!authLoading && (!user || user.role?.toLowerCase() !== 'admin')) {
       router.push('/unauthorized')
     }
   }, [authLoading, user, router])
@@ -508,7 +508,7 @@ const AdminApplicationsPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {ensureArray(filteredApplications, []).map(app => (
+                    {ensureArray<any>(filteredApplications, []).map(app => (
                       <tr key={app._id} className="hover:bg-gray-50 transition">
                         <td className="px-6 py-4 text-sm">
                           <p className="font-medium text-gray-900">{app.fullName}</p>

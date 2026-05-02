@@ -14,7 +14,7 @@ export default function Dashboard() {
     approvedDocs: 0
   });
   const [loading, setLoading] = useState(true);
-  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState<any[]>([]);
 
   useEffect(() => {
     fetchDashboardData();

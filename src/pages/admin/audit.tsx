@@ -5,9 +5,9 @@ import { useState, useEffect } from 'react';
 import api from '@/lib/api';
 
 const SafeAuditLogs = () => {
-  const [logs, setLogs] = useState([]);
+  const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState({
     action: '',
     entity: '',
@@ -59,7 +59,7 @@ const SafeAuditLogs = () => {
     }
   };
 
-  const handleFilterChange = (key, value) => {
+  const handleFilterChange = (key: string, value: string) => {
     setFilters((current) => ({ ...current, [key]: value }));
   };
 
@@ -68,12 +68,12 @@ const SafeAuditLogs = () => {
     await fetchLogs({ page: 1 });
   };
 
-  const changePage = async (newPage) => {
+  const changePage = async (newPage: number) => {
     setPagination((prev) => ({ ...prev, page: newPage }));
     await fetchLogs({ page: newPage });
   };
 
-  const renderDetails = (details) => {
+  const renderDetails = (details: any) => {
     if (!details) return '—';
     if (typeof details === 'string') return details;
     return JSON.stringify(details, null, 2);

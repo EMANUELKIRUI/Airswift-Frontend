@@ -4,7 +4,7 @@
  */
 
 import toast from 'react-hot-toast'
-import { socket } from '@/services/socket'
+import { getSocket } from '@/services/socket'
 import { formatDateTime } from '@/utils/helpers'
 import { getStatusLabel } from '@/utils/statusColors'
 
@@ -18,7 +18,8 @@ export const setupUserSocketListeners = (callbacks: {
   onPaymentSuccess?: (data: any) => void
   onStatusChanged?: (data: any) => void
 }) => {
-  if (!socket || !socket.connected) {
+  const activeSocket = getSocket()
+  if (!activeSocket || !activeSocket.connected) {
     console.warn('⚠️ Socket not connected, skipping user listeners setup')
     return
   }
@@ -26,7 +27,7 @@ export const setupUserSocketListeners = (callbacks: {
   console.log('📡 Setting up user socket listeners...')
 
   // 📩 Application Status Updated
-  socket.on('applicationUpdated', (data) => {
+  activeSocket.on('applicationUpdated', (data) => {
     console.log('🔥 Application Updated:', data)
     toast.success(`Your application status: ${getStatusLabel(data.status || 'pending')}`, {
       duration: 5000,
@@ -36,7 +37,7 @@ export const setupUserSocketListeners = (callbacks: {
   })
 
   // 📅 Interview Scheduled
-  socket.on('interviewScheduled', (data) => {
+  activeSocket.on('interviewScheduled', (data) => {
     console.log('🔥 Interview Scheduled:', data)
     toast.success(`Interview scheduled for ${formatDateTime(data.interviewDate)}`, {
       duration: 5000,
@@ -46,7 +47,7 @@ export const setupUserSocketListeners = (callbacks: {
   })
 
   // 💰 Payment Received
-  socket.on('paymentSuccess', (data) => {
+  activeSocket.on('paymentSuccess', (data) => {
     console.log('🔥 Payment Success:', data)
     toast.success('💰 Payment processed! Visa processing started.', {
       duration: 5000,
@@ -56,9 +57,10 @@ export const setupUserSocketListeners = (callbacks: {
   })
 
   // 🎯 Status Changed (Alternative event)
-  socket.on('statusChanged', (data) => {
+  activeSocket.on('statusChanged', (data: any) => {
     console.log('🔥 Status Changed:', data)
-    const statusIcon = {
+    const statusKey = data.status?.toLowerCase()
+    const statusIconMap = {
       pending: '⏳',
       reviewed: '👀',
       shortlisted: '✨',
@@ -67,17 +69,21 @@ export const setupUserSocketListeners = (callbacks: {
       rejected: '❌',
       offer_made: '🎉',
       visa_ready: '🛫',
-    }[data.status] || '📝'
+    } as const
+    const statusIcon = statusIconMap[statusKey as keyof typeof statusIconMap] || '📝'
 
-    toast.success(`Status: ${getStatusLabel(data.status)}`, {
-      duration: 5000,
-      icon: statusIcon,
-    })
+    toast.success(
+      `${getStatusLabel(data.status)} - ${data.message || 'Status updated'}`,
+      {
+        duration: 5000,
+        icon: statusIcon,
+      }
+    )
     callbacks.onStatusChanged?.(data)
   })
 
   // 🔔 General Notification
-  socket.on('notification', (data) => {
+  activeSocket.on('notification', (data: any) => {
     console.log('🔔 Notification:', data)
     if (data.type === 'success') {
       toast.success(data.message, { duration: 4000 })
@@ -96,23 +102,25 @@ export const setupUserSocketListeners = (callbacks: {
  * 🧹 Cleanup Socket Listeners
  */
 export const cleanupUserSocketListeners = () => {
-  if (!socket) return
+  const activeSocket = getSocket()
+  if (!activeSocket) return
 
   console.log('🧹 Cleaning up user socket listeners...')
-  socket.off('applicationUpdated')
-  socket.off('interviewScheduled')
-  socket.off('paymentSuccess')
-  socket.off('statusChanged')
-  socket.off('notification')
+  activeSocket.off('applicationUpdated')
+  activeSocket.off('interviewScheduled')
+  activeSocket.off('paymentSuccess')
+  activeSocket.off('statusChanged')
+  activeSocket.off('notification')
 }
 
 /**
  * 📤 Emit Events from User Dashboard
  */
 export const emitUserEvent = (event: string, data: any) => {
-  if (!socket || !socket.connected) {
+  const activeSocket = getSocket()
+  if (!activeSocket || !activeSocket.connected) {
     console.warn('⚠️ Socket not connected')
     return
   }
-  socket.emit(event, data)
+  activeSocket.emit(event, data)
 }

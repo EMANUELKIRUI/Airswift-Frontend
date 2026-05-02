@@ -266,6 +266,17 @@ export default function ApplicationForm({ onSuccess }: ApplicationFormProps) {
       // Extract values to match API specification
       const { jobId, nationalId, phone, passport: passportFile, cv: cvFile } = applicationData
 
+      // Ensure required files are present before calling the API
+      if (!passportFile || !cvFile) {
+        setErrors((prev) => ({
+          ...prev,
+          passport: passportFile ? prev.passport : 'Passport is required',
+          cv: cvFile ? prev.cv : 'CV is required',
+        }))
+        setLoading(false)
+        return
+      }
+
       // Call application service to submit
       const result = await applicationService.submitApplication(
         jobId,

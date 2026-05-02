@@ -37,7 +37,7 @@ export const useAdminSocketNotifications = () => {
   const { user } = useAuth()
 
   useEffect(() => {
-    if (!user || user.role.toLowerCase() !== 'admin' || !socket?.connected) return
+    if (!user || user.role?.toLowerCase() !== 'admin' || !socket?.connected) return
 
     console.log('📡 Setting up admin socket notifications...')
 
@@ -60,29 +60,35 @@ export const useAdminSocketNotifications = () => {
 
     // Application status change notification
     const handleApplicationStatusChanged = (app: any) => {
-      const statusEmoji = {
+      const statusKey = app.status?.toLowerCase()
+      const statusEmojiMap = {
         accepted: '✅',
         rejected: '❌',
         shortlisted: '🟡',
         pending: '⏳',
-      }[app.status] || '📝'
+      } as const
+      const statusEmoji = statusEmojiMap[statusKey as keyof typeof statusEmojiMap] || '📝'
 
       toast.success(
-        `Application from ${app.user?.name} - ${app.status.toUpperCase()}`,
+        `Application from ${app.user?.name} - ${app.status?.toUpperCase()}`,
         { icon: statusEmoji, duration: 4000 }
       )
     }
 
+    const activeSocket = socket
+    if (!activeSocket) return
+
     // Register listeners
-    socket.on('admin:new-application', handleNewApplication)
-    socket.on('job:updated', handleJobUpdated)
-    socket.on('application:status', handleApplicationStatusChanged)
+    activeSocket.on('admin:new-application', handleNewApplication)
+    activeSocket.on('job:updated', handleJobUpdated)
+    activeSocket.on('application:status', handleApplicationStatusChanged)
 
     // Cleanup
     return () => {
-      socket.off('admin:new-application', handleNewApplication)
-      socket.off('job:updated', handleJobUpdated)
-      socket.off('application:status', handleApplicationStatusChanged)
+      if (!activeSocket) return
+      activeSocket.off('admin:new-application', handleNewApplication)
+      activeSocket.off('job:updated', handleJobUpdated)
+      activeSocket.off('application:status', handleApplicationStatusChanged)
     }
   }, [user])
 }
@@ -94,7 +100,7 @@ export const useUserSocketNotifications = () => {
   const { user } = useAuth()
 
   useEffect(() => {
-    if (!user || user.role.toLowerCase() !== 'user' || !socket?.connected) return
+    if (!user || user.role?.toLowerCase() !== 'user' || !socket?.connected) return
 
     console.log('📡 Setting up user socket notifications...')
 
@@ -135,16 +141,20 @@ export const useUserSocketNotifications = () => {
       })
     }
 
+    const activeSocket = socket
+    if (!activeSocket) return
+
     // Register listeners
-    socket.on('user:application-status', handleApplicationStatusChange)
-    socket.on('user:interview-scheduled', handleInterviewScheduled)
-    socket.on('user:message-received', handleNewMessage)
+    activeSocket.on('user:application-status', handleApplicationStatusChange)
+    activeSocket.on('user:interview-scheduled', handleInterviewScheduled)
+    activeSocket.on('user:message-received', handleNewMessage)
 
     // Cleanup
     return () => {
-      socket.off('user:application-status', handleApplicationStatusChange)
-      socket.off('user:interview-scheduled', handleInterviewScheduled)
-      socket.off('user:message-received', handleNewMessage)
+      if (!activeSocket) return
+      activeSocket.off('user:application-status', handleApplicationStatusChange)
+      activeSocket.off('user:interview-scheduled', handleInterviewScheduled)
+      activeSocket.off('user:message-received', handleNewMessage)
     }
   }, [user])
 }
@@ -156,7 +166,7 @@ export const useRecruiterSocketNotifications = () => {
   const { user } = useAuth()
 
   useEffect(() => {
-    if (!user || user.role.toLowerCase() !== 'recruiter' || !socket?.connected) return
+    if (!user || user.role?.toLowerCase() !== 'recruiter' || !socket?.connected) return
 
     console.log('📡 Setting up recruiter socket notifications...')
 
@@ -178,14 +188,18 @@ export const useRecruiterSocketNotifications = () => {
       )
     }
 
+    const activeSocket = socket
+    if (!activeSocket) return
+
     // Register listeners
-    socket.on('recruiter:candidate-application', handleCandidateApplication)
-    socket.on('recruiter:job-stats', handleJobStats)
+    activeSocket.on('recruiter:candidate-application', handleCandidateApplication)
+    activeSocket.on('recruiter:job-stats', handleJobStats)
 
     // Cleanup
     return () => {
-      socket.off('recruiter:candidate-application', handleCandidateApplication)
-      socket.off('recruiter:job-stats', handleJobStats)
+      if (!activeSocket) return
+      activeSocket.off('recruiter:candidate-application', handleCandidateApplication)
+      activeSocket.off('recruiter:job-stats', handleJobStats)
     }
   }, [user])
 }
@@ -205,21 +219,25 @@ export const useSocketStatus = () => {
       toast.success('Connected to live updates', { icon: '🟢', duration: 2000 })
     }
 
+    const activeSocket = socket
+    if (!activeSocket) return
+
     const handleDisconnect = () => {
       console.log('❌ Socket disconnected')
       setIsConnected(false)
       toast.error('Disconnected from live updates', { icon: '⚫', duration: 3000 })
     }
 
-    socket.on('connect', handleConnect)
-    socket.on('disconnect', handleDisconnect)
+    activeSocket.on('connect', handleConnect)
+    activeSocket.on('disconnect', handleDisconnect)
 
     // Check initial state
-    setIsConnected(socket.connected)
+    setIsConnected(activeSocket.connected)
 
     return () => {
-      socket.off('connect', handleConnect)
-      socket.off('disconnect', handleDisconnect)
+      if (!activeSocket) return
+      activeSocket.off('connect', handleConnect)
+      activeSocket.off('disconnect', handleDisconnect)
     }
   }, [])
 

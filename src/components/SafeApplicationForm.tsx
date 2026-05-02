@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, ChangeEvent } from 'react';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import API from '@/services/apiClient'; // Centralized API client with auth interceptor
@@ -17,11 +17,15 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
     nationalId: '',
     coverLetter: ''
   });
+<<<<<<< HEAD
   const [files, setFiles] = useState<{
     cv: File | null;
     nationalId: File | null;
     passport: File | null;
   }>({
+=======
+  const [files, setFiles] = useState<{ cv: File | null; passport: File | null; nationalId: File | null }>({
+>>>>>>> 74c58cc (fix error)
     cv: null,
     nationalId: null,
     passport: null
@@ -83,7 +87,11 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
   }
 
   // Handle text input changes
+<<<<<<< HEAD
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+=======
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+>>>>>>> 74c58cc (fix error)
     const { name, value } = e.target;
     try {
       setFormData(prev => ({ ...prev, [name]: value }));
@@ -168,6 +176,8 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
       // ✅ Use FormData for file uploads
       const formDataToSend = new FormData();
+      const passportFile = files.passport!;
+      const nationalIdFile = files.nationalId!;
 
       formDataToSend.append('jobId', formData.jobId);
       formDataToSend.append('phone', formData.phone);
@@ -175,8 +185,13 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
       // Append files (these must match backend multer field names)
       formDataToSend.append('cv', cvFile);
+<<<<<<< HEAD
       if (files.passport) formDataToSend.append('passport', files.passport);
       if (files.nationalId) formDataToSend.append('nationalId', files.nationalId);
+=======
+      formDataToSend.append('passport', passportFile);
+      formDataToSend.append('nationalId', nationalIdFile);
+>>>>>>> 74c58cc (fix error)
 
       console.log('📋 Form data prepared:');
       console.log('   - CV:', cvFile?.name);
@@ -184,9 +199,9 @@ export default function SafeApplicationForm({ onSuccess }: SafeApplicationFormPr
 
       // 🔍 Debug: Log all FormData entries before sending
       console.log('🔍 FormData entries debug:');
-      for (const pair of formDataToSend.entries()) {
+      Array.from(formDataToSend.entries()).forEach((pair) => {
         console.log(`   ${pair[0]}:`, pair[1] instanceof File ? `File(${pair[1].name}, ${pair[1].size} bytes)` : pair[1]);
-      }
+      });
 
       try {
         const response = await API.post('/applications/apply', formDataToSend);

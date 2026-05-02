@@ -25,7 +25,7 @@ export const useSocketEvents = (
   // Only set up listeners if user has the required role
   useEffect(() => {
     // Guard: Check user role
-    if (!user || user.role.toLowerCase() !== requiredRole.toLowerCase()) {
+    if (!user || user.role?.toLowerCase() !== requiredRole.toLowerCase()) {
       console.log(`⚠️ Socket events require '${requiredRole}' role, user has '${user?.role}'`)
       return
     }
@@ -43,15 +43,17 @@ export const useSocketEvents = (
     console.log(`📡 Setting up socket listeners for '${requiredRole}' role:`, Object.keys(handlers))
 
     // Register all event handlers
+    const activeSocket = socket
+    if (!activeSocket) return
     Object.entries(handlers).forEach(([event, handler]) => {
-      socket.on(event, handler)
+      activeSocket.on(event, handler)
     })
 
     // 🛡️ CLEANUP (CRITICAL - prevents memory leaks)
     return () => {
       console.log(`🧹 Cleaning up socket listeners for '${requiredRole}' role`)
       Object.entries(handlers).forEach(([event, handler]) => {
-        socket.off(event, handler)
+        activeSocket.off(event, handler)
       })
     }
   }, [user, requiredRole, handlers])
@@ -71,14 +73,15 @@ export const useSocketEvent = (
   enabled: boolean = true
 ) => {
   useEffect(() => {
-    if (!enabled || !socket || !socket.connected) return
+    const activeSocket = socket
+    if (!enabled || !activeSocket || !activeSocket.connected) return
 
     console.log(`📡 Listening for: ${event}`)
-    socket.on(event, handler)
+    activeSocket.on(event, handler)
 
     return () => {
       console.log(`🧹 Cleanup: ${event}`)
-      socket.off(event, handler)
+      activeSocket.off(event, handler)
     }
   }, [event, handler, enabled])
 }

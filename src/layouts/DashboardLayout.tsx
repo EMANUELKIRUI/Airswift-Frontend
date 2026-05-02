@@ -11,6 +11,7 @@ interface DashboardLayoutProps {
 const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, sidebarItems }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { user } = useAuth()
+  const safeSidebarItems = sidebarItems || []
 
   return (
     <div className="flex h-screen bg-gray-50 page-watermark overflow-hidden">
@@ -33,7 +34,7 @@ const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children, sidebarItem
           </button>
         </div>
         <nav className="mt-8 space-y-2 px-2">
-          {sidebarItems.map((item) => (
+          {safeSidebarItems.map((item) => (
             <Link
               key={item.href}
               href={item.href}

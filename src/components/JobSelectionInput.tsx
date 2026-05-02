@@ -26,7 +26,7 @@ const JobSelectionInput = () => {
       console.log('Jobs fetched:', response.data);
 
       const payload = response.data?.data || response.data || [];
-      const jobsData = Array.isArray(payload)
+      const jobsData: any[] = Array.isArray(payload)
         ? payload
         : Array.isArray(payload.jobs)
         ? payload.jobs

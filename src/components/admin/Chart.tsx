@@ -60,7 +60,14 @@ export default function Chart({
               cx="50%"
               cy="50%"
               labelLine={false}
+<<<<<<< HEAD
               label={({ name, percent = 0 }) => `${name} ${(percent * 100).toFixed(0)}%`}
+=======
+              label={({ name, percent }) => {
+                const displayPercent = typeof percent === 'number' ? (percent * 100).toFixed(0) : '0';
+                return `${name} ${displayPercent}%`;
+              }}
+>>>>>>> 74c58cc (fix error)
               outerRadius={80}
               fill="#8884d8"
               dataKey={dataKey}

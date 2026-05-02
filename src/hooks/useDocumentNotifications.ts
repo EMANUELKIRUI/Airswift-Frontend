@@ -71,12 +71,20 @@ export const useDocumentNotifications = (options: UseDocumentNotificationsOption
     })
 
     return () => {
+<<<<<<< HEAD
       if (socket) {
         socket.off('document:approved', handleDocumentApproved)
         socket.off('document:rejected', handleDocumentRejected)
         socket.off('document:status_changed', handleDocumentStatusChanged)
         socket.off('notification')
       }
+=======
+      if (!socket) return
+      socket.off('document:approved', handleDocumentApproved)
+      socket.off('document:rejected', handleDocumentRejected)
+      socket.off('document:status_changed', handleDocumentStatusChanged)
+      socket.off('notification')
+>>>>>>> 74c58cc (fix error)
     }
   }, [handleDocumentApproved, handleDocumentRejected, handleDocumentStatusChanged])
 

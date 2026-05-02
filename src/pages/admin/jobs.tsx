@@ -299,7 +299,7 @@ const AdminJobsPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
-                {ensureArray(filteredJobs, []).map((job) => (
+                {ensureArray<any>(filteredJobs, []).map((job) => (
                   <tr key={job._id} className="hover:bg-gray-50 transition">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">
                       {job.title}
