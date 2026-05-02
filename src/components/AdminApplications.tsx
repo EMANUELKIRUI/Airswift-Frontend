@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import api from '@/lib/api';
 import { getSocket } from '@/lib/socket';
@@ -27,16 +26,21 @@ interface Application {
 const AdminApplications: React.FC = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [filteredApplications, setFilteredApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState<boolean>(true);
+  const [searchTerm, setSearchTerm] = useState<string>('');
 
   const fetchApplications = useCallback(async () => {
     try {
       setLoading(true);
+
       const res = await api.get('/admin/applications');
-      setApplications(ensureArray(res.data.data, []));
+
+      const data = res?.data?.data || [];
+      setApplications(ensureArray<Application>(data, []));
+
     } catch (err) {
-      console.error(err);
+      console.error('Error fetching applications:', err);
+      setApplications([]);
     } finally {
       setLoading(false);
     }
@@ -48,28 +52,36 @@ const AdminApplications: React.FC = () => {
     const socket = getSocket();
     if (!socket) return;
 
-    socket.on('applicationUpdated', (data: any) => {
+    const handleUpdate = (data: any) => {
       setApplications(prev =>
-        prev.map(app => app._id === data.appId ? data.app : app)
+        prev.map(app =>
+          app._id === data.appId ? data.app : app
+        )
       );
-    });
+    };
+
+    socket.on('applicationUpdated', handleUpdate);
 
     return () => {
-      socket.off('applicationUpdated');
+      socket.off('applicationUpdated', handleUpdate);
     };
   }, [fetchApplications]);
 
   useEffect(() => {
+    const term = searchTerm.toLowerCase();
+
     const filtered = applications.filter(app =>
-      app.userId?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.userId?.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      app.jobId?.title?.toLowerCase().includes(searchTerm.toLowerCase())
+      app.userId?.name?.toLowerCase().includes(term) ||
+      app.userId?.email?.toLowerCase().includes(term) ||
+      app.jobId?.title?.toLowerCase().includes(term)
     );
 
     setFilteredApplications(filtered);
   }, [applications, searchTerm]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return <p>Loading applications...</p>;
+  }
 
   return (
     <div className="admin-container">
@@ -77,7 +89,7 @@ const AdminApplications: React.FC = () => {
 
       <input
         type="text"
-        placeholder="Search..."
+        placeholder="Search applications..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
       />
@@ -98,7 +110,7 @@ const AdminApplications: React.FC = () => {
               <td>{app.userId?.name || 'N/A'}</td>
               <td>{app.userId?.email || 'N/A'}</td>
               <td>{app.jobId?.title || 'N/A'}</td>
-              <td>{app.status}</td>
+              <td>{app.status || 'pending'}</td>
             </tr>
           ))}
         </tbody>
@@ -106,6 +118,3 @@ const AdminApplications: React.FC = () => {
     </div>
   );
 };
-
-export default AdminApplications;
-
