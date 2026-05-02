@@ -13,6 +13,9 @@ const baseURL = normalizedBaseUrl.endsWith('/api')
 const api = axios.create({
   baseURL,
   withCredentials: true, // Include cookies for authentication
+  headers: {
+    'Content-Type': 'application/json'
+  }
 })
 
 console.log('📡 API baseURL set to:', baseURL)
@@ -20,7 +23,7 @@ console.log('📡 API baseURL set to:', baseURL)
 // ✅ REQUEST INTERCEPTOR: Add Authorization header with Bearer token
 api.interceptors.request.use((config) => {
   const url = config.url || ''
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem('token') || localStorage.getItem('accessToken')
 
   const isAuthRequest = url.includes('/auth/login') ||
                        url.includes('/auth/register') ||
@@ -43,17 +46,44 @@ api.interceptors.request.use((config) => {
   return config
 })
 
-// ✅ RESPONSE INTERCEPTOR: Handle authentication errors
+// ✅ RESPONSE INTERCEPTOR: Handle authentication errors and refresh expired tokens
 api.interceptors.response.use(
   res => res,
-  err => {
-    if (err.response?.status === 401) {
-      // ✅ DO NOT immediately remove token on 401
-      console.warn("Unauthorized (401) - Token may be expired or invalid");
-      // The token will be handled by the app's auth logic
-      // Token removal should only happen on explicit logout
+  async (err) => {
+    const originalRequest = err.config
+
+    if (err.response?.status === 401 && originalRequest && !originalRequest._retry) {
+      originalRequest._retry = true
+      const refreshToken = localStorage.getItem('refreshToken')
+
+      if (refreshToken) {
+        try {
+          const refreshResponse = await axios.post(
+            `${baseURL}/auth/refresh`,
+            { refreshToken },
+            { withCredentials: true }
+          )
+
+          const newToken = refreshResponse.data?.token || refreshResponse.data?.accessToken
+
+          if (newToken) {
+            localStorage.setItem('token', newToken)
+            localStorage.setItem('accessToken', newToken)
+            originalRequest.headers.Authorization = `Bearer ${newToken}`
+            return api(originalRequest)
+          }
+        } catch (refreshError) {
+          console.warn('🔄 Token refresh failed:', refreshError)
+        }
+      }
+
+      localStorage.removeItem('token')
+      localStorage.removeItem('accessToken')
+      localStorage.removeItem('refreshToken')
+      window.location.href = '/login'
     }
-    return Promise.reject(err);
+
+    return Promise.reject(err)
   }
 )
 
