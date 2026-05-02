@@ -65,6 +65,7 @@ export default function AdminDashboard() {
       return
     }
 
+    const activeSocket = socket // Capture socket to ensure it's not null in cleanup
     console.log('📡 Setting up admin socket listeners...')
 
     // 🟡 Listen for new applications
@@ -126,18 +127,18 @@ export default function AdminDashboard() {
     }
 
     // Register event listeners
-    socket.on('admin:new-application', handleNewApplication)
-    socket.on('application:status', handleApplicationStatusUpdate)
-    socket.on('job:created', handleJobCreated)
-    socket.on('job:updated', handleJobUpdated)
+    activeSocket.on('admin:new-application', handleNewApplication)
+    activeSocket.on('application:status', handleApplicationStatusUpdate)
+    activeSocket.on('job:created', handleJobCreated)
+    activeSocket.on('job:updated', handleJobUpdated)
 
     // 🛡️ CLEANUP - Prevent memory leaks (CRITICAL)
     return () => {
       console.log('🧹 Cleaning up admin socket listeners...')
-      socket.off('admin:new-application', handleNewApplication)
-      socket.off('application:status', handleApplicationStatusUpdate)
-      socket.off('job:created', handleJobCreated)
-      socket.off('job:updated', handleJobUpdated)
+      activeSocket.off('admin:new-application', handleNewApplication)
+      activeSocket.off('application:status', handleApplicationStatusUpdate)
+      activeSocket.off('job:created', handleJobCreated)
+      activeSocket.off('job:updated', handleJobUpdated)
     }
   }, [user, isAuthorized, socket])
 

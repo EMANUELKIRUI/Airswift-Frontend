@@ -55,7 +55,7 @@ const EditModal: React.FC<EditModalProps> = ({
 
   const handleChange = (e: any) => {
     const { name, value, type, checked } = e.target;
-    setFormData(prev => ({
+    setFormData((prev: any) => ({
       ...prev,
       [name]: type === 'checkbox' ? checked : value
     }));
@@ -564,7 +564,7 @@ const AdminApplications: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {ensureArray(currentApplications, []).map((app) => (
+                  {ensureArray<Application>(currentApplications, []).map((app) => (
                     <tr key={app._id} className={`status-${app.status?.toLowerCase()}`}>
                       <td className="name-cell">
                         <span className="applicant-name">{app.userId?.name || 'N/A'}</span>

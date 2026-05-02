@@ -3,10 +3,19 @@ import api from '@/lib/api'; // Your axios instance
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000';
 
+interface Setting {
+  _id: string;
+  key: string;
+  value: string;
+  description: string;
+  category: string;
+  isPublic: boolean;
+}
+
 const AdminSettings = () => {
-  const [settings, setSettings] = useState([]);
+  const [settings, setSettings] = useState<Setting[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [selectedCategory, setSelectedCategory] = useState('general');
   const [newSetting, setNewSetting] = useState({ key: '', value: '', description: '', category: 'general', isPublic: false });
 
@@ -27,7 +36,7 @@ const AdminSettings = () => {
     }
   };
 
-  const updateSetting = async (key, value) => {
+  const updateSetting = async (key: string, value: string) => {
     try {
       await api.put(`/settings/${key}`, { value });
       fetchSettings();
@@ -48,7 +57,7 @@ const AdminSettings = () => {
     }
   };
 
-  const deleteSetting = async (key) => {
+  const deleteSetting = async (key: string) => {
     if (!confirm('Are you sure you want to delete this setting?')) return;
 
     try {
