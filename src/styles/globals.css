@@ -1,8 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
 :root {
   --primary: #0A66C2;
@@ -39,8 +36,7 @@ body {
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
 html {
@@ -49,6 +45,71 @@ html {
 
 body {
   position: relative;
+}
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+::selection {
+  background: rgba(10, 102, 194, 0.15);
+  color: #0A66C2;
+}
+
+@layer base {
+  html {
+    font-family: 'Inter', sans-serif;
+  }
+
+  body {
+    line-height: 1.6;
+  }
+
+  h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+@layer utilities {
+  .text-primary {
+    color: var(--primary);
+  }
+
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+
+  .bg-primary {
+    background-color: var(--primary);
+  }
+
+  .bg-accent {
+    background-color: var(--accent);
+  }
 }
 
 /* Card Styles */
