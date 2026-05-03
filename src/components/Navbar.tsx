@@ -37,24 +37,24 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="sticky top-0 z-50 bg-white border-b border-gray-200 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 flex justify-between items-center">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 group cursor-pointer">
-          <div className="bg-primary p-2 rounded-lg group-hover:shadow-md transition-all">
+        <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group cursor-pointer flex-shrink-0">
+          <div className="bg-primary p-1.5 sm:p-2 rounded-lg group-hover:shadow-md transition-all">
             💼
           </div>
-          <span className="hidden sm:inline text-xl md:text-2xl font-bold text-primary">
+          <span className="hidden sm:inline text-lg sm:text-xl lg:text-2xl font-bold text-primary">
             TALEX
           </span>
         </Link>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8">
           {isAuthenticated ? (
             <>
               <Link
                 href={user?.role === 'admin' ? '/admin/dashboard' : '/job-seeker/dashboard'}
-                className="text-gray-600 hover:text-primary transition font-medium flex items-center gap-2"
+                className="text-gray-600 hover:text-primary transition font-medium flex items-center gap-2 text-sm lg:text-base"
               >
                 <LayoutDashboard size={18} />
                 Dashboard
@@ -63,7 +63,7 @@ const Navbar: React.FC = () => {
               <AdminOnly>
                 <Link
                   href="/admin"
-                  className="text-orange-600 hover:text-orange-700 transition font-medium flex items-center gap-2"
+                  className="text-orange-600 hover:text-orange-700 transition font-medium flex items-center gap-2 text-sm lg:text-base"
                 >
                   <span className="text-sm">⚙️</span>
                   Admin Panel
@@ -72,17 +72,17 @@ const Navbar: React.FC = () => {
             </>
           ) : (
             <>
-              <Link href="/about" className="text-gray-600 hover:text-primary transition">About</Link>
-              <Link href="/contact" className="text-gray-600 hover:text-primary transition">Contact</Link>
+              <Link href="/about" className="text-gray-600 hover:text-primary transition text-sm lg:text-base">About</Link>
+              <Link href="/contact" className="text-gray-600 hover:text-primary transition text-sm lg:text-base">Contact</Link>
             </>
           )}
         </div>
 
         {/* Desktop Auth Buttons */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden lg:flex items-center gap-4">
           <button
             onClick={handleThemeToggle}
-            className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition"
+            className="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition touch-safe"
             aria-label="Toggle theme"
           >
             {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
@@ -90,31 +90,31 @@ const Navbar: React.FC = () => {
 
           {isAuthenticated ? (
             <>
-              <div className="flex items-center gap-3 px-4 py-2 bg-gray-50 rounded-lg border border-gray-200">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm font-bold text-white">
+              <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs sm:text-sm font-bold text-white flex-shrink-0">
                   {user?.name?.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-sm font-medium text-gray-700">{user?.name}</span>
+                <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">{user?.name}</span>
               </div>
               <button
                 onClick={handleLogout}
-                className="bg-danger hover:bg-red-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-red-500/30"
+                className="bg-danger hover:bg-red-600 text-white px-3 sm:px-4 py-2 sm:py-2.5 rounded-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-red-500/30 text-sm touch-safe"
               >
-                <LogOut size={18} />
-                Logout
+                <LogOut size={16} className="sm:w-[18px] sm:h-[18px]" />
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </>
           ) : (
             <>
               <Link
                 href="/login"
-                className="text-primary hover:text-green-600 px-4 py-2 rounded-lg border border-primary transition"
+                className="text-primary hover:text-primary-dark px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg border border-primary transition text-sm font-medium touch-safe"
               >
                 Login
               </Link>
               <Link
                 href="/register"
-                className="bg-primary hover:bg-green-600 text-white px-6 py-2 rounded-lg transition-all hover:shadow-lg hover:shadow-green-500/30"
+                className="bg-primary hover:bg-primary-dark text-white px-4 sm:px-6 py-1.5 sm:py-2 rounded-lg transition-all hover:shadow-lg text-sm font-medium touch-safe"
               >
                 Register
               </Link>
@@ -124,10 +124,20 @@ const Navbar: React.FC = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-gray-600 hover:text-primary transition"
+          className="lg:hidden text-gray-600 hover:text-primary transition p-2 touch-safe"
           onClick={() => setMenuOpen(!menuOpen)}
+          aria-label="Toggle menu"
         >
-          {menuOpen ? <X size={28} /> : <Menu size={28} />}
+          {menuOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+
+        {/* Mobile Theme Toggle */}
+        <button
+          onClick={handleThemeToggle}
+          className="p-2 lg:hidden rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition touch-safe"
+          aria-label="Toggle theme"
+        >
+          {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
         </button>
       </div>
 
@@ -137,42 +147,42 @@ const Navbar: React.FC = () => {
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="md:hidden bg-gray-50 border-t border-gray-200"
+          className="lg:hidden bg-gray-50 border-t border-gray-200 overflow-y-auto max-h-[calc(100vh-70px)]"
         >
-          <div className="px-4 py-4 space-y-3">
+          <div className="px-3 sm:px-4 py-3 sm:py-4 space-y-2">
             {isAuthenticated ? (
               <>
-                <div className="mb-4 flex items-center gap-3 px-3 py-2 bg-white rounded-lg border border-gray-200">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-sm font-bold text-white">
+                <div className="mb-4 flex items-center gap-2 sm:gap-3 px-3 py-2 bg-white rounded-lg border border-gray-200">
+                  <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs sm:text-sm font-bold text-white flex-shrink-0">
                     {user?.name?.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-sm font-medium text-gray-700">{user?.name}</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">{user?.name}</span>
                 </div>
 
                 <Link
                   href={user?.role === 'admin' ? '/admin/dashboard' : '/job-seeker/dashboard'}
-                  className="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition flex items-center gap-2"
+                  className="block px-3 py-2.5 sm:py-3 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition flex items-center gap-2 text-sm font-medium touch-safe"
                   onClick={() => setMenuOpen(false)}
                 >
                   <LayoutDashboard size={18} />
-                  Dashboard
+                  <span className="truncate">Dashboard</span>
                 </Link>
 
                 {/* Admin-only mobile navigation */}
                 <AdminOnly>
                   <Link
                     href="/admin"
-                    className="block px-3 py-2 text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-lg transition flex items-center gap-2"
+                    className="block px-3 py-2.5 sm:py-3 text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-lg transition flex items-center gap-2 text-sm font-medium touch-safe"
                     onClick={() => setMenuOpen(false)}
                   >
-                    <span className="text-sm">⚙️</span>
+                    <span className="text-lg">⚙️</span>
                     Admin Panel
                   </Link>
                 </AdminOnly>
 
                 <button
                   onClick={handleLogout}
-                  className="w-full bg-danger hover:bg-red-600 text-white px-3 py-2 rounded-lg flex items-center justify-center gap-2 transition-all mt-2"
+                  className="w-full bg-danger hover:bg-red-600 text-white px-3 py-2.5 sm:py-3 rounded-lg flex items-center justify-center gap-2 transition-all mt-3 text-sm font-medium touch-safe"
                 >
                   <LogOut size={18} />
                   Logout
@@ -182,7 +192,7 @@ const Navbar: React.FC = () => {
               <>
                 <Link
                   href="/about"
-                  className="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition"
+                  className="block px-3 py-2.5 sm:py-3 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition text-sm font-medium touch-safe"
                   onClick={() => setMenuOpen(false)}
                 >
                   About
@@ -190,27 +200,29 @@ const Navbar: React.FC = () => {
 
                 <Link
                   href="/contact"
-                  className="block px-3 py-2 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition"
+                  className="block px-3 py-2.5 sm:py-3 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition text-sm font-medium touch-safe"
                   onClick={() => setMenuOpen(false)}
                 >
                   Contact
                 </Link>
 
-                <Link
-                  href="/login"
-                  className="block px-3 py-2 text-primary border border-primary rounded-lg hover:bg-green-50 transition text-center"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Login
-                </Link>
+                <div className="border-t border-gray-200 pt-3 space-y-2">
+                  <Link
+                    href="/login"
+                    className="block px-3 py-2.5 sm:py-3 text-primary border border-primary rounded-lg hover:bg-green-50 transition text-center text-sm font-medium touch-safe"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Login
+                  </Link>
 
-                <Link
-                  href="/register"
-                  className="block px-3 py-2 bg-primary hover:bg-green-600 text-white rounded-lg transition text-center font-medium"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Register
-                </Link>
+                  <Link
+                    href="/register"
+                    className="block px-3 py-2.5 sm:py-3 bg-primary hover:bg-primary-dark text-white rounded-lg transition text-center text-sm font-medium touch-safe"
+                    onClick={() => setMenuOpen(false)}
+                  >
+                    Register
+                  </Link>
+                </div>
               </>
             )}
           </div>

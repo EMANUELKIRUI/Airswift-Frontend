@@ -51,9 +51,60 @@ body {
   position: relative;
 }
 
+/* Responsive Typography */
+@layer utilities {
+  /* Mobile-first responsive text sizes */
+  .text-responsive-sm {
+    @apply text-sm sm:text-base;
+  }
+
+  .text-responsive-base {
+    @apply text-base sm:text-lg;
+  }
+
+  .text-responsive-lg {
+    @apply text-lg sm:text-xl;
+  }
+
+  .text-responsive-xl {
+    @apply text-xl sm:text-2xl md:text-3xl;
+  }
+
+  .text-responsive-2xl {
+    @apply text-2xl sm:text-3xl md:text-4xl;
+  }
+
+  .text-responsive-3xl {
+    @apply text-3xl sm:text-4xl md:text-5xl lg:text-6xl;
+  }
+
+  /* Responsive padding */
+  .px-responsive {
+    @apply px-3 sm:px-6 lg:px-8;
+  }
+
+  .py-responsive {
+    @apply py-4 sm:py-8 lg:py-12;
+  }
+
+  .p-responsive {
+    @apply p-3 sm:p-6 lg:p-8;
+  }
+
+  /* Touch-friendly spacing for interactive elements */
+  .touch-safe {
+    @apply py-2.5 px-3 sm:py-3 sm:px-4;
+  }
+
+  /* Container queries alternative for responsive components */
+  .container-responsive {
+    @apply max-w-full sm:max-w-2xl lg:max-w-4xl xl:max-w-6xl;
+  }
+}
+
 /* Card Styles */
 .card {
-  @apply bg-white rounded-lg shadow-md p-6 border border-gray-100;
+  @apply bg-white rounded-lg sm:rounded-xl shadow-md p-4 sm:p-6 border border-gray-100;
 }
 
 .card-header {
@@ -70,19 +121,19 @@ body {
 }
 
 .btn-primary {
-  @apply bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow-md;
+  @apply bg-primary text-white hover:bg-primary-dark shadow-sm hover:shadow-md active:scale-95;
 }
 
 .btn-secondary {
-  @apply border border-border bg-surface hover:bg-gray-50 text-text-primary shadow-sm hover:shadow-md;
+  @apply border border-border bg-surface hover:bg-gray-50 text-text-primary shadow-sm hover:shadow-md active:scale-95;
 }
 
 .btn-accent {
-  @apply bg-accent text-white hover:bg-green-600 shadow-sm hover:shadow-md;
+  @apply bg-accent text-white hover:bg-green-600 shadow-sm hover:shadow-md active:scale-95;
 }
 
 .btn-outline {
-  @apply border-2 border-primary text-primary hover:bg-primary hover:text-white;
+  @apply border-2 border-primary text-primary hover:bg-primary hover:text-white active:scale-95;
 }
 
 /* Badge Styles */
@@ -96,6 +147,42 @@ body {
 
 .badge-warning {
   @apply bg-yellow-100 text-yellow-800;
+}
+
+/* Responsive Grid */
+@media (max-width: 640px) {
+  /* Stack layout adjustments for mobile */
+  .grid-auto-mobile {
+    @apply grid-cols-1;
+  }
+
+  /* Hide desktop-only elements */
+  .hide-mobile {
+    display: none;
+  }
+}
+
+@media (min-width: 641px) {
+  .show-mobile-only {
+    display: none;
+  }
+}
+
+/* Smooth transitions for responsive changes */
+@media (prefers-reduced-motion: no-preference) {
+  body {
+    transition: background-color 0.3s ease;
+  }
+}
+
+/* Ensure proper touch targets on mobile */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a[role="button"],
+  input[type="button"],
+  input[type="submit"] {
+    @apply py-3 px-4;
+  }
 }
 
 .badge-danger {
