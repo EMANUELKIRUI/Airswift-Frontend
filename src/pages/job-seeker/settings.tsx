@@ -114,7 +114,7 @@ export default function SettingsPage() {
         toast.success(result.message || 'Password changed successfully.')
         setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' })
       } else {
-        toast.error(result.error || 'Failed to change password.')
+        toast.error(result.message || 'Failed to change password.')
       }
     } catch (err: any) {
       console.error('Password change failed:', err)

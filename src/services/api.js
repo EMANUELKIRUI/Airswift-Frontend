@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'https://airswift-backend-fjt3.onrender.com/api',
+  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000',
+  timeout: parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '30000', 10),
 });
 
 // Request interceptor to add auth token

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
-import { openai } from '../../../lib/openai';
+import openai from '../../../lib/openai';
 import { connectDB } from '@/lib/mongodb';
 import mongoose from 'mongoose';
 import axios from 'axios';

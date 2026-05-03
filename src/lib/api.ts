@@ -3,15 +3,13 @@ import axios from 'axios'
 // ✅ FIXED: API Configuration with Axios Interceptors
 // This file provides automatic Authorization header handling
 
-const rawApiUrl = process.env.NEXT_PUBLIC_API_URL || process.env.REACT_APP_API_URL || 'https://airswift-backend-fjt3.onrender.com/api'
-const normalizedBaseUrl = rawApiUrl.replace(/\/+$/, '')
-const baseURL = normalizedBaseUrl.endsWith('/api')
-  ? normalizedBaseUrl
-  : `${normalizedBaseUrl}/api`
+const baseURL = process.env.NEXT_PUBLIC_API_URL || process.env.REACT_APP_API_URL || 'http://localhost:3000'
+const timeout = parseInt(process.env.NEXT_PUBLIC_API_TIMEOUT || '30000', 10)
 
 // Create axios instance with base configuration
 const api = axios.create({
   baseURL,
+  timeout,
   withCredentials: true, // Include cookies for authentication
   headers: {
     'Content-Type': 'application/json'

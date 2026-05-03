@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { NextApiRequest, NextApiResponse } from 'next';
-import { openai } from '../../../lib/openai';
+import openai from '../../../lib/openai';
 import formidable from 'formidable';
 import fs from 'fs';
 

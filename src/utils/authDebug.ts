@@ -89,7 +89,7 @@ export const runFullDebug = async () => {
 
     // 3. Try force method
     try {
-      await forcePostWithToken('/auth/profile', {}, token);
+      await forcePostWithToken('/auth/profile', {}, token || undefined);
     } catch (error) {
       console.log('❌ Both methods failed - likely backend issue\n');
     }

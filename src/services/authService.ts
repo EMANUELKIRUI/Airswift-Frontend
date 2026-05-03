@@ -189,7 +189,7 @@ class AuthService {
       const profileUser = this.normalizeUser(data.user || data)
       console.log('✅ Profile fetched successfully')
       return { success: true, user: profileUser }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error fetching profile:', error?.message || error)
       if (error.response?.status === 401) {
         console.log('🔄 Token invalid, attempting refresh...')
@@ -203,7 +203,7 @@ class AuthService {
     }
   }
 
-  static async updateProfile(updates) {
+  static async updateProfile(updates: any): Promise<{ success: boolean; user?: any; error?: string }> {
     try {
       console.log('📝 Updating profile...')
       const response = await api.put('/auth/profile', updates)
@@ -212,45 +212,48 @@ class AuthService {
       }
       console.log('✅ Profile updated successfully')
       return { success: true, user: response.data.user }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Error updating profile:', error?.message || error)
       return { success: false, error: error.response?.data?.message || error.message || 'Profile update failed' }
     }
   }
 
-  static async requestPasswordReset(email) {
+  static async requestPasswordReset(email: string): Promise<{ success: boolean; message?: string; error?: string }> {
     try {
       console.log('🔐 Requesting password reset for:', email)
       const response = await api.post('/auth/forgot-password', { email })
       console.log('✅ Password reset requested')
       return { success: true, message: response.data?.message }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Password reset request error:', error?.message || error)
       return { success: false, error: error.response?.data?.message || error.message || 'Password reset request failed' }
     }
   }
 
-  static async resetPassword(token, newPassword) {
+  static async resetPassword(token: string, newPassword: string): Promise<{ success: boolean; message?: string; error?: string }> {
     try {
       console.log('🔐 Resetting password...')
       const response = await api.post('/auth/reset-password', { token, password: newPassword })
       console.log('✅ Password reset successfully')
       return { success: true, message: response.data?.message }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Password reset error:', error?.message || error)
       return { success: false, error: error.response?.data?.message || error.message || 'Password reset failed' }
     }
   }
 
-  static async changePassword(currentPassword, newPassword) {
+  static async changePassword(currentPassword: string, newPassword: string) {
     try {
       console.log('🔐 Changing password...')
-      const response = await api.post('/auth/change-password', { currentPassword, newPassword })
-      console.log('✅ Password changed successfully')
-      return { success: true, message: response.data?.message }
-    } catch (error) {
-      console.error('❌ Password change error:', error?.message || error)
-      return { success: false, error: error.response?.data?.message || error.message || 'Password change failed' }
+      const response = await api.post('/auth/change-password', {
+        currentPassword,
+        newPassword
+      })
+
+      return { success: true, data: response.data }
+    } catch (error: any) {
+      console.error('❌ Error changing password:', error?.message || error)
+      return { success: false, message: error?.response?.data?.message || 'Failed to change password' }
     }
   }
 
@@ -272,7 +275,7 @@ class AuthService {
     }
   }
 
-  static async googleLogin(googleCredential) {
+  static async googleLogin(googleCredential: string) {
     try {
       console.log('🔐 Logging in with Google...')
       const response = await api.post('/auth/google', { credential: googleCredential })
@@ -291,7 +294,7 @@ class AuthService {
         console.log('✅ Socket reconnected:', socket.id)
       }
       return { success: true, token, user: normalizedUser }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Google login error:', error?.message || error)
       return { success: false, error: error.response?.data?.message || error.message || 'Google login failed' }
     }
