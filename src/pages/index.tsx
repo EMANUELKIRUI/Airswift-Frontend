@@ -12,7 +12,7 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
-              <img src="/logo.svg" alt="Talex Logo" className="h-8 w-auto" />
+              <img src="/logo.svg" alt="Airswift Logo" className="h-8 w-auto" />
             </div>
 
             <div className="hidden md:flex items-center space-x-8">
@@ -56,7 +56,7 @@ const Home: React.FC = () => {
                   Faster
                 </h1>
                 <p className="text-xl text-gray-600 leading-relaxed max-w-lg">
-                  Connect with top employers, get AI-powered job matches, and accelerate your career with Talex.
+                  Connect with top employers, get AI-powered job matches, and accelerate your career with Airswift.
                 </p>
               </div>
 
@@ -275,7 +275,7 @@ const Home: React.FC = () => {
                 ))}
               </div>
               <p className="text-gray-700 mb-6">
-                "Talex helped me find my dream job in just two weeks. The platform is intuitive and the matching algorithm is spot on."
+                "Airswift helped me find my dream job in just two weeks. The platform is intuitive and the matching algorithm is spot on."
               </p>
               <div className="flex items-center">
                 <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mr-3">
@@ -356,7 +356,7 @@ const Home: React.FC = () => {
               Ready to Transform Your Career?
             </h2>
             <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-              Join thousands of professionals who have found success with Talex. Start your journey today.
+              Join thousands of professionals who have found success with Airswift. Start your journey today.
             </p>
             <Link href="/register">
               <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-50 shadow-lg">
@@ -410,7 +410,7 @@ const Home: React.FC = () => {
                   </div>
                   <div>
                     <p className="font-semibold text-gray-900">Email</p>
-                    <p className="text-gray-600">hello@talex.com</p>
+                    <p className="text-gray-600">hello@airswift.com</p>
                   </div>
                 </div>
               </div>
@@ -469,7 +469,7 @@ const Home: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="md:col-span-2">
-              <img src="/logo.svg" alt="Talex Logo" className="h-8 w-auto mb-4" />
+              <img src="/logo.svg" alt="Airswift Logo" className="h-8 w-auto mb-4" />
               <p className="text-gray-400 mb-4 max-w-md">
                 Connecting talent with opportunity through innovative technology and expert guidance.
               </p>
@@ -506,7 +506,7 @@ const Home: React.FC = () => {
           </div>
 
           <div className="border-t border-gray-800 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Talex. All rights reserved.</p>
+            <p>&copy; 2026 Airswift. All rights reserved.</p>
           </div>
         </div>
       </footer>
