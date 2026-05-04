@@ -68,11 +68,7 @@ export default function Home() {
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-slate-200">
           <div className="flex h-[70px] items-center justify-between gap-6">
-            <div className="flex items-center">
-              <button className="text-sm font-medium text-slate-700 hover:text-blue-600">Login</button>
-            </div>
-
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3 mx-auto">
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
                 <Building className="h-6 w-6" />
               </div>
@@ -81,8 +77,13 @@ export default function Home() {
               </div>
             </div>
 
-            <div className="flex items-center">
-              <Button variant="primary" size="sm" className="bg-blue-600 hover:bg-blue-700">Register</Button>
+            <div className="flex items-center gap-3 ml-auto">
+              <Link href="/login">
+                <button className="text-sm font-medium text-slate-700 hover:text-blue-600">Login</button>
+              </Link>
+              <Link href="/register">
+                <Button variant="primary" size="sm" className="bg-blue-600 hover:bg-blue-700">Register</Button>
+              </Link>
             </div>
           </div>
         </header>
