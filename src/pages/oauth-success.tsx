@@ -10,6 +10,7 @@ export default function OAuthSuccess() {
 
     if (token && typeof token === 'string') {
       localStorage.setItem("token", token);
+      localStorage.setItem("accessToken", token);
       router.replace("/user/dashboard");
     }
   }, [router]);

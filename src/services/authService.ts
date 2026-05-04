@@ -108,18 +108,19 @@ class AuthService {
 
   static async login(email: string, password: string) {
     try {
-      console.log('🔐 Logging in user:', email);
+        console.log('🔐 Logging in user:', email);
 
-      const response = await api.post('/auth/login', {
-        email,
-        password,
-      });
+        const response = await api.post('/auth/login', {
+          email,
+          password,
+        });
 
-      const authPayload = this.extractAuthPayload(response.data)
-      return {
-        ...response.data,
-        ...authPayload,
-        success: response.data?.success ?? true,
+        const authPayload = this.extractAuthPayload(response.data)
+        return {
+          ...response.data,
+          ...authPayload,
+          success: response.data?.success ?? true,
+
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -313,8 +314,11 @@ class AuthService {
       const data = response.data || {}
       const token = data.token || data.accessToken || data.data?.token || data.data?.accessToken
       const user = data.user || data.data?.user || data
-      if (!token || !user) {
-        throw new Error('Google login response missing token or user data')
+      if (!token) {
+        throw new Error('No token in response')
+      }
+      if (!user) {
+        throw new Error('No user in response')
       }
       const normalizedUser = this.normalizeUser(user)
       this.storeToken(token, normalizedUser)

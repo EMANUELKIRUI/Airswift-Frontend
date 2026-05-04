@@ -205,7 +205,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (data: any) => {
     setIsLoading(true)
 
-    if (!data.token) {
+    const token = data.token || data.accessToken
+    if (!token) {
       console.error('❌ Login failed: No token in response')
       setIsLoading(false)
       throw new Error('Login failed: No token received')
@@ -213,10 +214,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const normalizedUser = normalizeUser(data.user)
     setUser(normalizedUser)
-    AuthService.storeToken(data.token, normalizedUser)
+    AuthService.storeToken(token, normalizedUser)
 
-    if (data.token) {
-      initSocket(data.token)
+    if (token) {
+      initSocket(token)
     }
 
     const roleEmojiMap = {

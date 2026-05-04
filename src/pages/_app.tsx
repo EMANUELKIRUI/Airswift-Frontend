@@ -30,7 +30,7 @@ export default function App({ Component, pageProps }: AppProps) {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
-    if (token && !localStorage.getItem("token") && !localStorage.getItem("accessToken")) {
+    if (token) {
       localStorage.setItem("token", token);
       localStorage.setItem("accessToken", token);
 
