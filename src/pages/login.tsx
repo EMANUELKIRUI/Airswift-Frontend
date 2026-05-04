@@ -2,11 +2,11 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/router";
-import { signIn } from "next-auth/react";
 import { useAuth } from "@/context/AuthContext";
 import { clearAuth } from "@/lib/auth";
 import { validateEmailForAuth } from "@/utils/roleUtils";
 import { Eye, EyeOff } from "lucide-react";
+import { GoogleLogin } from "@react-oauth/google";
 import AuthService from "@/services/authService";
 import API from "@/services/apiClient";
 import OTPInput from "@/components/OTPInput";
@@ -84,19 +84,29 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
+  const handleGoogleSuccess = async (credentialResponse: any) => {
     setGoogleError("");
     setGoogleLoading(true);
 
     try {
       clearAuth();
-      await signIn('google', { callbackUrl: `${window.location.origin}/dashboard` });
+      const response = await AuthService.googleLogin(credentialResponse.credential);
+      if (!response.success) {
+        throw new Error(response.error || 'Google authentication failed');
+      }
+      const normalizedUser = AuthService.normalizeUser(response.user);
+      await login({ token: response.token, user: normalizedUser });
+      await redirectAfterLogin(normalizedUser, router);
     } catch (error: any) {
-      console.error('Google sign-in failed:', error);
-      setGoogleError(error?.message || 'Google sign-in failed. Please try again.');
+      console.error('Google login failed:', error);
+      setGoogleError(error?.message || error?.response?.data?.message || 'Google login failed. Please try again.');
     } finally {
       setGoogleLoading(false);
     }
+  };
+
+  const handleGoogleError = () => {
+    setGoogleError('Google login failed');
   };
 
   const sendOtp = async () => {
@@ -147,7 +157,9 @@ export default function LoginPage() {
 
     try {
       const result = await AuthService.verifyOTP(emailTarget, otpCode);
-      if (result.token && result.user) {
+      if (!result.success) {
+        setOtpError(result.error || 'OTP verification failed');
+      } else if (result.token && result.user) {
         const normalizedUser = AuthService.normalizeUser(result.user);
         await login({ token: result.token, user: normalizedUser });
         await redirectAfterLogin(normalizedUser, router);
@@ -314,7 +326,7 @@ export default function LoginPage() {
               size="large"
               text="continue_with"
               shape="rectangular"
-              width={100}
+              width={300}
             />
           </div>
 

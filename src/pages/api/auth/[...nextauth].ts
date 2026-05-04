@@ -16,8 +16,9 @@ const options: NextAuthOptions = {
       return token
     },
     async session({ session, token }) {
-      session.accessToken = token.accessToken as string
-      return session
+      const s = session as any
+      s.accessToken = token.accessToken as string
+      return s
     },
   },
   secret: process.env.NEXTAUTH_SECRET,

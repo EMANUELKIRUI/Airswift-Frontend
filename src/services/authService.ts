@@ -163,6 +163,18 @@ class AuthService {
     }
   }
 
+  static async sendLoginOTP(email: string): Promise<{ success: boolean; message?: string; error?: string }> {
+    try {
+      console.log('📧 Sending login OTP to:', email)
+      const response = await api.post('/auth/send-login-otp', { email })
+      console.log('✅ Login OTP sent successfully')
+      return { success: true, message: response.data?.message }
+    } catch (error: any) {
+      console.error('❌ Error sending login OTP:', error?.message || error)
+      return { success: false, error: error.response?.data?.message || error.message || 'Failed to send login OTP' }
+    }
+  }
+
   static async verifyOTP(email: string, otp: string): Promise<OTPResult> {
     try {
       console.log('🔐 Verifying OTP for:', email);

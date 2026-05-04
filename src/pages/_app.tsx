@@ -6,7 +6,7 @@ import { NotificationProvider } from '@/context/NotificationContext'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import UserLocationEmitter from '@/components/UserLocationEmitter'
 import { Toaster } from 'react-hot-toast'
-import { SessionProvider, useSession } from 'next-auth/react'
+import { GoogleOAuthProvider } from '@react-oauth/google'
 // @ts-ignore
 import 'leaflet/dist/leaflet.css'
 // @ts-ignore
