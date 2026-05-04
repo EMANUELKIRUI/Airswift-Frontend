@@ -2,14 +2,14 @@
 
 import { useState, useEffect, FormEvent } from "react";
 import { useRouter } from "next/router";
+import { signIn } from "next-auth/react";
 import { useAuth } from "@/context/AuthContext";
 import { clearAuth } from "@/lib/auth";
 import { validateEmailForAuth } from "@/utils/roleUtils";
 import { Eye, EyeOff } from "lucide-react";
-import { GoogleLogin } from "@react-oauth/google";
-import { CredentialResponse } from "@react-oauth/google";
 import AuthService from "@/services/authService";
 import API from "@/services/apiClient";
+import OTPInput from "@/components/OTPInput";
 import { redirectAfterLogin } from "@/lib/auth";
 
 export default function LoginPage() {
@@ -22,6 +22,17 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showResendPrompt, setShowResendPrompt] = useState(false);
+
+  const [authMode, setAuthMode] = useState<'password' | 'otp'>('password');
+  const [otpEmail, setOtpEmail] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
+  const [otpCode, setOtpCode] = useState("");
+  const [sendingOtp, setSendingOtp] = useState(false);
+  const [verifyingOtp, setVerifyingOtp] = useState(false);
+  const [otpStatus, setOtpStatus] = useState<string>("");
+  const [otpError, setOtpError] = useState<string>("");
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string>("");
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -73,48 +84,82 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleSuccess = async (credentialResponse: any) => {
-    setLoading(true);
-    setError("");
+  const handleGoogleSignIn = async () => {
+    setGoogleError("");
+    setGoogleLoading(true);
 
     try {
-      // Clear any existing auth state first
       clearAuth();
-
-      // Send Google credential to backend using API client
-      const response = await AuthService.googleLogin(credentialResponse.credential);
-
-      if (!response.success) {
-        throw new Error(response.error || "Google authentication failed");
-      }
-
-      // Email validation for Google login
-      const emailValidation = validateEmailForAuth(response.user?.email);
-      if (!emailValidation.isValid) {
-        setError(emailValidation.error || "");
-        return;
-      }
-
-      if (response.user?.role?.toLowerCase() === 'admin') {
-        setError("Admin login not allowed with Google. Please use email/password.");
-        return;
-      }
-
-      await login({ token: response.token, user: response.user });
-      await redirectAfterLogin(response.user, router);
-
-    } catch (err: unknown) {
-      const error = err as { message?: string };
-
-      setError(error.message || "Google login failed");
+      await signIn('google', { callbackUrl: `${window.location.origin}/dashboard` });
+    } catch (error: any) {
+      console.error('Google sign-in failed:', error);
+      setGoogleError(error?.message || 'Google sign-in failed. Please try again.');
     } finally {
-      setLoading(false);
+      setGoogleLoading(false);
     }
   };
 
+  const sendOtp = async () => {
+    setOtpError("");
+    setError("");
+    setOtpStatus("");
+    setSendingOtp(true);
 
-  const handleGoogleError = () => {
-    setError("Google login failed");
+    const emailTarget = otpEmail || email;
+    const emailValidation = validateEmailForAuth(emailTarget);
+    if (!emailValidation.isValid) {
+      setOtpError(emailValidation.error || "");
+      setSendingOtp(false);
+      return;
+    }
+
+    try {
+      await AuthService.sendLoginOTP(emailTarget);
+      setOtpSent(true);
+      setOtpStatus('A one-time verification code has been sent to your email.');
+      setOtpEmail(emailTarget);
+    } catch (err: any) {
+      console.error('❌ Send OTP error:', err);
+      setOtpError(err.response?.data?.message || err.message || 'Failed to send OTP.');
+    } finally {
+      setSendingOtp(false);
+    }
+  };
+
+  const verifyOtp = async () => {
+    setOtpError("");
+    setError("");
+    setVerifyingOtp(true);
+
+    const emailTarget = otpEmail || email;
+    const emailValidation = validateEmailForAuth(emailTarget);
+    if (!emailValidation.isValid) {
+      setOtpError(emailValidation.error);
+      setVerifyingOtp(false);
+      return;
+    }
+
+    if (!otpCode) {
+      setOtpError('Please enter the 6-digit OTP code.');
+      setVerifyingOtp(false);
+      return;
+    }
+
+    try {
+      const result = await AuthService.verifyOTP(emailTarget, otpCode);
+      if (result.token && result.user) {
+        const normalizedUser = AuthService.normalizeUser(result.user);
+        await login({ token: result.token, user: normalizedUser });
+        await redirectAfterLogin(normalizedUser, router);
+      } else {
+        setOtpError('OTP verification failed');
+      }
+    } catch (err: any) {
+      console.error('❌ OTP verification error:', err);
+      setOtpError(err.response?.data?.message || err.message || 'OTP verification failed');
+    } finally {
+      setVerifyingOtp(false);
+    }
   };
 
   useEffect(() => {

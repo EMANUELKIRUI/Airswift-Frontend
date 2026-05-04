@@ -62,6 +62,22 @@ class AuthService {
     }
   }
 
+  static extractAuthPayload(responseData: any) {
+    const data = responseData || {}
+    const token =
+      data.token ||
+      data.accessToken ||
+      data.data?.token ||
+      data.data?.accessToken
+
+    const user =
+      data.user ||
+      data.data?.user ||
+      (typeof data.data === 'object' ? data.data : null)
+
+    return { token, user }
+  }
+
   static getToken() {
     try {
       return localStorage.getItem('token')
@@ -99,7 +115,12 @@ class AuthService {
         password,
       });
 
-      return response.data;
+      const authPayload = this.extractAuthPayload(response.data)
+      return {
+        ...response.data,
+        ...authPayload,
+        success: response.data?.success ?? true,
+      }
     } catch (error) {
       console.error('Login error:', error);
       throw error;
@@ -150,7 +171,12 @@ class AuthService {
         otp,
       });
 
-      return response.data;
+      const authPayload = this.extractAuthPayload(response.data)
+      return {
+        ...response.data,
+        ...authPayload,
+        success: response.data?.success ?? true,
+      }
     } catch (error) {
       console.error('OTP verification error:', error);
       throw error;
@@ -161,7 +187,11 @@ class AuthService {
     try {
       console.log('🔄 Refreshing token...')
       const response = await api.post('/auth/refresh')
-      const token = response.data?.token || response.data?.accessToken
+      const token =
+        response.data?.token ||
+        response.data?.accessToken ||
+        response.data?.data?.token ||
+        response.data?.data?.accessToken
       if (!token) {
         throw new Error('No token in refresh response')
       }

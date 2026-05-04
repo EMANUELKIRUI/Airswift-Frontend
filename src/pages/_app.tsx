@@ -6,7 +6,7 @@ import { NotificationProvider } from '@/context/NotificationContext'
 import ErrorBoundary from '@/components/ErrorBoundary'
 import UserLocationEmitter from '@/components/UserLocationEmitter'
 import { Toaster } from 'react-hot-toast'
-import { GoogleOAuthProvider } from '@react-oauth/google'
+import { SessionProvider, useSession } from 'next-auth/react'
 // @ts-ignore
 import 'leaflet/dist/leaflet.css'
 // @ts-ignore
@@ -30,8 +30,9 @@ export default function App({ Component, pageProps }: AppProps) {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
 
-    if (token && !localStorage.getItem("token")) {
+    if (token && !localStorage.getItem("token") && !localStorage.getItem("accessToken")) {
       localStorage.setItem("token", token);
+      localStorage.setItem("accessToken", token);
 
       // Only redirect to dashboard if we're not already on a specific page
       const currentPath = window.location.pathname;

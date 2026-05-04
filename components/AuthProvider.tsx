@@ -29,8 +29,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedUser = typeof window !== 'undefined' ? window.localStorage.getItem('airswift_user') : null;
-    const storedToken = typeof window !== 'undefined' ? window.localStorage.getItem('airswift_token') : null;
+    if (typeof window === 'undefined') return;
+
+    const storedUser = window.localStorage.getItem('user');
+    const storedToken = window.localStorage.getItem('token') || window.localStorage.getItem('accessToken');
 
     if (storedUser) {
       setUser(JSON.parse(storedUser));
@@ -44,8 +46,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = (user: IUser, token: string) => {
     setUser(user);
     setToken(token);
-    window.localStorage.setItem('airswift_user', JSON.stringify(user));
-    window.localStorage.setItem('airswift_token', token);
+    window.localStorage.setItem('user', JSON.stringify(user));
+    window.localStorage.setItem('token', token);
+    window.localStorage.setItem('accessToken', token);
   };
 
   const logout = () => {

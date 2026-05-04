@@ -22,11 +22,14 @@ export default function VerifyEmail() {
         const result = await API.get(`/auth/verify?token=${token}`)
         const data = result.data
 
-        // Auto-login: Store both tokens and user data
-        localStorage.setItem('token', data.accessToken)
-        localStorage.setItem('accessToken', data.accessToken)
-        localStorage.setItem('refreshToken', data.refreshToken)
-        localStorage.setItem('user', JSON.stringify(data.user))
+        // Auto-login: Store both token keys and user data
+        const authToken = data.accessToken || data.token || data.data?.token || data.data?.accessToken
+        localStorage.setItem('token', authToken)
+        localStorage.setItem('accessToken', authToken)
+        if (data.refreshToken) {
+          localStorage.setItem('refreshToken', data.refreshToken)
+        }
+        localStorage.setItem('user', JSON.stringify(data.user || data.data?.user || data.data))
 
         setVerificationStatus('success')
         setMessage(data.message || 'Email verified successfully!')
