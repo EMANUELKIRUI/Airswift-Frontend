@@ -1,705 +1,358 @@
 import React from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { ArrowRight, CheckCircle, Star, MapPin, Phone, Mail, Zap, Users, Shield, Briefcase, Sparkles, TrendingUp, Award } from 'lucide-react'
+import { ArrowRight, Building, Search, MapPin, Briefcase, Shield, Globe, Users, Star, ChevronRight } from 'lucide-react'
 import Button from '@/components/Button'
 
-const Home: React.FC = () => {
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
-      },
-    },
-  }
+const featuredJobs = [
+  {
+    company: 'RemoteHub',
+    role: 'Senior Product Manager',
+    location: 'Remote',
+    salary: '$120k - $160k',
+    time: '1h ago',
+  },
+  {
+    company: 'TechFlow',
+    role: 'Frontend Developer',
+    location: 'Toronto, Canada',
+    salary: '$80k - $110k',
+    time: '3h ago',
+  },
+  {
+    company: 'CloudScale',
+    role: 'DevOps Engineer',
+    location: 'Remote',
+    salary: '$100k - $140k',
+    time: '5h ago',
+  },
+  {
+    company: 'DesignHub',
+    role: 'UI/UX Designer',
+    location: 'San Francisco, CA',
+    salary: '$70k - $100k',
+    time: '6h ago',
+  },
+]
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-    },
-  }
+const brandLogos = ['Google', 'Microsoft', 'Amazon', 'Spotify', 'Airbnb', 'Dropbox']
 
+const highlights = [
+  {
+    icon: Shield,
+    title: 'Verified Employers',
+    description: 'All companies are verified to ensure genuine opportunities.',
+  },
+  {
+    icon: Globe,
+    title: 'Smart Matching',
+    description: 'AI matches you with jobs that fit your skills and goals.',
+  },
+  {
+    icon: Building,
+    title: 'Global Opportunities',
+    description: 'Discover remote and on-site jobs from top companies worldwide.',
+  },
+]
+
+const metrics = [
+  { value: '10,000+', label: 'Active Job Seekers' },
+  { value: '2,500+', label: 'Verified Companies' },
+  { value: '15,000+', label: 'Successful Hires' },
+  { value: '95%', label: 'Satisfaction Rate' },
+]
+
+export default function Home() {
   return (
-    <div className="min-h-screen bg-white overflow-hidden">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/95 backdrop-blur-md border-b border-gray-200/50 z-50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+    <div className="bg-slate-50 text-slate-900 min-h-screen">
+      <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
+        <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-slate-200">
+          <div className="flex h-[70px] items-center justify-between gap-6">
             <div className="flex items-center">
-              <Link href="/login">
-                <Button variant="outline" size="sm">Sign In</Button>
-              </Link>
+              <button className="text-sm font-medium text-slate-700 hover:text-blue-600">Login</button>
             </div>
 
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/60 rounded-lg flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-white" />
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
+                <Building className="h-6 w-6" />
               </div>
-              <span className="font-bold text-xl text-gray-900">TALEX</span>
+              <div>
+                <p className="text-lg font-bold tracking-tight">TALEX</p>
+              </div>
             </div>
 
             <div className="flex items-center">
-              <Link href="/register">
-                <Button variant="primary" size="sm">Get Started</Button>
-              </Link>
+              <Button variant="primary" size="sm" className="bg-blue-600 hover:bg-blue-700">Register</Button>
             </div>
           </div>
-        </div>
-      </nav>
+        </header>
 
-      {/* Hero Section */}
-      <section className="pt-32 pb-24 lg:pb-32 bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
-        {/* Decorative gradient blobs */}
-        <div className="absolute top-20 -right-40 w-80 h-80 bg-gradient-to-br from-primary/20 to-transparent rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 -left-40 w-80 h-80 bg-gradient-to-tr from-purple-200/20 to-transparent rounded-full blur-3xl"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="space-y-8"
-            >
-              <motion.div
-                className="inline-flex items-center gap-2 bg-gradient-to-r from-primary/10 to-purple-100 text-primary px-4 py-2 rounded-full text-sm font-semibold border border-primary/20 backdrop-blur-sm"
-                whileHover={{ scale: 1.05 }}
-              >
-                <Sparkles className="h-4 w-4" />
-                Trusted by 10,000+ professionals
-              </motion.div>
-
-              <div className="space-y-6">
-                <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 leading-tight">
-                  Find Your
-                  <span className="bg-gradient-to-r from-primary via-primary to-purple-600 bg-clip-text text-transparent"> Dream Job</span>
+        <main className="space-y-16 py-16">
+          <motion.section
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.85, ease: 'easeOut' }}
+            className="grid gap-10 grid-cols-1 lg:grid-cols-2 lg:items-center"
+          >
+            <div className="space-y-6 sm:space-y-8">
+              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 shadow-sm">
+                Trusted by 10,000+ job seekers and employers
+              </div>
+              <div className="space-y-5">
+                <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
+                  Find Verified Jobs.
                   <br />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-gray-900 to-primary">Faster</span>
+                  Get Hired Faster.
                 </h1>
-                <p className="text-xl text-gray-600 leading-relaxed max-w-lg font-light">
-                  Connect with top employers, get AI-powered job matches, and accelerate your career with Talex.
+                <p className="max-w-2xl text-base text-slate-600 sm:text-lg md:text-xl">
+                  AIRSWIFT connects talented people with top companies across the globe. Your next opportunity is here.
                 </p>
               </div>
-
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/register">
-                  <Button variant="primary" size="lg" className="shadow-lg hover:shadow-xl transition-all">
-                    Start Your Search
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
-                <Link href="#features">
-                  <Button variant="outline" size="lg">
-                    Learn More
-                  </Button>
-                </Link>
+              <div className="flex flex-col gap-4 sm:flex-row">
+                <Button variant="primary" size="lg" className="bg-blue-600 hover:bg-blue-700 shadow-lg">
+                  Find Jobs
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+                <Button variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                  Create Profile
+                </Button>
               </div>
-
-              {/* Stats */}
-              <div className="grid grid-cols-3 gap-8 pt-8">
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.2 }}
-                  className="text-center group"
-                >
-                  <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">10K+</div>
-                  <div className="text-sm text-gray-600 font-medium">Placements</div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4 }}
-                  className="text-center group"
-                >
-                  <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">500+</div>
-                  <div className="text-sm text-gray-600 font-medium">Companies</div>
-                </motion.div>
-                <motion.div
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.6 }}
-                  className="text-center group"
-                >
-                  <div className="text-3xl lg:text-4xl font-bold bg-gradient-to-r from-primary to-purple-600 bg-clip-text text-transparent">95%</div>
-                  <div className="text-sm text-gray-600 font-medium">Success Rate</div>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="relative"
-            >
-              {/* Decorative cards background */}
-              <div className="absolute -inset-8 bg-gradient-to-br from-primary/5 to-purple-200/5 rounded-3xl blur-2xl"></div>
 
               <motion.div
-                className="relative bg-white/70 backdrop-blur-2xl rounded-2xl shadow-2xl p-8 border border-white/50"
-                whileHover={{ y: -8 }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.75, delay: 0.18 }}
+                className="rounded-[32px] border border-slate-200 bg-white p-5 shadow-xl"
               >
-                <div className="space-y-6">
-                  <motion.div
-                    className="flex items-center gap-4 group"
-                    whileHover={{ x: 4 }}
-                  >
-                    <div className="w-14 h-14 bg-gradient-to-br from-green-400 to-green-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <CheckCircle className="h-7 w-7 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">Profile Created</p>
-                      <p className="text-sm text-gray-600">Senior Developer</p>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    className="flex items-center gap-4 group"
-                    whileHover={{ x: 4 }}
-                  >
-                    <div className="w-14 h-14 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <Zap className="h-7 w-7 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">AI Matching</p>
-                      <p className="text-sm text-gray-600">5 perfect matches found</p>
-                    </div>
-                  </motion.div>
-
-                  <motion.div
-                    className="flex items-center gap-4 group"
-                    whileHover={{ x: 4 }}
-                  >
-                    <div className="w-14 h-14 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                      <Briefcase className="h-7 w-7 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-semibold text-gray-900">Interview Scheduled</p>
-                      <p className="text-sm text-gray-600">Tomorrow 2:00 PM</p>
-                    </div>
-                  </motion.div>
+                <div className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto] items-center">
+                  <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                    <Search className="h-5 w-5 text-slate-500" />
+                    <input type="text" placeholder="Job title or keyword" className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400" />
+                  </div>
+                  <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                    <MapPin className="h-5 w-5 text-slate-500" />
+                    <select className="w-full bg-transparent text-sm text-slate-900 outline-none">
+                      <option>Anywhere</option>
+                      <option>New York</option>
+                      <option>Toronto</option>
+                    </select>
+                  </div>
+                  <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
+                    <Briefcase className="h-5 w-5 text-slate-500" />
+                    <select className="w-full bg-transparent text-sm text-slate-900 outline-none">
+                      <option>Full-time</option>
+                      <option>Part-time</option>
+                      <option>Contract</option>
+                    </select>
+                  </div>
+                  <Button variant="primary" size="md" className="w-full bg-blue-600 hover:bg-blue-700">
+                    Search
+                  </Button>
                 </div>
-              </motion.div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="py-24 bg-gradient-to-b from-white via-blue-50/30 to-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-grid-gray-100/50 [mask-image:linear-gradient(0deg,transparent,black,transparent)] pointer-events-none"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
-              Everything You Need to Succeed
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-light">
-              Powerful tools and expert support to accelerate your job search
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="group relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/10 to-purple-200/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
-              <div className="relative bg-white rounded-2xl p-10 border border-gray-100/50 shadow-sm hover:shadow-xl transition-all duration-300 h-full">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary/20 to-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                  <Zap className="h-8 w-8 text-primary" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Smart Matching</h3>
-                <p className="text-gray-600 text-center leading-relaxed">
-                  AI-powered algorithm finds the perfect job matches based on your skills and preferences.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="group relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-200/10 to-primary/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
-              <div className="relative bg-white rounded-2xl p-10 border border-gray-100/50 shadow-sm hover:shadow-xl transition-all duration-300 h-full">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-200/30 to-blue-100/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                  <Users className="h-8 w-8 text-blue-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Expert Support</h3>
-                <p className="text-gray-600 text-center leading-relaxed">
-                  Get personalized guidance from career advisors throughout your job search journey.
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="group relative"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-200/10 to-primary/10 rounded-2xl blur-xl group-hover:blur-2xl transition-all duration-500 opacity-0 group-hover:opacity-100"></div>
-              <div className="relative bg-white rounded-2xl p-10 border border-gray-100/50 shadow-sm hover:shadow-xl transition-all duration-300 h-full">
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-200/30 to-purple-100/20 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
-                  <Shield className="h-8 w-8 text-purple-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Verified Employers</h3>
-                <p className="text-gray-600 text-center leading-relaxed">
-                  All companies are thoroughly vetted to ensure security and legitimacy.
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-24 bg-gradient-to-b from-white to-gray-50 relative overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-gradient-to-br from-primary/5 to-purple-200/5 rounded-full blur-3xl"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">How It Works</h2>
-            <p className="text-xl text-gray-600 font-light">Three simple steps to your dream job</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            {/* Connecting line for desktop */}
-            <div className="hidden md:block absolute top-24 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="relative"
-            >
-              <div className="bg-white rounded-2xl p-10 border border-gray-100/50 shadow-sm hover:shadow-lg transition-all duration-300 h-full relative z-20">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg">
-                  1
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Create Profile</h3>
-                <p className="text-gray-600 text-center leading-relaxed">
-                  Upload your resume and tell us about your career goals
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative md:-translate-y-4"
-            >
-              <div className="bg-white rounded-2xl p-10 border border-gray-100/50 shadow-sm hover:shadow-lg transition-all duration-300 h-full relative z-20">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg">
-                  2
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Get Matched</h3>
-                <p className="text-gray-600 text-center leading-relaxed">
-                  Receive personalized job recommendations from our AI
-                </p>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="bg-white rounded-2xl p-10 border border-gray-100/50 shadow-sm hover:shadow-lg transition-all duration-300 h-full relative z-20">
-                <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 text-white rounded-full flex items-center justify-center text-2xl font-bold mx-auto mb-6 shadow-lg">
-                  3
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3 text-center">Apply & Succeed</h3>
-                <p className="text-gray-600 text-center leading-relaxed">
-                  Apply to opportunities and track your progress
-                </p>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Testimonials */}
-      <section id="testimonials" className="py-24 bg-gradient-to-br from-blue-50 via-white to-purple-50 relative overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-300/5 rounded-full blur-3xl"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">Loved by Professionals</h2>
-            <p className="text-xl text-gray-600 font-light">See what our users say about their experience</p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="group overflow-hidden"
-            >
-              <div className="bg-white rounded-2xl p-8 border border-gray-100/50 shadow-sm hover:shadow-xl transition-all duration-300 h-full relative">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-600"></div>
-
-                <div className="flex items-center mb-6 gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div key={i} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
-                      <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                    </motion.div>
+                <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-500">
+                  {['Remote', 'Software Engineer', 'Marketing', 'Design', 'Data Analyst'].map((search) => (
+                    <button key={search} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-slate-600 transition hover:bg-blue-50 hover:text-blue-700">
+                      {search}
+                    </button>
                   ))}
                 </div>
+            </motion.div>
+            </div>
 
-                <p className="text-gray-700 mb-8 leading-relaxed font-light">
-                  "Talex helped me find my dream job in just two weeks. The platform is intuitive and the matching algorithm is spot on."
-                </p>
-
-                <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white font-semibold text-sm">SJ</span>
+            <motion.div
+              initial={{ opacity: 0, x: 24 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.85, delay: 0.2 }}
+              className="relative w-full"
+            >
+              <div className="absolute -left-10 top-8 h-32 w-32 rounded-full bg-blue-100 opacity-70 blur-3xl"></div>
+              <div className="absolute -right-10 bottom-10 h-24 w-24 rounded-full bg-cyan-100 opacity-70 blur-3xl"></div>
+              <div className="relative overflow-hidden rounded-[32px] bg-white p-6 shadow-2xl border border-slate-200 sm:p-8">
+                <div className="flex flex-col gap-6">
+                  <div className="flex items-center justify-between gap-4 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
+                    <div className="flex items-center gap-3">
+                      <div className="h-12 w-12 rounded-3xl bg-blue-600/10" />
+                      <div>
+                        <p className="text-sm font-semibold text-slate-900">Avery Lee</p>
+                        <p className="text-xs text-slate-500">Software Recruiter</p>
+                      </div>
+                    </div>
+                    <span className="rounded-full bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white">Top recruiter</span>
                   </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Sarah Johnson</p>
-                    <p className="text-sm text-gray-600">Senior Software Engineer</p>
+
+                  <div className="grid gap-4 sm:grid-cols-2">
+                    <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="h-12 w-12 rounded-3xl bg-blue-500/20" />
+                        <span className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">98%</span>
+                      </div>
+                      <p className="mt-4 text-sm font-semibold text-slate-900">Job Match</p>
+                      <p className="mt-2 text-sm text-slate-500">Highly accurate role matches.</p>
+                    </div>
+                    <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
+                      <div className="flex items-center justify-between gap-4">
+                        <div className="h-12 w-12 rounded-3xl bg-slate-900/10" />
+                        <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">Live</span>
+                      </div>
+                      <p className="mt-4 text-sm font-semibold text-slate-900">Live roles</p>
+                      <p className="mt-2 text-sm text-slate-500">Updated in real time.</p>
+                    </div>
+                  </div>
+
+                  <div className="rounded-[32px] border border-slate-200 bg-slate-950 p-5 text-white">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Your next team</p>
+                        <p className="mt-2 text-lg font-semibold">Meet the hiring squad</p>
+                      </div>
+                      <div className="h-12 w-12 rounded-3xl bg-blue-600/20" />
+                    </div>
+                    <div className="mt-5 rounded-[28px] bg-gradient-to-r from-blue-600 to-cyan-500 p-4 text-sm text-white">
+                      Dashboard preview
+                    </div>
                   </div>
                 </div>
               </div>
             </motion.div>
+            </motion.section>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="group overflow-hidden"
-            >
-              <div className="bg-white rounded-2xl p-8 border border-gray-100/50 shadow-sm hover:shadow-xl transition-all duration-300 h-full relative">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
-
-                <div className="flex items-center mb-6 gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div key={i} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
-                      <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                    </motion.div>
-                  ))}
-                </div>
-
-                <p className="text-gray-700 mb-8 leading-relaxed font-light">
-                  "The career support team was incredible. They helped me negotiate a 30% salary increase. Highly recommend!"
-                </p>
-
-                <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                  <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white font-semibold text-sm">MC</span>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Michael Chen</p>
-                    <p className="text-sm text-gray-600">Product Manager</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-              className="group overflow-hidden"
-            >
-              <div className="bg-white rounded-2xl p-8 border border-gray-100/50 shadow-sm hover:shadow-xl transition-all duration-300 h-full relative">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-pink-500 to-red-500"></div>
-
-                <div className="flex items-center mb-6 gap-1">
-                  {[...Array(5)].map((_, i) => (
-                    <motion.div key={i} whileHover={{ scale: 1.2 }} whileTap={{ scale: 0.9 }}>
-                      <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                    </motion.div>
-                  ))}
-                </div>
-
-                <p className="text-gray-700 mb-8 leading-relaxed font-light">
-                  "From application to offer, the entire process was seamless. Talex made job hunting stress-free."
-                </p>
-
-                <div className="flex items-center gap-4 pt-6 border-t border-gray-100">
-                  <div className="w-12 h-12 bg-gradient-to-br from-pink-400 to-red-500 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white font-semibold text-sm">ER</span>
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Emily Rodriguez</p>
-                    <p className="text-sm text-gray-600">UX Designer</p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-primary via-primary/90 to-purple-600 text-white relative overflow-hidden">
-        {/* Animated background elements */}
-        <div className="absolute top-0 left-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -translate-y-1/2 -translate-x-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl translate-y-1/2 translate-x-1/2"></div>
-
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-          >
-            <h2 className="text-4xl lg:text-5xl font-bold mb-8">
-              Ready to Transform Your Career?
-            </h2>
-            <p className="text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed font-light">
-              Join thousands of professionals who have found success with Talex. Start your journey today and take the next step toward your dream job.
-            </p>
-            <Link href="/register">
-              <Button variant="secondary" size="lg" className="bg-white text-primary hover:bg-gray-50 shadow-xl hover:shadow-2xl transition-all font-semibold">
-                Get Started Now
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-24 bg-gradient-to-b from-white via-blue-50/20 to-white relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-16 items-stretch">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-8">Get in Touch</h2>
-              <p className="text-xl text-gray-600 mb-12 font-light">
-                Have questions? We're here to help you succeed.
-              </p>
-
-              <div className="space-y-8">
-                <motion.div
-                  className="flex items-center gap-4"
-                  whileHover={{ x: 8 }}
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-primary/20 to-primary/10 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <MapPin className="h-6 w-6 text-primary" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Location</p>
-                    <p className="text-gray-600">123 Business District, Nairobi, Kenya</p>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-center gap-4"
-                  whileHover={{ x: 8 }}
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-blue-200/40 to-blue-100/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Phone className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Phone</p>
-                    <p className="text-gray-600">+254 700 123 456</p>
-                  </div>
-                </motion.div>
-
-                <motion.div
-                  className="flex items-center gap-4"
-                  whileHover={{ x: 8 }}
-                >
-                  <div className="w-14 h-14 bg-gradient-to-br from-purple-200/40 to-purple-100/30 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <Mail className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900">Email</p>
-                    <p className="text-gray-600">hello@talex.com</p>
-                  </div>
-                </motion.div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="bg-white rounded-2xl shadow-xl border border-gray-100/50 p-10 h-fit"
-            >
-              <h3 className="text-2xl font-semibold text-gray-900 mb-8">Send us a Message</h3>
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="First Name"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    />
-                  </div>
-                  <div>
-                    <input
-                      type="text"
-                      placeholder="Last Name"
-                      className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                    />
-                  </div>
-                </div>
+            <section className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
-                  <input
-                    type="email"
-                    placeholder="Email Address"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
-                  />
+                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-600">Featured Jobs</p>
+                  <h2 className="mt-3 text-3xl font-bold text-slate-900">Featured Jobs</h2>
                 </div>
-                <div>
-                  <textarea
-                    rows={4}
-                    placeholder="Your Message"
-                    className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all resize-none"
-                  ></textarea>
+                <Link href="#" className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                  View all
+                  <ChevronRight className="h-4 w-4" />
+                </Link>
+              </div>
+              <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              {featuredJobs.map((job) => (
+                <article key={job.role} className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:shadow-xl">
+                  <div className="flex items-center justify-between">
+                    <div className="rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-slate-800">{job.company.charAt(0)}</div>
+                    <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Featured</span>
+                  </div>
+                  <h3 className="mt-6 text-xl font-semibold text-slate-900">{job.role}</h3>
+                  <p className="mt-3 text-sm text-slate-600">{job.location}</p>
+                  <div className="mt-5 flex items-center justify-between text-sm font-semibold text-slate-900">
+                    <span>{job.salary}</span>
+                    <span className="text-slate-500">{job.time}</span>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
+
+          <section className="grid gap-6 md:grid-cols-3">
+            {highlights.map((item) => {
+              const Icon = item.icon
+              return (
+                <div key={item.title} className="rounded-[28px] border border-slate-200 bg-white p-8 shadow-sm">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-blue-50 text-blue-600">
+                    <Icon className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-6 text-xl font-semibold text-slate-900">{item.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-slate-600">{item.description}</p>
                 </div>
-                <Button variant="primary" size="lg" className="w-full shadow-lg hover:shadow-xl transition-shadow">
-                  Send Message
+              )
+            })}
+          </section>
+
+          <section className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+            {metrics.map((metric) => (
+              <div key={metric.label} className="rounded-[28px] border border-slate-200 bg-white p-8 text-center shadow-sm">
+                <p className="text-4xl font-bold text-blue-600">{metric.value}</p>
+                <p className="mt-3 text-sm text-slate-600">{metric.label}</p>
+              </div>
+            ))}
+          </section>
+
+          <section className="rounded-[36px] border border-slate-200 bg-white p-10 shadow-xl">
+            <div className="grid gap-8 lg:grid-cols-[0.95fr_0.85fr] lg:items-center">
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-600">What Our Users Say</p>
+                <h2 className="mt-4 text-3xl font-bold text-slate-900">What Our Users Say</h2>
+                <p className="mt-4 max-w-xl text-slate-600">AIRSWIFT helped me find a remote job that perfectly matches my skills. The process was so smooth and professional.</p>
+              </div>
+              <div className="rounded-[32px] bg-slate-950 p-8 text-white shadow-2xl">
+                <Star className="h-6 w-6 text-blue-400" />
+                <p className="mt-6 text-lg leading-8">“AIRS WIFT helped me find a remote role in less than two weeks. The matching quality was outstanding.”</p>
+                <div className="mt-8 flex items-center gap-4">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-lg font-bold">SJ</div>
+                  <div>
+                    <p className="font-semibold">Sarah Johnson</p>
+                    <p className="text-sm text-slate-300">Product Designer</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="rounded-[36px] bg-gradient-to-r from-blue-600 to-sky-500 px-8 py-14 text-white shadow-2xl">
+            <div className="grid gap-6 md:grid-cols-[1.5fr_0.8fr] md:items-center">
+              <div>
+                <p className="text-sm uppercase tracking-[0.3em] text-blue-200">Ready to launch your next career move?</p>
+                <h2 className="mt-4 text-3xl font-bold">Join AIRSWIFT today and explore thousands of verified job opportunities.</h2>
+              </div>
+              <div className="flex items-center justify-start md:justify-end">
+                <Button variant="primary" size="lg" className="bg-white text-blue-700 hover:bg-slate-100">
+                  Get Started Free
                 </Button>
-              </form>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+              </div>
+            </div>
+          </section>
 
-      {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white py-16 relative overflow-hidden border-t border-gray-700">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid md:grid-cols-4 gap-12 mb-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="md:col-span-2"
-            >
-              <div className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/60 rounded-lg flex items-center justify-center">
-                  <Sparkles className="h-5 w-5 text-white" />
+          <footer className="rounded-[36px] border border-slate-200 bg-white p-10 shadow-sm">
+            <div className="grid gap-8 lg:grid-cols-4">
+              <div>
+                <div className="flex items-center gap-3">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white">
+                    <Building className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-bold">AIRSWIFT</p>
+                  </div>
                 </div>
-                <span className="font-bold text-lg">Talex</span>
+                <p className="mt-6 max-w-sm text-sm text-slate-600">Connecting talent with verified opportunities across the globe. Fast, modern hiring for job seekers and employers.</p>
               </div>
-              <p className="text-gray-400 mb-6 max-w-md leading-relaxed">
-                Connecting talent with opportunity through innovative technology and expert guidance. Your career transformation starts here.
-              </p>
-              <div className="flex space-x-4">
-                <motion.a
-                  href="#"
-                  className="w-10 h-10 bg-gray-800 hover:bg-primary rounded-full flex items-center justify-center transition-all"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="text-sm">in</span>
-                </motion.a>
-                <motion.a
-                  href="#"
-                  className="w-10 h-10 bg-gray-800 hover:bg-primary rounded-full flex items-center justify-center transition-all"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="text-sm">𝕏</span>
-                </motion.a>
-                <motion.a
-                  href="#"
-                  className="w-10 h-10 bg-gray-800 hover:bg-primary rounded-full flex items-center justify-center transition-all"
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  <span className="text-sm">f</span>
-                </motion.a>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">For Job Seekers</h3>
+                <ul className="mt-6 space-y-3 text-sm text-slate-600">
+                  <li><Link href="#" className="hover:text-blue-600">Job Search</Link></li>
+                  <li><Link href="#" className="hover:text-blue-600">Create Profile</Link></li>
+                  <li><Link href="#" className="hover:text-blue-600">Career Advice</Link></li>
+                </ul>
               </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
-              <h4 className="font-semibold mb-6">Platform</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href="#" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Browse Jobs</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Companies</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Career Resources</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Blog</Link></li>
-              </ul>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              <h4 className="font-semibold mb-6">Support</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li><Link href="#" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Help Center</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Contact Us</Link></li>
-                <li><Link href="/privacy" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Privacy Policy</Link></li>
-                <li><Link href="/terms" className="hover:text-white transition-colors hover:translate-x-1 inline-block">→ Terms of Service</Link></li>
-              </ul>
-            </motion.div>
-          </div>
-
-          <div className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent mb-8"></div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            className="text-center text-gray-400"
-          >
-            <p>&copy; 2024 Talex. All rights reserved. | Made with <span className="text-primary">❤</span> by your team</p>
-          </motion.div>
-        </div>
-      </footer>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">For Employers</h3>
+                <ul className="mt-6 space-y-3 text-sm text-slate-600">
+                  <li><Link href="#" className="hover:text-blue-600">Hire Talent</Link></li>
+                  <li><Link href="#" className="hover:text-blue-600">Employer Resources</Link></li>
+                  <li><Link href="#" className="hover:text-blue-600">Post a Job</Link></li>
+                </ul>
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold uppercase tracking-[0.3em] text-slate-500">Support</h3>
+                <ul className="mt-6 space-y-3 text-sm text-slate-600">
+                  <li><Link href="#" className="hover:text-blue-600">Contact</Link></li>
+                  <li><Link href="#" className="hover:text-blue-600">Privacy</Link></li>
+                  <li><Link href="#" className="hover:text-blue-600">Terms</Link></li>
+                </ul>
+              </div>
+            </div>
+            <div className="mt-10 flex flex-col gap-4 border-t border-slate-200 pt-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+              <p>© 2026 AIRSWIFT. All rights reserved.</p>
+              <div className="flex items-center gap-4 text-slate-600">
+                <span className="hover:text-blue-600 cursor-pointer">Twitter</span>
+                <span className="hover:text-blue-600 cursor-pointer">LinkedIn</span>
+                <span className="hover:text-blue-600 cursor-pointer">Facebook</span>
+              </div>
+            </div>
+          </footer>
+        </main>
+      </div>
     </div>
   )
 }
-
-export default Home

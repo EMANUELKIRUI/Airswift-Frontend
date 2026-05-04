@@ -1,9 +1,13 @@
 import React, { useState, useMemo } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { GoogleLogin } from "@react-oauth/google";
 import Button from "../components/Button";
 import API from "@/services/apiClient";
+import AuthService from '@/services/authService';
 import { clearAuth } from '@/lib/auth';
+import { redirectAfterLogin } from '@/lib/auth';
+import { useAuth } from '@/context/AuthContext';
 import { CheckCircle, AlertCircle, InfoIcon, Eye, EyeOff, Check, X } from "lucide-react";
 
 export default function Register() {
@@ -16,6 +20,9 @@ export default function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [touched, setTouched] = useState({ name: false, email: false, password: false, confirmPassword: false });
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string>("");
+  const { login } = useAuth();
 
   // Password strength validation
   const passwordStrength = useMemo(() => {
@@ -106,6 +113,37 @@ export default function Register() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    if (!credentialResponse?.credential) {
+      setGoogleError("Google authentication failed. Please try again.");
+      return;
+    }
+
+    setGoogleError("");
+    setGoogleLoading(true);
+
+    try {
+      clearAuth();
+
+      const response = await AuthService.googleLogin(credentialResponse.credential);
+      if (response?.token && response?.user) {
+        login({ token: response.token, user: response.user });
+        redirectAfterLogin(response.user, router);
+      } else {
+        setGoogleError("Could not complete Google login. Please try again.");
+      }
+    } catch (error: any) {
+      console.error("Google registration error:", error);
+      setGoogleError(error?.response?.data?.message || error?.message || "Google registration failed.");
+    } finally {
+      setGoogleLoading(false);
+    }
+  };
+
+  const handleGoogleError = () => {
+    setGoogleError("Google registration could not be completed. Please try again.");
   };
 
   // Registration form view
@@ -241,7 +279,7 @@ export default function Register() {
                   required
                 />
                 <p className="text-xs text-gray-500 mt-2">
-                  📧 Gmail only • Verification link will be sent to this email
+                  📧 We'll send a verification link to this email address.
                 </p>
                 {touched.email && formData.email && !isValidEmail && (
                   <p className="text-xs text-red-600 mt-1 flex items-center gap-1">
@@ -398,6 +436,26 @@ export default function Register() {
                 )}
               </button>
             </form>
+
+            {googleError && (
+              <div className="mt-4 px-4 py-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm">
+                {googleError}
+              </div>
+            )}
+
+            <div className="mt-4 py-4 px-4 rounded-2xl border border-gray-200 bg-slate-50">
+              <div className="text-center text-sm text-gray-500 mb-4">Or register with</div>
+              <div className="flex justify-center">
+                <GoogleLogin
+                  onSuccess={handleGoogleSuccess}
+                  onError={handleGoogleError}
+                  width="100%"
+                />
+              </div>
+              {googleLoading && (
+                <p className="text-center text-sm text-gray-500 mt-3">Completing Google sign-in...</p>
+              )}
+            </div>
 
             {/* Divider */}
             <div className="relative my-6">
