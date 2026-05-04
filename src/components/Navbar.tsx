@@ -4,7 +4,6 @@ import { useAuth } from '@/context/AuthContext'
 import { useRouter } from 'next/router'
 import { Menu, X, Plane, LogOut, LayoutDashboard, Moon, Sun } from 'lucide-react'
 import { motion } from 'framer-motion'
-import { AdminOnly } from './RoleGuard'
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuth()
@@ -53,28 +52,25 @@ const Navbar: React.FC = () => {
           {isAuthenticated ? (
             <>
               <Link
-                href={user?.role === 'admin' ? '/admin/dashboard' : '/job-seeker/dashboard'}
+                href={user?.role === 'admin' ? '/admin/jobs' : '/jobs'}
                 className="text-gray-600 hover:text-primary transition font-medium flex items-center gap-2 text-sm lg:text-base"
               >
                 <LayoutDashboard size={18} />
                 Dashboard
               </Link>
               {/* Admin-only navigation */}
-              <AdminOnly>
+              {user?.role === 'admin' && (
                 <Link
-                  href="/admin"
+                  href="/admin/jobs"
                   className="text-orange-600 hover:text-orange-700 transition font-medium flex items-center gap-2 text-sm lg:text-base"
                 >
                   <span className="text-sm">⚙️</span>
                   Admin Panel
                 </Link>
-              </AdminOnly>
+              )}
             </>
           ) : (
-            <>
-              <Link href="/about" className="text-gray-600 hover:text-primary transition text-sm lg:text-base">About</Link>
-              <Link href="/contact" className="text-gray-600 hover:text-primary transition text-sm lg:text-base">Contact</Link>
-            </>
+            <></>
           )}
         </div>
 
@@ -92,9 +88,9 @@ const Navbar: React.FC = () => {
             <>
               <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-gray-50 rounded-lg border border-gray-200">
                 <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs sm:text-sm font-bold text-white flex-shrink-0">
-                  {user?.name?.charAt(0).toUpperCase()}
+                  {user?.email?.charAt(0).toUpperCase()}
                 </div>
-                <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">{user?.name}</span>
+                <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">{user?.email}</span>
               </div>
               <button
                 onClick={handleLogout}
@@ -154,13 +150,13 @@ const Navbar: React.FC = () => {
               <>
                 <div className="mb-4 flex items-center gap-2 sm:gap-3 px-3 py-2 bg-white rounded-lg border border-gray-200">
                   <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-xs sm:text-sm font-bold text-white flex-shrink-0">
-                    {user?.name?.charAt(0).toUpperCase()}
+                    {user?.email?.charAt(0).toUpperCase()}
                   </div>
-                  <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">{user?.name}</span>
+                  <span className="text-xs sm:text-sm font-medium text-gray-700 truncate">{user?.email}</span>
                 </div>
 
                 <Link
-                  href={user?.role === 'admin' ? '/admin/dashboard' : '/job-seeker/dashboard'}
+                  href={user?.role === 'admin' ? '/admin/jobs' : '/jobs'}
                   className="block px-3 py-2.5 sm:py-3 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition flex items-center gap-2 text-sm font-medium touch-safe"
                   onClick={() => setMenuOpen(false)}
                 >
@@ -169,16 +165,16 @@ const Navbar: React.FC = () => {
                 </Link>
 
                 {/* Admin-only mobile navigation */}
-                <AdminOnly>
+                {user?.role === 'admin' && (
                   <Link
-                    href="/admin"
+                    href="/admin/jobs"
                     className="block px-3 py-2.5 sm:py-3 text-orange-600 hover:text-orange-700 hover:bg-orange-50 rounded-lg transition flex items-center gap-2 text-sm font-medium touch-safe"
                     onClick={() => setMenuOpen(false)}
                   >
                     <span className="text-lg">⚙️</span>
                     Admin Panel
                   </Link>
-                </AdminOnly>
+                )}
 
                 <button
                   onClick={handleLogout}
@@ -190,22 +186,6 @@ const Navbar: React.FC = () => {
               </>
             ) : (
               <>
-                <Link
-                  href="/about"
-                  className="block px-3 py-2.5 sm:py-3 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition text-sm font-medium touch-safe"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  About
-                </Link>
-
-                <Link
-                  href="/contact"
-                  className="block px-3 py-2.5 sm:py-3 text-gray-600 hover:text-primary hover:bg-green-50 rounded-lg transition text-sm font-medium touch-safe"
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Contact
-                </Link>
-
                 <div className="border-t border-gray-200 pt-3 space-y-2">
                   <Link
                     href="/login"

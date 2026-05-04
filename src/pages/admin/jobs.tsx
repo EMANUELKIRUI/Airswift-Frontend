@@ -11,7 +11,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
 
 interface Job {
-  _id?: string;
+  id?: number;
   title: string;
   description: string;
   location: string;
@@ -25,7 +25,7 @@ export default function AdminJobsPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [formData, setFormData] = useState<Job>({
+  const [formData, setFormData] = useState<Omit<Job, 'id'>>({
     title: '',
     description: '',
     location: '',
@@ -43,7 +43,7 @@ export default function AdminJobsPage() {
   const fetchJobs = async () => {
     try {
       const response = await axios.get('/api/admin/jobs');
-      setJobs(response.data.jobs || []);
+      setJobs(response.data);
       setLoading(false);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load jobs');
@@ -133,7 +133,7 @@ export default function AdminJobsPage() {
           ) : (
             <div className="space-y-4">
               {jobs.map((job) => (
-                <div key={job._id} className="bg-white p-6 rounded-lg shadow">
+                <div key={job.id} className="bg-white p-6 rounded-lg shadow">
                   <h3 className="text-lg font-semibold text-gray-900">{job.title}</h3>
                   <p className="text-gray-600 mt-1">{job.location}</p>
                   <p className="text-gray-700 mt-2">{job.description}</p>

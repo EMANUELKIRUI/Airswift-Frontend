@@ -24,7 +24,7 @@ export default function JobsPage() {
     const fetchJobs = async () => {
       try {
         const response = await axios.get('/api/jobs');
-        setJobs(response.data.jobs || []);
+        setJobs(response.data);
       } catch (err: any) {
         setError(err.response?.data?.message || 'Failed to load jobs');
       } finally {
@@ -34,6 +34,15 @@ export default function JobsPage() {
 
     fetchJobs();
   }, [isAuthenticated, router]);
+
+  const handleApply = async (jobId: number) => {
+    try {
+      await axios.post('/api/applications/apply', { jobId });
+      alert('Application submitted!');
+    } catch (err: any) {
+      alert('Failed to apply: ' + err.response?.data?.message);
+    }
+  };
 
   if (!isAuthenticated) {
     return <Loader />;
@@ -62,9 +71,9 @@ export default function JobsPage() {
             <div className="space-y-6">
               {jobs.map((job) => (
                 <JobCard
-                  key={job._id}
+                  key={job.id}
                   job={job}
-                  onApply={() => router.push(`/jobs/${job._id}`)}
+                  onApply={handleApply}
                 />
               ))}
             </div>

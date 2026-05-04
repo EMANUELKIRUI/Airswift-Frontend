@@ -8,11 +8,10 @@ import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/router';
 
 interface Application {
-  _id: string;
-  userId: { name: string; email: string };
-  jobId: { title: string };
+  id: number;
+  User: { email: string };
+  Job: { title: string; location: string };
   status: string;
-  createdAt: string;
 }
 
 export default function AdminApplicationsPage() {
@@ -34,7 +33,7 @@ export default function AdminApplicationsPage() {
   const fetchApplications = async () => {
     try {
       const response = await axios.get('/api/admin/applications');
-      setApplications(response.data.applications || []);
+      setApplications(response.data);
       setLoading(false);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to load applications');
@@ -71,9 +70,6 @@ export default function AdminApplicationsPage() {
                 <thead className="bg-gray-50">
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                      Candidate
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                       Email
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
@@ -82,30 +78,21 @@ export default function AdminApplicationsPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
                       Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider">
-                      Date
-                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {applications.map((app) => (
-                    <tr key={app._id}>
+                    <tr key={app.id}>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        {app.userId.name}
+                        {app.User.email}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {app.userId.email}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {app.jobId.title}
+                        {app.Job.title}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
                           {app.status}
                         </span>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                        {new Date(app.createdAt).toLocaleDateString()}
                       </td>
                     </tr>
                   ))}

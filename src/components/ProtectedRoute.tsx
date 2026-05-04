@@ -1,26 +1,32 @@
-import { ReactNode, useEffect } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
-import { useRequireAuth } from '@/hooks/useProtectedRoute'
+import { useAuth } from '@/context/AuthContext'
 
 interface ProtectedRouteProps {
   children: ReactNode
   role?: 'admin' | 'user'
-  status?: string[]
 }
 
-const ProtectedRoute = ({ children, role, status }: ProtectedRouteProps) => {
+const ProtectedRoute = ({ children, role }: ProtectedRouteProps) => {
   const router = useRouter()
-  const { isLoading, isAuthorized } = useRequireAuth({ role, status })
+  const { user, isLoading, isAuthenticated } = useAuth()
+  const [isAuthorized, setIsAuthorized] = useState(false)
 
   useEffect(() => {
-    if (!isLoading && !isAuthorized) {
-      // Navigation is handled inside useRequireAuth
-      // This effect exists so children are not rendered during redirect.
-      if (typeof window !== 'undefined') {
-        // no-op
+    if (!isLoading) {
+      if (!isAuthenticated) {
+        router.push('/login')
+        return
       }
+
+      if (role && user?.role !== role) {
+        router.push('/unauthorized')
+        return
+      }
+
+      setIsAuthorized(true)
     }
-  }, [isLoading, isAuthorized])
+  }, [isLoading, isAuthenticated, user, role, router])
 
   if (isLoading) {
     return <div className="text-center mt-10">Loading...</div>
