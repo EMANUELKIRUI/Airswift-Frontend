@@ -67,19 +67,28 @@ export default function Home() {
     <div className="bg-slate-50 text-slate-900 min-h-screen">
       <div className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8">
         <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-xl border-b border-slate-200">
-          <div className="flex h-[70px] items-center justify-between gap-6">
-            <div className="flex items-center gap-3 mx-auto">
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-sm">
+          <div className="flex h-[76px] items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex h-12 w-12 items-center justify-center rounded-3xl bg-blue-600 text-white shadow-lg">
                 <Building className="h-6 w-6" />
               </div>
               <div>
                 <p className="text-lg font-bold tracking-tight">TALEX</p>
+                <p className="text-xs uppercase tracking-[0.3em] text-slate-500">Career Intelligence</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 ml-auto">
+            <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
+              <Link href="#jobs" className="hover:text-blue-600 transition">Jobs</Link>
+              <Link href="#features" className="hover:text-blue-600 transition">Why Talex</Link>
+              <Link href="#testimonials" className="hover:text-blue-600 transition">Testimonials</Link>
+            </nav>
+
+            <div className="flex items-center gap-3">
               <Link href="/login">
-                <button className="text-sm font-medium text-slate-700 hover:text-blue-600">Login</button>
+                <button className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition">
+                  Login
+                </button>
               </Link>
               <Link href="/register">
                 <Button variant="primary" size="sm" className="bg-blue-600 hover:bg-blue-700">Register</Button>
@@ -93,144 +102,98 @@ export default function Home() {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.85, ease: 'easeOut' }}
-            className="grid gap-10 grid-cols-1 lg:grid-cols-2 lg:items-center"
+            className="relative overflow-hidden rounded-[32px] bg-gradient-to-br from-slate-900 via-slate-950 to-blue-900 px-6 py-16 text-white shadow-2xl md:px-12 lg:px-16"
           >
-            <div className="space-y-6 sm:space-y-8">
-              <div className="inline-flex items-center gap-2 rounded-full border border-blue-100 bg-blue-50 px-4 py-2 text-sm font-medium text-blue-700 shadow-sm">
-                Trusted by 10,000+ job seekers and employers
-              </div>
-              <div className="space-y-5">
-                <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
-                  Find Verified Jobs.
-                  <br />
-                  Get Hired Faster.
-                </h1>
-                <p className="max-w-2xl text-base text-slate-600 sm:text-lg md:text-xl">
-                  AIRSWIFT connects talented people with top companies across the globe. Your next opportunity is here.
-                </p>
-              </div>
-              <div className="flex flex-col gap-4 sm:flex-row">
-                <Button variant="primary" size="lg" className="bg-blue-600 hover:bg-blue-700 shadow-lg">
-                  Find Jobs
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-                <Button variant="outline" size="lg" className="border-blue-600 text-blue-600 hover:bg-blue-50">
-                  Create Profile
-                </Button>
+            <div className="pointer-events-none absolute inset-x-0 top-0 h-56 bg-[radial-gradient(circle_at_top,_rgba(56,189,248,0.3),_transparent_62%)]" />
+            <div className="grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+              <div className="space-y-8">
+                <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm uppercase tracking-[0.3em] text-slate-200">
+                  Trusted by 10,000+ professionals
+                </span>
+
+                <div className="space-y-6">
+                  <h1 className="max-w-3xl text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+                    Find your next role with confidence, speed, and clarity.
+                  </h1>
+                  <p className="max-w-2xl text-lg leading-8 text-slate-200/90 sm:text-xl">
+                    Talex blends AI-powered matching with verified employer insights so you can land high-impact roles without the guesswork.
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-4 sm:flex-row">
+                  <Link href="/register">
+                    <Button variant="primary" size="lg" className="shadow-xl">
+                      Start your journey
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </Link>
+                  <Link href="#jobs">
+                    <Button variant="outline" size="lg" className="border-white/20 text-white hover:bg-white/10">
+                      Browse Jobs
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="grid gap-4 sm:grid-cols-3">
+                  {metrics.slice(0, 3).map((metric) => (
+                    <div key={metric.label} className="rounded-3xl border border-white/10 bg-white/5 p-4">
+                      <p className="text-3xl font-semibold text-white">{metric.value}</p>
+                      <p className="mt-2 text-sm text-slate-300">{metric.label}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.75, delay: 0.18 }}
-                className="rounded-[32px] border border-slate-200 bg-white p-5 shadow-xl"
+                transition={{ duration: 0.8 }}
+                className="relative"
               >
-                <div className="grid gap-3 sm:grid-cols-[2fr_1fr_1fr_auto] items-center">
-                  <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                    <Search className="h-5 w-5 text-slate-500" />
-                    <input type="text" placeholder="Job title or keyword" className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400" />
+                <div className="absolute -left-10 top-10 h-36 w-36 rounded-full bg-cyan-400/20 blur-3xl" />
+                <div className="rounded-[32px] border border-white/10 bg-slate-950/80 p-8 shadow-2xl backdrop-blur-xl">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.35em] text-cyan-300">Fast track</p>
+                      <h2 className="mt-3 text-2xl font-semibold text-white">Smart job insights</h2>
+                    </div>
+                    <div className="rounded-3xl bg-blue-600/15 px-4 py-2 text-sm text-cyan-200">AI-powered</div>
                   </div>
-                  <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                    <MapPin className="h-5 w-5 text-slate-500" />
-                    <select className="w-full bg-transparent text-sm text-slate-900 outline-none">
-                      <option>Anywhere</option>
-                      <option>New York</option>
-                      <option>Toronto</option>
-                    </select>
+
+                  <div className="mt-8 grid gap-4">
+                    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                      <p className="text-sm text-slate-300">AI matches</p>
+                      <p className="mt-3 text-lg font-semibold text-white">Precision role recommendations</p>
+                    </div>
+                    <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
+                      <p className="text-sm text-slate-300">Verified offers</p>
+                      <p className="mt-3 text-lg font-semibold text-white">Trusted employer network</p>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-                    <Briefcase className="h-5 w-5 text-slate-500" />
-                    <select className="w-full bg-transparent text-sm text-slate-900 outline-none">
-                      <option>Full-time</option>
-                      <option>Part-time</option>
-                      <option>Contract</option>
-                    </select>
+
+                  <div className="mt-8 rounded-[28px] bg-slate-800/80 p-5 text-sm text-slate-300">
+                    <p className="font-medium text-white">Candidate success</p>
+                    <p className="mt-2">95% satisfaction from job seekers and hiring teams.</p>
                   </div>
-                  <Button variant="primary" size="md" className="w-full bg-blue-600 hover:bg-blue-700">
-                    Search
-                  </Button>
                 </div>
-                <div className="mt-4 flex flex-wrap gap-3 text-sm text-slate-500">
-                  {['Remote', 'Software Engineer', 'Marketing', 'Design', 'Data Analyst'].map((search) => (
-                    <button key={search} className="rounded-full border border-slate-200 bg-slate-50 px-3 py-2 text-slate-600 transition hover:bg-blue-50 hover:text-blue-700">
-                      {search}
-                    </button>
-                  ))}
-                </div>
-            </motion.div>
+              </motion.div>
             </div>
+          </motion.section>
 
-            <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.85, delay: 0.2 }}
-              className="relative w-full"
-            >
-              <div className="absolute -left-10 top-8 h-32 w-32 rounded-full bg-blue-100 opacity-70 blur-3xl"></div>
-              <div className="absolute -right-10 bottom-10 h-24 w-24 rounded-full bg-cyan-100 opacity-70 blur-3xl"></div>
-              <div className="relative overflow-hidden rounded-[32px] bg-white p-6 shadow-2xl border border-slate-200 sm:p-8">
-                <div className="flex flex-col gap-6">
-                  <div className="flex items-center justify-between gap-4 rounded-[28px] border border-slate-200 bg-slate-50 p-4">
-                    <div className="flex items-center gap-3">
-                      <div className="h-12 w-12 rounded-3xl bg-blue-600/10" />
-                      <div>
-                        <p className="text-sm font-semibold text-slate-900">Avery Lee</p>
-                        <p className="text-xs text-slate-500">Software Recruiter</p>
-                      </div>
-                    </div>
-                    <span className="rounded-full bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white">Top recruiter</span>
-                  </div>
-
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
-                      <div className="flex items-center justify-between gap-4">
-                        <div className="h-12 w-12 rounded-3xl bg-blue-500/20" />
-                        <span className="rounded-full bg-blue-600 px-3 py-1 text-xs font-semibold text-white">98%</span>
-                      </div>
-                      <p className="mt-4 text-sm font-semibold text-slate-900">Job Match</p>
-                      <p className="mt-2 text-sm text-slate-500">Highly accurate role matches.</p>
-                    </div>
-                    <div className="rounded-[28px] border border-slate-200 bg-slate-50 p-5">
-                      <div className="flex items-center justify-between gap-4">
-                        <div className="h-12 w-12 rounded-3xl bg-slate-900/10" />
-                        <span className="rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">Live</span>
-                      </div>
-                      <p className="mt-4 text-sm font-semibold text-slate-900">Live roles</p>
-                      <p className="mt-2 text-sm text-slate-500">Updated in real time.</p>
-                    </div>
-                  </div>
-
-                  <div className="rounded-[32px] border border-slate-200 bg-slate-950 p-5 text-white">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Your next team</p>
-                        <p className="mt-2 text-lg font-semibold">Meet the hiring squad</p>
-                      </div>
-                      <div className="h-12 w-12 rounded-3xl bg-blue-600/20" />
-                    </div>
-                    <div className="mt-5 rounded-[28px] bg-gradient-to-r from-blue-600 to-cyan-500 p-4 text-sm text-white">
-                      Dashboard preview
-                    </div>
-                  </div>
-                </div>
+          <section id="jobs" className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-sm uppercase tracking-[0.3em] text-blue-600">Featured Jobs</p>
+                <h2 className="mt-3 text-3xl font-bold text-slate-900">Latest opportunities</h2>
               </div>
-            </motion.div>
-            </motion.section>
-
-            <section className="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
-              <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-blue-600">Featured Jobs</p>
-                  <h2 className="mt-3 text-3xl font-bold text-slate-900">Featured Jobs</h2>
-                </div>
-                <Link href="#" className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700">
-                  View all
-                  <ChevronRight className="h-4 w-4" />
-                </Link>
-              </div>
-              <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+              <Link href="#" className="inline-flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                View all
+                <ChevronRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
               {featuredJobs.map((job) => (
-                <article key={job.role} className="rounded-[24px] border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:shadow-xl">
+                <article key={job.role} className="group rounded-[24px] border border-slate-200 bg-slate-50 p-5 transition hover:-translate-y-1 hover:shadow-xl">
                   <div className="flex items-center justify-between">
                     <div className="rounded-2xl bg-white px-3 py-2 text-sm font-semibold text-slate-800">{job.company.charAt(0)}</div>
                     <span className="rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700">Featured</span>
