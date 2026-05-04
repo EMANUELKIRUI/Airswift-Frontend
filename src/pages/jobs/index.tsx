@@ -1,164 +1,76 @@
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import MainLayout from '@/layouts/MainLayout'
-import JobCard from '@/components/JobCard'
-import Loader from '@/components/Loader'
-import Input from '@/components/Input'
-import { jobService, Job } from '@/services/jobService'
-import { useNotification } from '@/context/NotificationContext'
-import { useAuth } from '@/context/AuthContext'
-import { JOB_TYPES } from '@/utils/constants'
+'use client';
 
-const JobsPage: React.FC = () => {
-  const router = useRouter()
-  const { isLoading: authLoading, user, isAuthenticated } = useAuth()
-  const [jobs, setJobs] = useState<Job[]>([])
-  const [searchQuery, setSearchQuery] = useState('')
-  const [location, setLocation] = useState('')
-  const [jobType, setJobType] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [page, setPage] = useState(1)
-  const [hasMore, setHasMore] = useState(true)
-  const { addNotification } = useNotification()
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import JobCard from '@/components/JobCard';
+import Navbar from '@/components/Navbar';
+import Loader from '@/components/Loader';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/router';
 
-  // Strong authentication guard - redirect immediately if not authenticated
+export default function JobsPage() {
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
+  const [jobs, setJobs] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
   useEffect(() => {
-    if (!authLoading && !isAuthenticated) {
-      // Not authenticated, redirect to login
-      router.replace('/login')
-      return
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
     }
-  }, [authLoading, isAuthenticated, router])
 
-  // Fetch jobs only when fully authenticated and loading is complete
-  useEffect(() => {
-    if (!authLoading && isAuthenticated && user) {
-      fetchJobs()
-    }
-  }, [searchQuery, location, jobType, page, authLoading, isAuthenticated, user])
-
-  const fetchJobs = async () => {
-    setLoading(true)
-    try {
-      const filters: any = {
-        type: jobType || undefined,
-        location: location || undefined,
-        page,
-        limit: 10,
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get('/api/jobs');
+        setJobs(response.data.jobs || []);
+      } catch (err: any) {
+        setError(err.response?.data?.message || 'Failed to load jobs');
+      } finally {
+        setLoading(false);
       }
+    };
 
-      const data = await jobService.searchJobs(searchQuery, filters)
-      const jobs = Array.isArray(data)
-        ? data
-        : data?.jobs || []
-      const sortedJobs = [...jobs].sort((a: any, b: any) => {
-        if (typeof a === 'string' && typeof b === 'string') {
-          return a.localeCompare(b)
-        }
-        if (a?.title && b?.title) {
-          return a.title.localeCompare(b.title)
-        }
-        return 0
-      })
-      if (page === 1) {
-        setJobs(sortedJobs)
-      } else {
-        setJobs(prev => [...prev, ...sortedJobs])
-      }
-      setHasMore(data?.hasMore || false)
-    } catch (error) {
-      addNotification('Failed to load jobs', 'error')
-    } finally {
-      setLoading(false)
-    }
+    fetchJobs();
+  }, [isAuthenticated, router]);
+
+  if (!isAuthenticated) {
+    return <Loader />;
   }
 
   return (
-    // Only render main content if authenticated and loading complete
-    authLoading || !isAuthenticated ? (
-      <Loader />
-    ) : (
-      <MainLayout>
-        <div>
-          <h1 className="text-4xl font-bold mb-2 text-gray-900">Browse Opportunities</h1>
-          <p className="text-gray-600 mb-8">Find your next career opportunity from our curated job listings</p>
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <h1 className="text-3xl font-bold text-gray-900 mb-8">Job Opportunities</h1>
 
-        {/* Filters */}
-<div className="bg-white p-6 rounded-lg shadow-sm mb-8 grid lg:grid-cols-3 gap-4 border border-gray-100">
-            <Input
-              label="Search Jobs"
-              placeholder="Job title, company, location..."
-              value={searchQuery}
-              onChange={(e) => {
-                setSearchQuery(e.target.value)
-                setPage(1)
-              }}
-            />
-            <Input
-              label="Location"
-              placeholder="Toronto, Nairobi, Remote..."
-              value={location}
-              onChange={(e) => {
-                setLocation(e.target.value)
-              setPage(1)
-            }}
-          />
-          <div>
-            <label className="block text-gray-700 font-semibold mb-2">Job Type</label>
-            <select
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-              value={jobType}
-              onChange={(e) => {
-                setJobType(e.target.value)
-                setPage(1)
-              }}
-            >
-              <option value="">All Types</option>
-              {JOB_TYPES.map(type => (
-                <option key={type} value={type}>
-                  {type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
+          {error && (
+            <div className="rounded-md bg-red-50 p-4 mb-6">
+              <p className="text-sm text-red-800">{error}</p>
+            </div>
+          )}
 
-        {/* Jobs Grid */}
-        {loading && page === 1 ? (
-          <div className="flex justify-center py-12">
-            <Loader size="lg" />
-          </div>
-        ) : (
-          <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {jobs.map(job => (
-                <JobCard key={job.id} job={job} />
+          {loading ? (
+            <Loader />
+          ) : jobs.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">No jobs available at the moment</p>
+            </div>
+          ) : (
+            <div className="space-y-6">
+              {jobs.map((job) => (
+                <JobCard
+                  key={job._id}
+                  job={job}
+                  onApply={() => router.push(`/jobs/${job._id}`)}
+                />
               ))}
             </div>
-
-            {hasMore && (
-              <div className="text-center">
-                <button
-                  onClick={() => setPage(prev => prev + 1)}
-                  disabled={loading}
-                  className="bg-primary text-white px-6 py-2 rounded hover:bg-opacity-90 disabled:opacity-50"
-                >
-                  {loading ? 'Loading...' : 'Load More Jobs'}
-                </button>
-              </div>
-            )}
-
-            {jobs.length === 0 && !loading && (
-              <div className="text-center py-12">
-                <p className="text-gray-600">No jobs found matching your criteria.</p>
-              </div>
-            )}
-          </>
-        )}
+          )}
+        </div>
       </div>
-    </MainLayout>
-    )
-  )
+    </>
+  );
 }
-
-export default JobsPage

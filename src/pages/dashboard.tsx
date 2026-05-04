@@ -1,23 +1,27 @@
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { useAuth } from '@/context/AuthContext'
-import Loader from '@/components/Loader'
+'use client';
+
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import Loader from '@/components/Loader';
 
 export default function Dashboard() {
-  const { user, isLoading, isAuthenticated } = useAuth()
-  const router = useRouter()
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
 
   useEffect(() => {
-    if (!isLoading) {
-      if (!isAuthenticated || !user) {
-        router.replace('/login')
-      } else if (user?.role?.toLowerCase() === 'admin') {
-        router.replace('/admin/dashboard')
-      } else {
-        router.replace('/job-seeker/dashboard')
-      }
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
     }
-  }, [isAuthenticated, user, isLoading, router])
 
-  return <Loader fullScreen />
+    // Redirect based on role
+    if (user?.role === 'admin') {
+      router.push('/admin/jobs');
+    } else {
+      router.push('/jobs');
+    }
+  }, [isAuthenticated, user, router]);
+
+  return <Loader />;
 }

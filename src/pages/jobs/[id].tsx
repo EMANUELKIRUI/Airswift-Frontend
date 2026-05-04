@@ -1,139 +1,119 @@
-import React, { useState, useEffect } from 'react'
-import { useRouter } from 'next/router'
-import MainLayout from '@/layouts/MainLayout'
-import Button from '@/components/Button'
-import Loader from '@/components/Loader'
-import { jobService, Job } from '@/services/jobService'
-import { useAuth } from '@/context/AuthContext'
-import { useNotification } from '@/context/NotificationContext'
-import { formatDate } from '@/utils/helpers'
+'use client';
 
-const JobDetailPage: React.FC = () => {
-  const router = useRouter()
-  const { id } = router.query
-  const { user } = useAuth()
-  const isAuthenticated = !!user
-  const { addNotification } = useNotification()
-  const [job, setJob] = useState<Job | null>(null)
-  const [loading, setLoading] = useState(true)
+import { useState, useEffect, FormEvent } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
+import Button from '@/components/Button';
+import Navbar from '@/components/Navbar';
+import Loader from '@/components/Loader';
+import { useAuth } from '@/context/AuthContext';
+
+interface Job {
+  _id: string;
+  title: string;
+  description: string;
+  location: string;
+}
+
+export default function JobDetailPage() {
+  const router = useRouter();
+  const { isAuthenticated, user } = useAuth();
+  const { id } = router.query;
+  const [job, setJob] = useState<Job | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [applying, setApplying] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
 
   useEffect(() => {
-    if (id) {
-      fetchJob()
+    if (!isAuthenticated) {
+      router.push('/login');
+      return;
     }
-  }, [id])
 
-  const fetchJob = async () => {
+    if (!id) return;
+
+    const fetchJob = async () => {
+      try {
+        const response = await axios.get(`/api/jobs/${id}`);
+        setJob(response.data.job);
+        setLoading(false);
+      } catch (err: any) {
+        setError(err.response?.data?.message || 'Failed to load job');
+        setLoading(false);
+      }
+    };
+
+    fetchJob();
+  }, [id, isAuthenticated, router]);
+
+  const handleApply = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setError('');
+    setSuccess('');
+    setApplying(true);
+
     try {
-      const data = await jobService.getJobById(id as string)
-      setJob(data)
-    } catch (error) {
-      addNotification('Failed to load job details', 'error')
+      await axios.post('/api/applications/apply', {
+        jobId: id,
+      });
+      setSuccess('Applied successfully!');
+      setTimeout(() => router.push('/jobs'), 2000);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to apply');
     } finally {
-      setLoading(false)
+      setApplying(false);
     }
-  }
+  };
 
-  if (loading) {
-    return (
-      <MainLayout>
-        <div className="text-center py-12">
-          <Loader size="lg" />
-        </div>
-      </MainLayout>
-    )
-  }
-
-  if (!job) {
-    return (
-      <MainLayout>
-        <div className="text-center py-12">
-          <p className="text-gray-600">Job not found</p>
-        </div>
-      </MainLayout>
-    )
+  if (!isAuthenticated) {
+    return <Loader />;
   }
 
   return (
-    <MainLayout>
-      <div className="grid md:grid-cols-3 gap-8">
-        {/* Main Content */}
-        <div className="md:col-span-2">
-          <div className="bg-white rounded-lg shadow-md p-8">
-            <div className="mb-8">
-              <h1 className="text-4xl font-bold text-gray-900 mb-2">{job.title}</h1>
-              <p className="text-xl text-gray-600 mb-4">{job.company}</p>
-              <p className="text-gray-500">Posted on {formatDate(job.postedDate)}</p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-4 mb-8 pb-8 border-b">
-              <div>
-                <p className="text-gray-600">Location</p>
-                <p className="text-lg font-semibold">{job.location}</p>
+    <>
+      <Navbar />
+      <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
+          {loading ? (
+            <Loader />
+          ) : job ? (
+            <div className="bg-white p-6 rounded-lg shadow">
+              <h1 className="text-3xl font-bold text-gray-900 mb-2">{job.title}</h1>
+              <p className="text-gray-600 mb-4">{job.location}</p>
+              <div className="mb-6 p-4 bg-gray-50 rounded">
+                <p className="text-gray-700">{job.description}</p>
               </div>
-              <div>
-                <p className="text-gray-600">Salary</p>
-                <p className="text-lg font-semibold">{job.salary}</p>
-              </div>
-              <div>
-                <p className="text-gray-600">Job Type</p>
-                <p className="text-lg font-semibold capitalize">{job.type}</p>
-              </div>
-            </div>
 
-            <div className="mb-8">
-              <h2 className="text-2xl font-bold mb-4">Description</h2>
-              <p className="text-gray-700 whitespace-pre-wrap">{job.description}</p>
-            </div>
+              {error && (
+                <div className="rounded-md bg-red-50 p-4 mb-6">
+                  <p className="text-sm text-red-800">{error}</p>
+                </div>
+              )}
 
-            <div>
-              <h2 className="text-2xl font-bold mb-4">Requirements</h2>
-              <ul className="space-y-2">
-                {job.requirements.map((req, index) => (
-                  <li key={index} className="flex items-start">
-                    <span className="text-primary mr-3">✓</span>
-                    <span className="text-gray-700">{req}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </div>
+              {success && (
+                <div className="rounded-md bg-green-50 p-4 mb-6">
+                  <p className="text-sm text-green-800">{success}</p>
+                </div>
+              )}
 
-        {/* Sidebar */}
-        <div>
-          <div className="bg-white rounded-lg shadow-md p-6 sticky top-20">
-            <div className="mb-6">
-              <p className="text-gray-600 mb-2">Applications</p>
-              <p className="text-3xl font-bold">{job.appliedCount}</p>
-            </div>
-
-            {isAuthenticated ? (
-              user?.role === 'user' ? (
+              <form onSubmit={handleApply} className="space-y-4">
                 <Button
-                  onClick={() => router.push(`/jobs/apply/${id}`)}
-                  size="lg"
+                  type="submit"
+                  disabled={applying}
                   className="w-full"
                 >
-                  Apply for this Job
+                  {applying ? 'Applying...' : 'Apply Now'}
                 </Button>
-              ) : (
-                <p className="text-gray-600 text-center">Admin cannot apply for jobs</p>
-              )
-            ) : (
-              <Button
-                onClick={() => router.push('/login')}
-                size="lg"
-                className="w-full"
-              >
-                Login to Apply
-              </Button>
-            )}
-          </div>
+              </form>
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600">Job not found</p>
+            </div>
+          )}
         </div>
       </div>
-    </MainLayout>
-  )
+    </>
+  );
 }
-
-export default JobDetailPage
