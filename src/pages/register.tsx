@@ -1,11 +1,7 @@
-'use client';
-
-import { useState, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
-import Button from '@/components/Button';
-import Input from '@/components/Input';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -92,7 +88,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-md relative z-10">
         {/* Header Section */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-primary to-teal-600 rounded-2xl mb-4 shadow-lg">
+          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-teal-600 rounded-2xl mb-4 shadow-lg">
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
@@ -107,7 +103,7 @@ export default function RegisterPage() {
 
         {/* Card Container */}
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-          <div className="bg-gradient-to-r from-primary/5 to-teal-600/5 px-6 py-4 border-b border-gray-100"></div>
+          <div className="bg-gradient-to-r from-blue-600/5 to-teal-600/5 px-6 py-4 border-b border-gray-100"></div>
 
           <form className="p-8 space-y-5" onSubmit={handleSubmit}>
             {/* Error Alert */}
@@ -132,58 +128,73 @@ export default function RegisterPage() {
 
             {/* Name Input */}
             <div>
-              <Input
-                type="text"
-                placeholder="Full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                icon={
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                }
-                required
-              />
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                Full Name
+              </label>
+              <div className="relative">
+                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                <input
+                  id="name"
+                  type="text"
+                  placeholder="Full Name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg transition-all duration-200 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 hover:border-gray-400"
+                  required
+                />
+              </div>
             </div>
 
             {/* Email Input */}
             <div>
-              <Input
-                type="email"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                icon={
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                }
-                required
-              />
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                Email Address
+              </label>
+              <div className="relative">
+                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg transition-all duration-200 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 hover:border-gray-400"
+                  required
+                />
+              </div>
             </div>
 
             {/* Password Input */}
             <div>
-              <Input
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={handlePasswordChange}
-                icon={
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                }
-                required
-              />
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+                <input
+                  id="password"
+                  type="password"
+                  placeholder="At least 8 characters"
+                  value={password}
+                  onChange={handlePasswordChange}
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg transition-all duration-200 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 hover:border-gray-400"
+                  required
+                />
+              </div>
               {password && (
                 <div className="mt-2 flex gap-2 items-center">
                   <div className="flex gap-1 flex-1">
-                    <div className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength === 'strong' ? 'bg-accent' : passwordStrength === 'medium' ? 'bg-warning' : 'bg-danger'}`}></div>
-                    <div className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength === 'strong' ? 'bg-accent' : passwordStrength === 'medium' ? 'bg-warning' : 'bg-gray-200'}`}></div>
-                    <div className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength === 'strong' ? 'bg-accent' : 'bg-gray-200'}`}></div>
+                    <div className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength === 'strong' ? 'bg-green-500' : passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-red-500'}`}></div>
+                    <div className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength === 'strong' ? 'bg-green-500' : passwordStrength === 'medium' ? 'bg-yellow-500' : 'bg-gray-200'}`}></div>
+                    <div className={`h-1 flex-1 rounded-full transition-colors ${passwordStrength === 'strong' ? 'bg-green-500' : 'bg-gray-200'}`}></div>
                   </div>
-                  <span className={`text-xs font-medium ${passwordStrength === 'strong' ? 'text-accent' : passwordStrength === 'medium' ? 'text-warning' : 'text-danger'}`}>
+                  <span className={`text-xs font-medium ${passwordStrength === 'strong' ? 'text-green-500' : passwordStrength === 'medium' ? 'text-yellow-500' : 'text-red-500'}`}>
                     {passwordStrength === 'strong' ? 'Strong' : passwordStrength === 'medium' ? 'Medium' : 'Weak'}
                   </span>
                 </div>
@@ -192,18 +203,23 @@ export default function RegisterPage() {
 
             {/* Confirm Password Input */}
             <div>
-              <Input
-                type="password"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                icon={
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                }
-                required
-              />
+              <label htmlFor="confirm-password" className="block text-sm font-medium text-gray-700 mb-2">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <svg className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <input
+                  id="confirm-password"
+                  type="password"
+                  placeholder="Confirm password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full pl-12 pr-4 py-3 bg-white border border-gray-300 placeholder-gray-500 text-gray-900 rounded-lg transition-all duration-200 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 hover:border-gray-400"
+                  required
+                />
+              </div>
             </div>
 
             {/* Password Requirements */}
@@ -211,25 +227,25 @@ export default function RegisterPage() {
               <p className="text-xs font-semibold text-blue-900 mb-2">Password requirements:</p>
               <ul className="space-y-1 text-xs text-blue-700">
                 <li className="flex items-center gap-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${password && password.length >= 8 ? 'bg-accent' : 'bg-gray-300'}`}></span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${password && password.length >= 8 ? 'bg-green-500' : 'bg-gray-300'}`}></span>
                   At least 8 characters
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${password && /[A-Z]/.test(password) ? 'bg-accent' : 'bg-gray-300'}`}></span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${password && /[A-Z]/.test(password) ? 'bg-green-500' : 'bg-gray-300'}`}></span>
                   One uppercase letter
                 </li>
                 <li className="flex items-center gap-2">
-                  <span className={`w-1.5 h-1.5 rounded-full ${password && /[0-9]/.test(password) ? 'bg-accent' : 'bg-gray-300'}`}></span>
+                  <span className={`w-1.5 h-1.5 rounded-full ${password && /[0-9]/.test(password) ? 'bg-green-500' : 'bg-gray-300'}`}></span>
                   One number
                 </li>
               </ul>
             </div>
 
             {/* Submit Button */}
-            <Button
+            <button
               type="submit"
               disabled={loading || !name || !email || !password || !confirmPassword}
-              className="w-full mt-6 py-3"
+              className="w-full py-3 px-4 border border-transparent text-sm font-semibold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 mt-6 flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>
@@ -237,18 +253,18 @@ export default function RegisterPage() {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Creating account...
+                  Creating Account...
                 </>
               ) : (
                 'Create Account'
               )}
-            </Button>
+            </button>
 
             {/* Login Link */}
             <div className="text-center pt-4 border-t border-gray-200">
               <p className="text-sm text-gray-600">
                 Already have an account?{' '}
-                <Link href="/login" className="font-semibold text-primary hover:text-primary-dark transition-colors">
+                <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
                   Sign in here
                 </Link>
               </p>
@@ -257,11 +273,11 @@ export default function RegisterPage() {
             {/* Footer Text */}
             <p className="text-center text-xs text-gray-500 pt-2">
               By signing up, you agree to our{' '}
-              <a href="#" className="text-primary hover:underline font-medium">
+              <a href="#" className="text-blue-600 hover:underline font-medium">
                 Terms of Service
               </a>
               {' '}and{' '}
-              <a href="#" className="text-primary hover:underline font-medium">
+              <a href="#" className="text-blue-600 hover:underline font-medium">
                 Privacy Policy
               </a>
             </p>
