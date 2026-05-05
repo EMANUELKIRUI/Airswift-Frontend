@@ -14,11 +14,11 @@ const Footer: React.FC = () => {
                 <Plane className="text-white" size={24} />
               </div>
               <span className="text-xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                TALEX
+                Airswift
               </span>
             </div>
             <p className="text-slate-400 text-sm">
-              Enterprise-grade authentication platform with modern UX and military-grade security.
+              Job search made modern, reliable, and simple for both candidates and employers.
             </p>
           </div>
 
@@ -67,11 +67,11 @@ const Footer: React.FC = () => {
             <ul className="space-y-3 text-slate-400 text-sm">
               <li className="flex items-center gap-2 hover:text-primary transition">
                 <Mail size={16} />
-                <a href="mailto:support@talex.com">support@talex.com</a>
+                <a href="mailto:support@airswift.com">support@airswift.com</a>
               </li>
               <li className="flex items-center gap-2 hover:text-primary transition">
                 <Phone size={16} />
-                <a href="tel:+1-800-TALEX">+1-800-TALEX</a>
+                <a href="tel:+1-800-123-4567">+1-800-123-4567</a>
               </li>
               <li className="flex items-start gap-2 hover:text-primary transition">
                 <MapPin size={16} className="mt-0.5 flex-shrink-0" />

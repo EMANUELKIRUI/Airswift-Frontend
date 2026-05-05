@@ -41,7 +41,7 @@ export const normalizeUser = (user: AuthUser | null): AuthUser | null => {
 
   const normalizedUser: AuthUser = { ...user }
 
-  if (!normalizedUser.role && normalizedUser.email?.toLowerCase() === 'admin@talex.com') {
+  if (!normalizedUser.role && normalizedUser.email?.toLowerCase() === 'admin@airswift.com') {
     normalizedUser.role = 'admin'
   }
 

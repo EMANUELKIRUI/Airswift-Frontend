@@ -11,6 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
+  console.log('BODY:', req.body);
   const { email, password } = req.body;
 
   try {
@@ -29,7 +30,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, secret);
 
     res.status(200).json({ token, user: { id: user.id, email: user.email, role: user.role } });
-  } catch (error) {
-    res.status(500).json({ message: 'Internal server error' });
+  } catch (error: any) {
+    console.error('LOGIN ERROR:', error);
+    res.status(500).json({ message: error.message || 'Internal server error' });
   }
 }

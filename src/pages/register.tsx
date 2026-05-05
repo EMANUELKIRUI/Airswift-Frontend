@@ -57,12 +57,14 @@ export default function RegisterPage() {
     }
 
     try {
+      console.log('REGISTER REQUEST:', { name, email, password: password ? '*****' : '', role: 'user' });
       const response = await axios.post('/api/auth/register', {
         name,
         email,
         password,
         role: 'user',
       });
+      console.log('REGISTER RESPONSE:', response.data);
 
       if (response.data.success) {
         setSuccess('Registration successful! Please check your email to verify your account.');
@@ -73,6 +75,7 @@ export default function RegisterPage() {
         setTimeout(() => router.push('/login'), 3000);
       }
     } catch (err: any) {
+      console.error('REGISTER ERROR:', err);
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
       setLoading(false);
@@ -240,6 +243,21 @@ export default function RegisterPage() {
                 </li>
               </ul>
             </div>
+
+            {/* Google Sign Up */}
+            <button
+              type="button"
+              onClick={() => window.location.href = '/api/auth/google'}
+              className="w-full py-3 px-4 border border-gray-300 bg-white text-gray-700 rounded-lg hover:bg-gray-50 transition-all duration-200 flex items-center justify-center gap-3"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M22.5 12.27c0-.77-.07-1.51-.2-2.23H12v4.22h5.88c-.25 1.35-1.02 2.49-2.18 3.25v2.7h3.52c2.07-1.91 3.26-4.7 3.26-8." fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-1 7.28-2.72l-3.52-2.7c-.98.66-2.23 1.05-3.76 1.05-2.9 0-5.36-1.95-6.24-4.57H2.14v2.86C3.94 20.91 7.74 23 12 23z" fill="#34A853"/>
+                <path d="M5.76 14.06c-.22-.66-.35-1.36-.35-2.06s.13-1.4.35-2.06V7.08H2.14A11.98 11.98 0 000 12c0 1.96.47 3.82 1.31 5.5l3.45-3.44z" fill="#FBBC05"/>
+                <path d="M12 4.5c1.62 0 3.08.56 4.23 1.65l3.17-3.17C17.45 1.22 14.97 0 12 0 7.74 0 3.94 2.09 2.14 5.08l3.62 2.86C6.64 6.45 9.1 4.5 12 4.5z" fill="#EA4335"/>
+              </svg>
+              Continue with Google
+            </button>
 
             {/* Submit Button */}
             <button

@@ -39,14 +39,13 @@ const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-2 sm:py-3 flex justify-between items-center">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-1.5 sm:gap-2 group cursor-pointer flex-shrink-0">
-          <div className="bg-primary p-1.5 sm:p-2 rounded-lg group-hover:shadow-md transition-all">
-            💼
-          </div>
-          <span className="hidden sm:inline text-lg sm:text-xl lg:text-2xl font-bold text-primary">
-            TALEX
-          </span>
-        </Link>
-
+            <div className="bg-primary p-1.5 sm:p-2 rounded-lg group-hover:shadow-md transition-all">
+              💼
+            </div>
+            <span className="hidden sm:inline text-lg sm:text-xl lg:text-2xl font-bold text-primary">
+              Airswift
+            </span>
+          </Link>
         {/* Desktop Navigation */}
         <div className="hidden lg:flex items-center gap-8">
           {isAuthenticated ? (

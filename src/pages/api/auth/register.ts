@@ -11,6 +11,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
+  console.log('BODY:', req.body);
   const { email, password, role } = req.body;
 
   try {
@@ -23,10 +24,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     res.status(201).json({ token, user: { id: user.id, email: user.email, role: user.role } });
   } catch (error: any) {
+    console.error('REGISTER ERROR:', error);
     if (error.name === 'SequelizeUniqueConstraintError') {
       res.status(409).json({ message: 'User already exists' });
     } else {
-      res.status(500).json({ message: 'Internal server error' });
+      res.status(500).json({ message: error.message || 'Internal server error' });
     }
   }
 }
